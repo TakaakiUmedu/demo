@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<h4>計算手順</h4>
+
+
+<div class="demo-example">
+<script class="demo-calc">
+	function make_exp(...clauses: [BigInteger, BigInteger][]): string{
+		let exp: string[] = [];
+		for(const clause of clauses){
+			if(clause.length > 0){
+				let minus;
+				let clause_exp = [];
+				for(let j = 0; j < clause.length; j ++){
+					const val = clause[j];
+					let abs = val.abs();
+					if(j == 0){
+						minus = val.minus;
+					}else{
+						minus = (val.minus ? !minus : minus);
+					}
+					if(!abs.equals(BigInteger.ONE)){
+						clause_exp.push(abs);
+					}
+				}
+				if(minus){
+					if(exp.length > 0){
+						exp.push(" - ");
+					}else{
+						exp.push("-");
+					}
+				}else{
+					if(exp.length > 0){
+						exp.push(" + ");
+					}
+				}
+				
+				if(clause_exp.length > 0){
+					exp.push("" + clause_exp[0]);
+					for(let j = 1; j < clause_exp.length; j ++){
+						exp.push(" \\cdot " + clause_exp[j]);
+					}
+				}else{
+					exp.push("1");
+				}
+			}
+		}
+		return exp.join("");
+	}
+</script>
+<form class="demo-form">
+<et>
+L & = & $<input type="text" name="L" data-parser="BigInteger.parse"></input>$ \\
+A & = & $<input type="text" name="A" data-parser="BigInteger.parse"></input>$ & $<input type="submit" value="再計算"></input>$
+</et>
+</form>
+<script class="demo-init">
+const L = BigInteger.parse(123456);
+const A = BigInteger.parse(165437);
+</script>
+
+<p>のとき、$L$ を法とした $A$ の逆元を求める。</p>
+<p>すなわち、</p>
+
+<et>
+A\cdot A^{-1} \ \% \ L = 1
+</et>
+
+<p>となるような、$A^{-1}$ を求める。なお、$A^{-1}$ は、ここでは、<q>$A$の$-1$乗</q> ではなく、<q>$A^{-1}$ という1つの記号</q>、とみなす)。</p>
+
+<p>まず、 $L$ と $A$ にから始めて、ユークリッドの互除法と同様に、除算して商と余りを求める操作を繰り返す。</p>
+
+<script class="demo-calc" data-inject="table1">
+	const list: {
+		a: BigInteger,
+		b: BigInteger,
+		r: BigInteger,
+		q: BigInteger,
+	}[] = [];
+	const tbody1 = Dom.elem("tbody");
+	const table1 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody1));
+	
+	let a = vars.A, b = vars.L;
+	while(true){
+		const divmod = b.divmod(a);
+		
+		tbody1.appendChild(Dom.elem("tr", Dom.td({ className: "right" }, "$" + b + "\\div" + a + "$"), Dom.td("$=$"), Dom.td("$" + divmod.quo + " あまり " + divmod.rem + "$")));
+		
+		list.push({
+			a: a,
+			b: b,
+			r: divmod.rem,
+			q: divmod.quo,
+		});
+		
+		b = a;
+		a = divmod.rem;
+		if(a.equals(BigInteger.ONE)){
+			break;
+		}else if(a.isZero()){
+			break;
+		}
+	}
+	
+</script>
+
+<div class="demo-if" data-cond="a.isZero()">
+	<p>$L$ と $A$ が互いに素でないため、逆元 $A^{-1}$ は<em>存在しない</em>。</p>
+</div>
+<div class="demo-else">
+	<p>これらの式を、それぞれ、<q>$あまり=$</q>の形に書き換えると</p>
+	
+	<script class="demo-calc" data-inject="table2">
+		const tbody2 = Dom.elem("tbody");
+		const table2 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody2));
+	
+		for(let i = 0; i < list.length; i ++){
+			const item = list[i];
+			tbody2.appendChild(Dom.elem("tr", 
+				Dom.elem("td", { className: "right" }, "$" + item.r + "$"), Dom.td("$=$"), 
+				Dom.td("$" + item.b + " - " + item.a + " \\cdot " + item.q + "$"), 
+				Dom.elem("td", { className: "right"}, "$(" + (i + 1) + ")$")
+			));
+		}
+		
+	</script>
+	<p>これらの式の右辺は、それぞれ、1つ前と2つ前の左辺(あまり)の線形結合(整数倍して足すか引くかしたもの)になっている。
+	よって、これを逆順に代入して、1つ前と2つ前の左辺の値でくくる形に整理して、という操作を繰り返していくと、順にそれ以外の項が無くなるので、</p>
+	
+	<script class="demo-calc" data-inject="table3">
+		const tbody3 = Dom.elem("tbody");
+		const table3 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody3));
+		let item = list[list.length - 1];
+		
+		tbody3.appendChild(Dom.elem("tr", Dom.td("$1$"), Dom.td("$=$"), Dom.td("$" + item.b + " - " + item.a + " \\cdot " + item.q + "$"), Dom.elem("td"), Dom.elem("td"), Dom.td("$((" + (list.length) + ")より)$")));
+		
+		a = item.b;
+		b = BigInteger.ONE;
+		let c = item.a;
+		let d = item.q.neg();
+		
+		for(let i = list.length - 2; i >= 0; i --){
+			item = list[i];
+			
+			/// デバッグ用
+			const check = a.mul(b).add(c.mul(d));
+			if(!check.equals(BigInteger.ONE)){
+				tbody3.appendChild(Dom.tr(Dom.elem("td", { style: { color: "red" } }, "【バグ】予期せぬ計算エラーが起きました")));
+				break;
+			}
+			
+			let exp = [];
+			if(a.mul(b).minus){
+				exp.push("-");
+			}
+			exp.push(a.abs());
+			if(!b.equals(BigInteger.ONE)){
+				exp.push(" × ");
+				exp.push(b.abs());
+			}
+			
+			if(d.minus){
+				exp.push(" - ");
+			}else{
+				exp.push(" + ");
+			}
+			
+			exp = exp.concat(["(", item.b, " - ", item.a, " \\cdot ", item.q, ")", " \\cdot ", d.abs()]);
+		
+			
+			let next_a = item.b;
+			let next_b = d;
+			let next_c = a;
+			let next_d = b.add(item.q.mul(d.neg()));
+			
+			a = next_a;
+			b = next_b;
+			c = next_c;
+			d = next_d;
+			
+			tbody3.appendChild(Dom.elem("tr", 
+				Dom.td(),
+				Dom.td("$=$"),
+				Dom.td("$" + exp.join("") + "$"),
+				Dom.td("$=$"),
+				Dom.td("$" + make_exp([a, b], [c, d]) + "$"),
+				Dom.td("$((" + (i + 1) + ")を代入して整理)$")
+			));
+		}
+		let inv_a: BigInteger;
+		let q: BigInteger;
+		if(a.equals(vars.A)){
+			inv_a = b;
+			q = d;
+		}else{
+			inv_a = d;
+			q = b;
+		}
+	</script>
+
+<p>より、</p>
+			
+
+<et>
+1 & = & <in>make_exp([b, a], [d, c])</in> \\
+  & = & <in>q</in> L<in>inv_a.minus ? "" : "+"</in><in>inv_a</in> A
+</et>
+	
+<p>という等式が得られる。これを変形して、</p>
+
+<eq>
+<p>
+$<in>inv_a</in> A = 1 <in>q.minus ? "+" : "-"</in> <in>q.abs()</in> L$
+</p>
+</eq>
+
+<p>となる。この等式の両辺を $L$ で割った余りを求めると、</p>
+
+<et>
+<in>inv_a</in>A \ \% \ L & = & (1<in>(q.minus ? "+" : "-") + q.abs()</in>L) \ \% \ L \\
+& = & \{1<in>(q.minus ? "+" : "-")</in>(<in>q.abs()</in>L \ \% \ L)\} \ \% \ L & (剰余の性質より) \\
+& = & (1<in>(q.minus ? "+" : "-")</in>0) \ \% \ L & (Lの倍数をLで割ると余りは0) \\
+& = & 1 & (Lが2以上より)
+</et>
+
+<div class="demo-if" data-cond="!inv_a.minus">
+<p>となり、 逆元</p>
+<eq>
+<p>
+$A^{-1} = <in>inv_a</in>$
+</p>
+</eq>
+<p>が求まった。</p>
+</div>
+<div class="demo-else">
+<p>となり、$<in>inv_a</in>$ は、逆元の条件をほぼ満たす。逆元は、$0$ 以上 $L$ 未満である必要があるため、$<in>inv_a</in>$ を $L$ で割った余りを求め、得られた</p>
+<eq>
+<p>
+$A^{-1} = <script class="demo-calc" data-inject="inv_a2">
+const inv_a2 = L.add(inv_a);
+inv_a = inv_a2;
+</script>$
+</p>
+</eq>
+<p>が逆元となる。</p>
+</div>
+
+<p>実際に計算してみると、</p>
+<et>
+A\cdot A^{-1} \ \% \ L & = & <in>A</in>\cdot <in>inv_a</in> \ \% \ <in>L</in> \\
+& = & <in>A.mul(inv_a)</in> \ \% \ <in>L</in> \\
+& = & <in>A.mul(inv_a).mod(vars.L)</in>
+</et>
+<p>となる。</p>
+</div>
+
+
+
+</div>
+
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

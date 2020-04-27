@@ -1,0 +1,100 @@
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>RSA暗号のデモ >> 1. フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</title>
+<link rel="stylesheet" href="color-default2.css"/>
+<link rel="stylesheet" href="layout-default2.css"/>
+<link rel="stylesheet" href="math.css"/>
+<link rel="stylesheet" href="demo.css"/>
+<style>
+td {
+	background-color: white;
+	white-space: nowrap;
+}
+th {
+	white-space: nowrap;
+}
+.one {
+	background-color: #aaf;
+}
+.init {
+	background-color: #afa;
+}
+</style>
+<script src="1_Fermat.js"></script>
+</head>
+<body>
+
+<h1>RSA暗号のデモ >> 1. フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</h1>
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li class="current">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ(このページ)</li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+<div id="title" data-num="1"/>
+
+
+<div class="demo-example" id="demo_id_0">
+	<script></script>
+	<script></script>
+	<form id="demo_id_1" class="demo-form">
+	<p class="demo-typeset">
+	$p$: <input type="text" class="primes" size="50" name="p" id="p" tabindex="1"/>
+	<input id="calculate" type="submit" value="計算開始" tabindex="2"/>
+	</p>
+	
+	<p>
+	<label class="demo-typeset"><input id="mod" type="checkbox" tabindex="3"/>$p$で割った余りを計算する</label>
+	   |   
+	<label>一度に計算する列数:<select id="count">
+	<option value="1" selected="selected">1</option>
+	<option value="5">5</option>
+	<option value="10">10</option>
+	<option value="50">50</option>
+	</select></label>
+	</p>
+	</form>
+</div>
+
+<h4>計算結果</h4>
+<div id="explanation"> </div>
+
+<div id="result">
+<p><q class="demo-typeset">$p$</q>を設定して<q>計算開始</q>をクリックして下さい。</p>
+</div>
+<pre style="font-size:110%"><span class="one">    </span>: <span class="demo-typeset">$1$になったセル</span></pre>
+<pre style="font-size:110%"><span class="init">    </span>: <span class="demo-typeset">$x$と等しいセル</span></pre>
+
+<ul>
+<li class="demo-typeset">$p$を指定して<q>計算開始</q>をクリックすると、表が現れる。</li>
+<li><q>続きを計算…</q>をクリックする毎に表の列や行が増える。</li>
+<li><q class="demo-typeset">$p$で割った余りを計算する</q>にチェックを入れた場合には、下記の特徴のある表ができる。</li>
+<li class="demo-typeset">$p$として、素数を入力した場合は、<a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86">フェルマーの小定理</a>により、周期的に<span class="one" style="padding: 0.2em 1em;">$1$</span>や<span class="init" style="padding: 0.2em 1em;">$x$</span>のセルが現れる。</li>
+<li class="demo-typeset">$p$として、素数×別の素数を入力した場合は、<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%A4%E3%83%A9%E3%83%BC%E3%81%AE%E5%AE%9A%E7%90%86_(%E6%95%B0%E8%AB%96)">オイラーの定理</a>により、周期的に<span class="one" style="padding: 0.2em 1em;">$1$</span>や<span class="init" style="padding: 0.2em 1em;">$x$</span>のセルが現れる行が生じる。
+また、<a href="https://ja.wikipedia.org/wiki/%E4%B8%AD%E5%9B%BD%E3%81%AE%E5%89%B0%E4%BD%99%E5%AE%9A%E7%90%86">孫子の定理</a>等により、それ以外の行では様々な周期で周期的に<span class="init" style="padding: 0.2em 1em;">$x$</span>が現れる。
+結果としていずれの行でも一定の周期で<span class="init" style="padding: 0.2em 1em;">$x$</span>が現れる。</li>
+</ul>
+
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li class="current">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ(このページ)</li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>RSA暗号のデモ >> 5. 孫子の剰余定理を用いた補題の証明</title>
+<link rel="stylesheet" href="color-default2.css"/>
+<link rel="stylesheet" href="layout-default2.css"/>
+<link rel="stylesheet" href="math.css"/>
+<link rel="stylesheet" href="demo.css"/>
+<script src="5_Sunzis_theorem.js"></script>
+</head>
+<body>
+
+<h1>RSA暗号のデモ >> 5. 孫子の剰余定理を用いた補題の証明</h1>
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li class="current">孫子の剰余定理を用いた補題の証明(このページ)</li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+
+
+<h4>このページの目標</h4>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle 任意の素数p、q と整数k 、および、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle 0 以上 pq 未満でpq と$<q>$互いに素ではない$</q>$整数m に対して、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle m^{k(p-1)(q-1) + 1} \ \% \ pq = m$</td><td class="right demo-typeset">$ \displaystyle (本題)$</td></tr>
+</table>
+</blockquote>
+<p>となることを証明する。</p>
+
+<h4>孫子の剰余定理などを使った補題の準備</h4>
+<p><a href="https://ja.wikipedia.org/wiki/%E4%B8%AD%E5%9B%BD%E3%81%AE%E5%89%B0%E4%BD%99%E5%AE%9A%E7%90%86">孫子の定理</a>により、以下が成り立つ。</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle 未知の整数x があった時、2つの異なる素数p、q を用いて、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle xをp で割った余りが a であり、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle xをq で割った余りが b であるという情報が得られれば、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle 条件に合致するような整数xの候補を、0以上pq未満の範囲から必ず1つだけ見つけられる。$</td><td class="right demo-typeset">$ \displaystyle (補題1)$</td></tr>
+</table>
+</blockquote>
+
+
+<p class="demo-typeset">この$(補題1)$は、そのような $x$ の候補が下記の手順で求められることから示せる。</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle 2つの異なる素数p、q があり、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle 未知の整数xをp で割った余りが a であり、qで割った余りが b だという情報が得られたとする。$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle そのようなp、q に対しては、pu + qv = 1 となるようなu、v を求めることができ、$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle そのようにして求めたu、vについて、x をpq で割った余りと、整数y =aqv + bpuをpqで割った余りは等しい。$</td><td class="right demo-typeset">$ \displaystyle (補題2)$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">以下では、$(補題2)$の手順の正しさを確かめる。</p>
+
+<h4 class="demo-typeset">$x$を求める手順</h4>
+<p class="demo-typeset">まず、以下が成り立つ整数$u$、$v$ を求める。</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle pu + qv = 1$</td><td class="right demo-typeset">$ \displaystyle (1)$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">$(2)$の両辺を $q$ で割った余りを求めると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle (pu + qv) \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 1 \ \% \ q$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle pu \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 1$</td><td class="demo-typeset">$ \displaystyle (左辺は剰余の性質より、右辺は1を素数で割った余りは1なので)$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">となる。$pu \ \% \ q = 1$ となるような$u$、すなわち、$p$ の$q$ を法とする逆元は、<a>{:href=>""}ユークリッドの互除法の拡張</a>を用いて求められる。その後、$pu + qv = 1$ を解けば、$v$ も求まる。</p>
+<p class="demo-typeset">同様に$(2)$の両辺を $p$ で割った余りを求めると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle (pu + qv) \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 1 \ \% \ p$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle qv \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 1$</td><td class="demo-typeset">$ \displaystyle (左辺は剰余の性質より、右辺は1を素数で割った余りは1なので)$</td></tr>
+</table>
+</blockquote>
+<p>となる。</p>
+
+<div class="demo-example" id="demo_id_0">
+	<form id="demo_id_1" class="demo-form">
+	<p>実際に、</p>
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle p$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input name="p" tabindex="1" id="demo_id_2"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle q$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input name="q" tabindex="2" id="demo_id_3"/></td><td><input type="submit" value="再計算" tabindex="3" id="demo_id_4"/></td></tr>
+</table>
+</blockquote>
+	<p>に対して計算してみると、</p>
+	</form>
+	<script></script>
+	<script></script>
+	<div class="demo-option" id="demo_id_5">
+		<script></script>
+		<blockquote class="demo-equation">
+		<p class="demo-typeset">$\displaystyle u = <span id="demo_id_6">u</span>$</p>
+		<p class="demo-typeset">$\displaystyle v = <span id="demo_id_7">v</span>$</p>
+		</blockquote>
+		<p>が求まり、検算すると、</p>
+		<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle pu + qv$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_8">p</span>\cdot<span id="demo_id_9">u</span>+<span id="demo_id_10">q</span>\cdot(<span id="demo_id_11">v</span>)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_12">t</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle pu \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_13">p</span>\cdot<span id="demo_id_14">u</span>\ \% \ <span id="demo_id_15">q</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_16">p.mul(u).mod(q)</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle qv \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_17">q</span>\cdot(<span id="demo_id_18">v</span>)\ \% \ <span id="demo_id_19">p</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_20">q.mul(v).mod(p)</span>$</td></tr>
+<tr><td/><td/><td/></tr>
+</table>
+</blockquote>
+		<p class="demo-typeset">と、$1$ となることが確かめられる。</p>
+	</div>
+	<div id="demo_id_21" class="demo-option">
+		<p class="demo-typeset">$p$ と $q$ が互いに素ではないため、条件を満たす $u$ が求められない。</p>
+	</div>
+</div>
+<p class="demo-typeset">次に、$y = aqv + bpu$ で求まる整数$y$ について考える。$y$ を$p$ 、および、$q$ で割った余りを求めると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle y \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (aqv + bpu)\ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \{(aqv \ \% \ p) + (bpu \ \% \ p)\}\ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle aqv \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (a \ \% \ p)(qv \ \% \ p) \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a \ \% \ p$</td><td class="demo-typeset">$ \displaystyle ((4)より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a$</td><td class="demo-typeset">$ \displaystyle (元々aはpで割った余りとして求められた数なので)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle y \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (aqv + bpu)\ \% \ q$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \{(aqv \ \% \ q) + (bpu \ \% \ q)\}\ \% \ q$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle bqu \ \% \ q$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (b \ \% \ q)(pu \ \% \ q) \ \% \ q$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle b \ \% \ q$</td><td class="demo-typeset">$ \displaystyle ((3)より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle b$</td><td class="demo-typeset">$ \displaystyle (元々bはqで割った余りとして求められた数なので)$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">
+となり、$y$ は $p$ で割ると$a$ 余り、$q$ で割ると$b$ 余る整数であることが分かり、ぞれぞれの余りが、$x$ のものと一致する。
+また、$y$ に $p$ と $q$ の公倍数である $pq$ の倍数を足したり引いたりしても、$p$ や $q$ で割った余りは変化しない。
+そのため$x$ の条件である、$0$ 以上 $pq$ 未満になるように$pq$ の倍数を$y$ に足すと $x$ が求められる。
+あるいは、$y$ を$pq$ で割った余りが $x$ であるとも言える。</p>
+<p class="demo-typeset">以上により、$(補題2)$が示せた。</p>
+<div class="demo-example" id="demo_id_22">
+	<div class="demo-option" id="demo_id_23">
+		<div class="demo-example" id="demo_id_24">
+			<form id="demo_id_25" class="demo-form">
+			<p class="demo-typeset">上で求めた $p$、$q$ に対する $u$、$v$ について、</p>
+			<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input name="a" tabindex="4" id="demo_id_26"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle b$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input name="b" tabindex="5" id="demo_id_27"/></td><td><input type="submit" value="再計算" tabindex="6" id="demo_id_28"/></td></tr>
+</table>
+</blockquote>
+			<p class="demo-typeset">の場合の $x$、$y$ を求めてみると、 </p>
+			</form>
+			<script></script>
+			<script></script>
+			<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle y$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle aqv + bpu$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_29">a</span>\cdot<span id="demo_id_30">q</span>\cdot<span id="demo_id_31">u</span>+<span id="demo_id_32">b</span>\cdot<span id="demo_id_33">p</span>\cdot<span id="demo_id_34">v</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_35">y</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle x$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle y \ \% \ pq$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_36">y</span>\ \% \ <span id="demo_id_37">p.mul(q)</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_38">x</span>$</td></tr>
+</table>
+</blockquote>
+			<p class="demo-typeset">と$x$が求まり、$p$、$q$で割った余りを試すと、</p>
+			<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_39">a2</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_40">b2</span>$</td></tr>
+</table>
+</blockquote>
+			<div class="demo-option" id="demo_id_41">
+				<div class="demo-option" id="demo_id_42">
+					<p class="demo-typeset">となり、$a$、$b$と一致する事が確かめられる。</p>
+				</div>
+				<div id="demo_id_43" class="demo-option">
+					<p class="demo-typeset">となり、$a$ は一致するが、$b$ は一致しない。これは、$b = <span id="demo_id_44">b</span>$ が $q = <span id="demo_id_45">q</span>$ 以上であり、<q>$b$ は $x$ を$q$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p class="demo-typeset">$b$ を $q$ で割った余り、$b \ \% \ q = <span id="demo_id_46">b.mod(q)</span>$ とは一致する。</p>
+				</div>
+			</div>
+			<div id="demo_id_47" class="demo-option">
+				<div class="demo-option" id="demo_id_48">
+					<p class="demo-typeset">となり、$b$ は一致するが、$a$ は一致しない。これは、$a = <span id="demo_id_49">a</span>$ が $q = <span id="demo_id_50">p</span>$ 以上であり、<q>$a$ は $x$ を$p$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p class="demo-typeset">$a$ を $p$ で割った余り、$a \ \% \ p = <span id="demo_id_51">a.mod(p)</span>$ とは一致する。</p>
+				</div>
+				<div id="demo_id_52" class="demo-option">
+					<p class="demo-typeset">となり、$a$ も $b$ も一致しない。これは、$a = <span id="demo_id_53">a</span>$、$b = <span id="demo_id_54">b</span>$ が、ぞれぞれ $p = <span id="demo_id_55">p</span>$、$q = <span id="demo_id_56">q</span>$ 以上であり、<q>$a$、$b$ は $x$ をそれぞれ$p$、$q$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p class="demo-typeset">$a$、$b$ をそれぞれ $p$、$q$ で割った余り、$a \ \% \ p = <span id="demo_id_57">a.mod(p)</span>$、$b \ \% \ q = <span id="demo_id_58">b.mod(q)</span>$ とは一致する。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="option_3" class="demo-option">
+		<p class="demo-typeset">$p$ と $q$ が互いに素ではないため、条件を満たす $u$ が求められない。</p>
+	</div>
+</div>
+
+<h4 class="demo-typeset">$(本題)$の証明</h4>
+<p class="demo-typeset">$m$ が $pq$ と互いに素ではない場合、$p$ と$q$ が素数であるため、$m$ は、$p$ か $q$ の少なくとも一方と互いに素ではない。</p>
+<p class="demo-typeset">まず、$m$ が $p$ と $q$ の両方と互いに素ではない場合を考えると、$p$ と $q$ が素数であるため、$m$ は $pq$ の倍数でなければならない。定義より $0 \le m \lt pq$ を満たすような $pq$ の倍数は、$m = 0$ のみであり、この場合、$(本題)$ は自明に成り立つ。よって、残る、$m$ が $p$ と $q$ のいずれか一方と互いに素ではなく、他方とは素である場合について証明できればよい。</p>
+<p class="demo-typeset">$m$ が $q$ と素ではなく、$p$ とは互いに素である場合、$q$ は素数であるため、$m$ は $q$ の倍数でなければならない。そのため、$m$ を $q$ で割った商を $i$、$m$ を $p$ で割った商を $j$、余りを $l$ とすると、$m$ は、</p>
+<blockquote class="demo-equation">
+<p class="demo-typeset">\[m=iq \  \ (mはqの倍数) \tag{4}\]</p>
+<p class="demo-typeset">\[m=jp + l \ \ \ (mをpで割るとl余る) \tag{5}\]</p>
+</blockquote>
+<p>と表すことができる。</p>
+<p class="demo-typeset">下記のように $(本題)$ の左辺で $pq$ で割った余りを求めている対象の $m$ の累乗を $x$ とおき、$x$ について考察する。</p>
+<blockquote class="demo-equation">
+<p class="demo-typeset">$\displaystyle x = m^{k(p - 1)(q - 1) + 1}$</p>
+</blockquote>
+<p class="demo-typeset">$x$ を $p$ で割った余りを求めると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m^{k(p - 1)(q - 1) + 1} \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \cdot m^{k(p - 1)(q - 1)} \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \cdot m^{(p - 1)\cdot k(q - 1)} \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m (m^{(p - 1)})^{k(q - 1)} \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m (m^{(p - 1)} \ \% \ p)^{k(q - 1)} \ \% \ p$</td><td class="demo-typeset">$ \displaystyle (剰余の性質より)$</td></tr>
+</table>
+</blockquote>
+<p>と式変形できる。ここで、<a href="4_Eulars_theorem.html" <="None" a="None">オイラーの定理</a>より、</p>
+<blockquote class="demo-equation">
+<p class="demo-typeset">\[ 素数pと、1以上 p 未満でpと互いに素な任意の整数 a に対して、a^{(p - 1)}\  \% \  p = 1 \tag{7}\]</p>
+</blockquote>
+<p>であるため、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \cdot 1^{k(q - 1)} \ \% \ p$</td><td class="demo-typeset">$ \displaystyle ((7)を代入して)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \ \% \ p$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle l$</td><td class="demo-typeset">$ \displaystyle (lの定義より)$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">である。一方で、$m$ は $q$ の倍数であるため、$m$ を複数回掛け合わせた $x$ も $q$ の倍数である。よって、$x$ を $q$ で割った余りは $0$であるため、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle l$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 0$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">となる。よって、$x$ は、$p$ で割ると $l$ 余り、$q$ で割ると $0$ 余るような整数である。そこで、$a = l$、$b = 0$ として、$(補題2)$を適用すると、$u$、$v$ が、</p>
+<e>
+<p class="demo-typeset">\[pu + qv = 1 \tag{8}\]</p>
+</e>
+<p>となるような整数であるとき、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (aqv + bpu) \ \% \ pq$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (lqv + 0 \cdot pu) \ \% \ pq$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle lqv \ \% \ pq$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">が成立するということが言える。補題を証明するためには $u$ と $v$ については具体的に値を求める必要はなく、そのまま式変形を続けると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle iq \cdot (1 - pu) \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle ((5)、(8)を代入)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle i(q - pqu) pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle i\{q - (pqu \ \% \ pq)\} \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle (剰余の性質より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle i(q - 0)\ \% \ pq$</td><td class="demo-typeset">$ \displaystyle (pquをpqで割ると余りは0)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle iq  \ \% \ pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \ \% \ pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m$</td><td class="demo-typeset">$ \displaystyle (元々の仮定よりm \lt pqなので)$</td></tr>
+</table>
+</blockquote>
+<p class="demo-typeset">となり、$(本題)$ $x = \ \% \ pqm^{k(p-1)(q-1) + 1} \ \% \ pq = m$ が証明できた。</p>
+<p class="demo-typeset">最後に、$m$ が $p$ と互いに素でない場合には、上記の議論を $p$ と $q$ を入れ替えて行えばよく、以上で全ての場合について証明ができた。</p>
+
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li class="current">孫子の剰余定理を用いた補題の証明(このページ)</li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+.demo-typeset{
+	visibility: hidden;
+}
+
+.demo-option:not(.demo-selected){
+	display: none;
+}
+
+blockquote.demo-equation table{
+	width: 100%;
+}
+
+blockquote.demo-equation table td.top{
+	vertical-align : top;
+}
+
+blockquote.demo-equation table td.bottom{
+	vertical-align : bottom;
+}
+
+blockquote.demo-equation table td.wrap{
+	white-space: normal;
+	width: auto;
+}
+
+blockquote.demo-equation table td:not(:last-child):not(.wrap){
+	white-space: nowrap;
+	width: 1em;
+}
+
+blockquote.demo-equation table td:last-child{
+	white-space: normal;
+	width: auto;
+}
+
+blockquote.demo-equation table td.right{
+	text-align: right;
+}
+
+.demo-equation center{
+	text-align: center;
+}
+
+.demo_toc_simple ol{
+	display: flex;
+	list-style-position: inside;
+	margin: 0.5em 4em;
+	padding: 0;
+}
+
+.demo_toc_simple ol li{
+	margin: 0.2em;
+	border-style: solid;
+	border-width: 0 0 0 0.5em;
+	border-color: #afa;
+	background-color: #dfd;
+	flex-basis: 100%;
+	padding: 0.2em 0.2em 0.2em 1.2em;
+	text-indent: -1em;
+	font-size: 80%;
+}
+.demo_toc_simple ol li.current{
+	border-color: #aaf;
+	background-color: #ddf;
+}
+
+/*.typeset.visible{
+	visibility: visible;
+}*/
+
+/*.option:not(.visible){
+	display: none;
+}
+.option.visible .typeset{
+	visibility: visible;
+}
+*/

@@ -1,0 +1,296 @@
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>RSA暗号のデモ >> 6. 累乗の剰余を高速に求めるアルゴリズム</title>
+<link rel="stylesheet" href="color-default2.css"/>
+<link rel="stylesheet" href="layout-default2.css"/>
+<link rel="stylesheet" href="math.css"/>
+<link rel="stylesheet" href="demo.css"/>
+<script src="6_exponential.js"></script>
+</head>
+<body>
+
+<h1>RSA暗号のデモ >> 6. 累乗の剰余を高速に求めるアルゴリズム</h1>
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li class="current">累乗の剰余を高速に求めるアルゴリズム(このページ)</li>
+</ol>
+</div></div>
+
+<h4>累乗の計算</h4>
+
+<p class="demo-typeset">$a$ を $b$ 乗したものを $l$ で割った剰余、</p>
+
+<blockquote class="demo-equation"><p class="demo-typeset">$a^b \ \% \ l$</p></blockquote>
+
+<p>を求める。</p>
+
+<h4>計算手順</h4>
+
+<p class="demo-typeset">まず、$2$進数の定義に従って、下記のように、$b$ を $2^n (x \ge 0)$ の和で表現する。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">$B = \{ n \mid b の2 進数表記の右からn - 1 桁目が 1 である \} とすると、$</p>
+<p class="demo-typeset">\[b = \sum_{n \in B} 2^n \tag{1}\]</p>
+</blockquote>
+
+<div class="demo-example" id="demo_id_0">
+	<p>具体的に、</p>
+	<form id="demo_id_1" class="demo-form">
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="a" tabindex="1" id="demo_id_2"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle b$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="b" tabindex="2" id="demo_id_3"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle l$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="l" tabindex="3" id="demo_id_4"/></td><td><input type="submit" value="再計算" tabindex="4" id="demo_id_5"/></td></tr>
+</table>
+</blockquote>
+	</form>
+	<script></script>
+	<script></script>
+
+	<p class="demo-typeset">のときについて計算すると、$b = <span id="demo_id_6">b</span>$ を $2$ 進数表記に直すと、</p>
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle b$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset"><span id="demo_id_7">format_list("", " ", "_{(2)}", list3)</span></td><td class="right demo-typeset">$ \displaystyle (2)$</td></tr>
+</table>
+</blockquote>
+	<p>すなわち、</p>
+	<script></script>
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle b$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset wrap"><span id="demo_id_8">format_list("", " \\ +\\  ", "", list4)</span></td><td class="bottom right demo-typeset">$ \displaystyle (3)$</td></tr>
+</table>
+</blockquote>
+</div>
+
+<p>すると、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a^b$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^{\sum_{n \in B} 2^n}$</td><td class="demo-typeset">$ \displaystyle (数式では分かりにくいが、aの右肩に(1)の右辺が乗っている)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \prod_{n \in B} a^{2^n}$</td><td/></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">となる。なお、$a$ の右肩に乗っているのは、$2n$ (2エヌ)ではなく、$2^n$ (2のエヌ乗) である事に注意。</p>
+
+<div class="demo-example" id="demo_id_9">
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle a^b$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="wrap demo-typeset">$ \displaystyle a $<span id="demo_id_10">format_list("", " {^{+}}", "", list5)</span></td><td/></tr>
+<tr><td/><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset wrap"><span id="demo_id_11">format_list("", " ", "", list6)</span></td><td class="bottom right demo-typeset">$ \displaystyle (4)$</td></tr>
+</table>
+</blockquote>
+</div>
+
+<p>ここで、</p>
+
+<blockquote class="demo-equation"><p class="demo-typeset">\[x_n = a^{2^n} \tag{5}\]</p></blockquote>
+<p>とすると、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">\[a^b = \prod_{n \in B} x_n \tag{6}\]</p>
+</blockquote>
+
+<p>となる。</p>
+
+<div class="demo-example" id="demo_id_12">
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle a^b$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset wrap"><span id="demo_id_13">format_list("", " ", "", list7)</span></td><td class="bottom right demo-typeset">$ \displaystyle (7)$</td></tr>
+</table>
+</blockquote>
+</div>
+
+<p class="demo-typeset">また、$ n \ge 1 $ のとき、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle x_n$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^{2^n}$</td><td class="demo-typeset">$ \displaystyle (aの右肩に乗っているのは2nではなく2^nであることに注意。以下同じ)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^{2^{(n - 1 + 1)}}$</td><td class="demo-typeset">$ \displaystyle (式変形)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^{2^{(n - 1)}\cdot 2}$</td><td class="demo-typeset">$ \displaystyle (2^{(n-1+1)}の+1の部分を外に)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \left(a^{2^{(n - 1)}}\right)^2$</td><td class="demo-typeset">$ \displaystyle (累乗部分が掛け算になっているのは2重の累乗にできる)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle x_{n-1}^2$</td><td class="demo-typeset">$ \displaystyle ((1)より x_{n-1} = a^{2^{n-1}} なので)$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">である。またここで、以下のように、$x_n$ を $l$ で割った余りを $y_n$ とする。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[y_n = x_n \ \% \ l \tag{8}\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">すると、$ n \ge 1 $ のとき、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle y_n$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle x_n \ \% \ l$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle x_{n - 1}^2 \ \% \ l$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \left(x_{n - 1} \ \% \ l\right)^2 \ \% \ l$</td><td class="demo-typeset">$ \displaystyle (剰余の性質より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle y_{n - 1}^2\ \% \ l$</td><td/></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">となる。$y_n$ の値は、$n = 0$ の時は、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle y_0$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle x_0 \ \% \ l$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^{2^0} \ \% \ l$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a^1 \ \% \ l$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle a \ \% \ l$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">であるため、$y_n$ は、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[
+y_n =
+\begin{cases}
+a \ \% \ l & (n = 0) \\
+\\
+y_{n - 1}^2\ \% \ l & (n \ge 1)
+\end{cases}
+\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">として、各 $y_{n - 1}$ の $2$ 乗を $l$ で割っていけば順に求められる。</p>
+
+<div class="demo-example" id="demo_id_14">
+	<p>具体的には、以下のように計算できる。</p>
+	<script id="demo_id_15"></script>
+</div>
+
+<p class="demo-typeset">また、$(6)$ より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">\[ a^b \ \% \ l = \left( \prod_{n \in B} x_n \right) \ \% \ l\]</p>
+</blockquote>
+
+<p>であり、剰余の性質より、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a^b \ \% \ l$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">\[ \left\{ \prod_{n \in B} (x_n \ \% \ l) \right\} \ \% \ l \]</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">\[ \left( \prod_{n \in B} y_n \right) \ \% \ l \]</td></tr>
+</table>
+</blockquote>
+
+<p>が得られる。</p>
+
+<div class="demo-example" id="demo_id_16">
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a^b \ \% \ l$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="wrap demo-typeset"><span id="demo_id_17">format_list("", " ", "", list7)</span>$ \ \%\ l$</td></tr>
+</table>
+</blockquote>
+	
+	<p class="demo-typeset">であり、剰余の性質を用いて式変形してから、$(6)$ を代入すると、</p>
+
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a^b \ \% \ l$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="wrap demo-typeset"><span id="demo_id_18">format_list("", " ", "", list8)</span>$ \ \%\ l $</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="wrap demo-typeset"><span id="demo_id_19">format_list("", " ", "", list9)</span>$ \ \%\ l$</td></tr>
+</table>
+</blockquote>
+	
+	<p>が得られる。</p>
+
+</div>
+
+
+<p>後はこれを順に計算すれば良い。</p>
+<p class="demo-typeset">ただし、掛ける要素の数が多い場合、全ての乗算を終えてから $l$ で割ると、一時的に非常に巨大な数値に対する計算が必要となり、計算に時間が掛かる。
+そのため、さらに剰余の性質を用いて、乗算を1回行う毎に結果を $l$ で割った余りに置き換えてから続きの計算を行うようにする。
+すると、高々 $(l - 1)^2$ 以下の整数の計算のみで済んで、効率的に結果を求められる。
+</p>
+
+<div class="demo-example" id="demo_id_20">
+	<div class="demo-option" id="demo_id_21">
+		<div class="demo-option" id="demo_id_22">
+			<p>数式にするとむしろ分かりにくいかも知れないが、以下のように計算する。</p>
+		</div>
+		<div id="demo_id_23" class="demo-option">
+			<p>以下のように計算する。</p>
+		</div>
+		<script></script>
+		<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle a^b \ \% \ l$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="wrap demo-typeset">$ \displaystyle <span id="demo_id_24">list9[0]</span>$<span id="demo_id_25">format_list("", " ", "", list11l)</span>$<span id="demo_id_26">list9[list9.length - 1]</span>$<span id="demo_id_27">format_list("", " ", "", list11r)</span>$ \ \%\ l$</td></tr>
+</table>
+</blockquote>
+	</div>
+	<div id="demo_id_28" class="demo-option">
+		<p>要素数が少ない場合は、特にこの工夫は必要無い。</p>
+	</div>
+</div>
+
+<p>Python風に書くと、</p>
+<blockquote class="demo-equation">
+<pre>
+# y_list に必要な y_n が記憶されているとする。
+# それらの値を全て掛けたものを計算する。
+# p を 1として、y_list の内容を順に掛けていく。
+p = 1
+for y in y_list:
+    p *= y
+
+# ここで、p が非常に巨大な値になっている。
+
+# l で割った余りを表示
+print(p % l)
+</pre>
+</blockquote>
+
+<p>ではなく、</p>
+
+<blockquote class="demo-equation">
+<pre>
+p = 1
+for y in y_list:
+    # 掛け算を行う毎に、lで割った余りに置き換え、値の巨大化を防ぐ
+    p = (p * y) % l
+
+# 結果として求まる値は同じになる(途中でlで割った余りにしているため、ここでは <q>%l</q> は不要になる)
+print(p)
+</pre>
+</blockquote>
+
+<p>とした方が良い、ということである。</p>
+
+<div class="demo-example" id="demo_id_29">
+	<p class="demo-typeset">以上のようにして計算することで、乗算と剰余算合わせて $<span id="demo_id_30">calc_count</span>$ 回の計算で、</p>
+	<blockquote class="demo-equation">
+	<p class="demo-typeset">$a^b \ \% \ l = <span id="demo_id_31">p</span>$</p>
+	</blockquote>
+	
+	<p>が求められた。</p>
+</div>
+
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li class="current">累乗の剰余を高速に求めるアルゴリズム(このページ)</li>
+</ol>
+</div></div>
+
+</body>
+</html>

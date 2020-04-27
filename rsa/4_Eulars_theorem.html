@@ -1,0 +1,427 @@
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>RSA暗号のデモ >> 4. オイラーの小定理を用いた補題の証明</title>
+<link rel="stylesheet" href="color-default2.css"/>
+<link rel="stylesheet" href="layout-default2.css"/>
+<link rel="stylesheet" href="math.css"/>
+<link rel="stylesheet" href="demo.css"/>
+<script src="4_Eulars_theorem.js"></script>
+</head>
+<body>
+
+<h1>RSA暗号のデモ >> 4. オイラーの小定理を用いた補題の証明</h1>
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li class="current">オイラーの小定理を用いた補題の証明(このページ)</li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+<h4>このページの目標</h4>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[任意の素数p、q と整数k 、および、\]
+$0 以上 pq 未満でpq と$<em>$互いに素である$</em>$ような整数m に対して、$<br/>
+\[m^{k(p-1)(q-1) + 1} \ \% \ pq = m \tag{本題} \]
+</p>
+</blockquote>
+
+<p>となることを証明する。</p>
+
+<h4 class="demo-typeset">オイラーの$\varphi$関数、オイラーの定理などを用いた補題の準備</h4>
+
+<p class="demo-typeset">ある整数 $n$ に対して、 $n$ と互いに素である $n$ 未満の整数の集合を$C(n)$ とし、$C(n)$ の要素の数を$\varphi(n)$ とすると、以下の補題が成り立つことが証明できる。</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle (オイラーの\varphi関数)$</td><td class="demo-typeset">$ \displaystyle 素数pに対して \varphi(p) = p - 1$</td><td class="right demo-typeset">$ \displaystyle (補題1)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle (オイラーの\varphi関数)$</td><td class="demo-typeset">$ \displaystyle 素数p、qに対して \varphi(pq) = (p - 1)(q - 1)$</td><td class="right demo-typeset">$ \displaystyle (補題2)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle (オイラーの定理)$</td><td class="demo-typeset">$ \displaystyle 整数mとnがと互いに素であるなら m^{\varphi(n)} \ \% \ n = 1$</td><td class="right demo-typeset">$ \displaystyle (補題3)$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">以上$3$つの補題が証明できれば、$(補題1)$、$(補題2)$ を$(補題3)$ に代入することで、さらに以下の補題が得られる。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[ 素数pと、1以上 p 未満でpと互いに素な任意の整数 m に対して、m^{p - 1}\  \% \  p = 1 \tag{補題4}\]
+\[ 2つの異なる素数p、q と、1以上 pq 未満でpqと互いに素な任意の整数 m に対して、m^{(p - 1)(q - 1)}\  \% \  pq = 1 \tag{補題5}\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">
+以下では、$(補題1)$、$(補題2)$、$(補題3)$について順に証明し、その後に、$(本題)$を証明する。
+なお、$(補題4)$は、このページでは用いないが、<a href="5_Sunzis_theorem.html">孫子の剰余定理などを使った証明</a>で必要となる。
+</p>
+
+
+<div class="demo-example" id="demo_id_0">
+	<script></script>
+	<p>具体的な値、</p>
+	<form id="demo_id_1" class="demo-form">
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle p$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="p" tabindex="1" id="demo_id_2"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle q$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="q" tabindex="2" id="demo_id_3"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle m$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="m" tabindex="3" id="demo_id_4"/></td><td><input type="submit" value="再計算" tabindex="4" id="demo_id_5"/></td></tr>
+<tr><td/><td/><td/><td/></tr>
+</table>
+</blockquote>
+	</form>
+	<script></script>
+	<p>に対して計算すると、</p>
+
+	<script id="demo_id_6"></script>
+	<div class="demo-option" id="demo_id_7">
+		<p>であるため、条件を満たし、</p>
+		<script></script>
+		<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle a^{(p - 1)(q - 1)}\  \% \  (p q)$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_8">m</span>^{(<span id="demo_id_9">p</span>- 1)(<span id="demo_id_10">q</span>- 1)}\  \% \  (<span id="demo_id_11">p</span>\cdot<span id="demo_id_12">q</span>)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_13">m</span>^{<span id="demo_id_14">x</span>}\ \% \ <span id="demo_id_15">z</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_16">yStr</span>\ \%\ <span id="demo_id_17">z</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_18">y.mod(z)</span>$</td></tr>
+</table>
+</blockquote>
+		<p class="demo-typeset">の通り、$(補題5)$は成り立つ。</p>
+	</div>
+	<div id="demo_id_19" class="demo-option">
+		<p class="demo-typeset">であり、条件を満たさないため$(補題5)$は<em>成り立たない</em>。</p>
+	</div>
+
+</div>
+
+<h4 class="demo-typeset">$(補題1)$ <q>$素数pに対して \varphi(p) = p - 1 $</q>の証明</h4>
+		
+<p class="demo-typeset">$p$ は、$0$以上$p$ 未満の任意の整数と互いに素であり、そのような整数は$p -1$ 個有る。</p>
+		
+<h4 class="demo-typeset">$(補題2)$<q>$素数p、qに対して \varphi(pq) = (p - 1)(q - 1)$</q>の証明</h4>
+
+<p class="demo-typeset">
+$C(pq)$に<em>含まれない</em>、すなわち、$pq$ と$1$以外の公約数を持つ、$pq$未満の自然数について考える。
+$p$と$q$が互いに異なる素数であるなら、そのような自然数は $p$ か $q$ のいずれかを約数として持つ。
+すなわち、$pq$ 未満の$p$ の倍数と$q$ の倍数がこれに該当する。
+それぞれ、<q>$p$に$q$未満の自然数を掛けたもの</q>と、<q>$q$に$p$未満の自然数を掛けたもの</q>が該当し、要素数は$p - 1$ 個と、$q- 1$ 個である。
+</p>
+
+<div class="demo-example" id="demo_id_20">
+	<p class="demo-typeset">$p = <span id="demo_id_21">p</span>$、$q = <span id="demo_id_22">q</span>$ に対して具体的に列挙すると、</p>
+	<script id="demo_id_23"></script>
+	<p>となる。</p>
+</div>
+
+<p class="demo-typeset">
+$C(pq)$ は、$pq$ 未満の自然数の集合から、これら2つの集合の要素を取り除いたものである。
+またここで、$p$ と$q$ は互いに素なので、2つの集合に重複して含まれる値は存在しない。
+そのため、$C(pq)$ の要素数は、$pq$ 未満の自然数の個数である$pq - 1$ 個から、これら2つの集合の要素数を単純に引けば良く、
+</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$\varphi(pq)=(pq - 1) - (p - 1) - (q - 1)=(p - 1)(q - 1)$
+</p>
+</blockquote>
+<p>となる。</p>
+
+<div class="demo-example" id="demo_id_24">
+	<script></script>
+	<p class="demo-typeset">$p = <span id="demo_id_25">p</span>$、$q = <span id="demo_id_26">q</span>$ に対して$C(pq)$ と$\varphi(pq)$を求めると、</p>
+	
+	<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle C(pq)$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle C(<span id="demo_id_27">n</span>)$</td></tr>
+<tr><td/><td class="top demo-typeset">$ \displaystyle =$</td><td><span id="demo_id_28">coprime_set</span></td></tr>
+<tr><td class="demo-typeset">$ \displaystyle \varphi(pq)$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \varphi(<span id="demo_id_29">n</span>)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_30">num_coprimes</span><span id="demo_id_31">length_match ? "=" : Dom.em("\ne")</span>(<span id="demo_id_32">p</span>- 1)(<span id="demo_id_33">q</span>- 1) = (p - 1)(q - 1)$</td></tr>
+</table>
+</blockquote>
+
+	<div class="demo-option" id="demo_id_34">
+		<p class="demo-typeset">となり、$C(pq)$ は、$pq$ 未満の自然数から、前述の$p$ の倍数、$q$ の倍数を取り除いたものであることが分かり、$(補題3)$ の等式も成り立つ。</p>
+	</div>
+	<div id="demo_id_35" class="demo-option">
+		<div class="demo-option" id="demo_id_36">
+			<p class="demo-typeset">となり、$(補題3)$の等式は<em>成り立たない</em>。</p>
+		</div>
+		<div id="demo_id_37" class="demo-option">
+			<p>となる。</p>
+		</div>
+	</div>
+</div>
+
+<h4 class="demo-typeset">$(補題3)$ <q>$整数mとnがと互いに素であるなら m^{\varphi(n)} \ \% \ n = 1$</q>の証明</h4>
+
+<p class="demo-typeset">$C(n)$ の各要素を $c_i \ (1 \le i \lt \varphi(n))$ に対して、
+$c_i$ を $m$ 倍して$n$ で割った商を $k_i$、余りを $x_i$ とし、$x_i$ からなる集合、$X(n, m)$を考える。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[X(n, m) = \{ x_i \mid ある c_i \in C(n) に対して、mc_i = nk_i + x_i \} \]
+あるいは、
+\[X(n, m) = \{ x_i \mid ある c_i \in C(n) に対して、x_i = mc_i \ \% \  n \} \]
+</p>
+</blockquote>
+
+<div class="demo-example" id="demo_id_38">
+<p class="demo-typeset">$n = pq = <span id="demo_id_39">n</span>$、$m = <span id="demo_id_40">m</span>$ に対して計算すると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="top demo-typeset">$ \displaystyle X(<span id="demo_id_41">n</span>, <span id="demo_id_42">m</span>)$</td><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset"><span id="demo_id_43">format_set(x_list0, limited)</span></td></tr>
+<tr><td/><td class="top demo-typeset">$ \displaystyle =$</td><td class="demo-typeset"><span id="demo_id_44">format_set(x_list, limited)</span></td></tr>
+</table>
+</blockquote>
+</div>
+
+<p class="demo-typeset">まず、このとき、$C(n)$ と、$X(n, m)$ に含まれる要素の個数が等しいことを証明する。そのためには、$C(n)$ から、$X(n,m)$ を求める変換が単射であること、すなわち、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[任意の i, j \ (1 \le i, j \lt \varphi(n)) に対して、 c_i \ne c_j \to x_i \ne x_j \tag{補題6}\]
+</p>
+</blockquote>
+
+<p>であることが証明できれば良い。</p>
+
+<p class="demo-typeset">適当な$i, j \ (1 \le i, j \lt \varphi(n))$に対して、$x_i$ と $k_i$ の定義より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[m c_i = n k_i + x_i\tag{1}\]
+\[m c_j = n k_j + x_j\tag{2}\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">$(1) - (2)$ より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$m(c_i - c_j) = nk_i + x_i - nk_j - x_j$
+</p>
+</blockquote>
+
+<p class="demo-typeset">$x_i = x_j$ の場合は、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$m(c_i - c_j) = n(k_i - k_j)$
+</p>
+</blockquote>
+
+<p class="demo-typeset">となる。ここで、$m$ と$n$ は互いに素であるため、この数式が成り立つためには、$c_i - c_j$ が$n$ の倍数である必要がある。
+また、$c_i$、$c_j$ は定義より、$n$未満の自然数であるため、$-n \le c_i - c_j \le n$ であり、この範囲に含まれる$n$ の倍数は$0$ のみである。よって、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$c_i - c_j = 0$
+</p>
+</blockquote>
+
+<p>であり、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$x_i = x_j \to c_i = c_j$
+</p>
+</blockquote>
+
+<p class="demo-typeset">が証明でき、この対偶である$(補題6)$ も証明できた。$(補題6)$ より、$X(n, m)$は、$C(n)$ と同数の要素を持つことが分かる。</p>
+
+<p>次に、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[X(n, m) の各要素 x_i \ (1 \le i \le \varphi(n)) はnと互いに素\tag{補題7}\]
+</p>
+</blockquote>
+
+<p>であることを示す。</p>
+<p class="demo-typeset">$x_i$ の定義より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$x_i = ac_i - nk_i$
+</p>
+</blockquote>
+
+<p class="demo-typeset">なので、$x_i$ を$n$ で割った余りは、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$x_i \ \%\  n = (ac_i - nk_i) \ \%\   n = ac_i \ \%\   n$
+</p>
+</blockquote>
+
+<p class="demo-typeset">である。ここで、$m$、$c_i$ は供に$n$ と互いに素であるため、$ac_i % n$ は$n$ と互いに素であり、$(補題7)$ が証明できた。</p>
+<p>以上の考察から、</p>
+
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">$定義より、C(n)は$<q>$n未満でnと互いに素である全ての自然数$</q>$の集合である。$</p>
+<p class="demo-typeset">$(補題6)より、X(n, m)はC(n)と同じ個数の、すなわち、$<q>$n未満でnと互いに素である全ての自然数$</q>$と同じ個数の要素を含む。$</p>
+<p class="demo-typeset">$(補題7)より、X(n, m)の各要素はn未満の自然数でnと互いに素である。$</p>
+</blockquote>
+
+
+<p class="demo-typeset">ということが分かった。これらを纏めると、$X(n, m)$ は、<q>$n$未満で$n$と互いに素であるような全ての自然数を含む集合</q>であることが分かるため、$X(n, m)$は$C(n)$と完全に一致する。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$X(n, m) = C(n)$
+</p>
+</blockquote>
+
+
+<div class="demo-example" id="demo_id_45">
+	<script></script>
+	<div class="demo-option" id="demo_id_46">
+		<div class="demo-option" id="demo_id_47">
+			<p>上記で示した具体例について、要素を小さい順に並び替えると、</p>
+		</div>
+		<div id="demo_id_48" class="demo-option">
+			<p>上記で示した具体例について、上記で列挙した所までの要素を小さい順に並び替えると、</p>
+		</div>
+		<script></script>
+	</div>
+	<div id="demo_id_49" class="demo-option">
+		<div class="demo-option" id="demo_id_50">
+			<p class="demo-typeset">$n=<span id="demo_id_51">n</span>$ と$a=<span id="demo_id_52">m</span>$ が互いに素ではなく、$(補題3)$は成り立たない。上記で示した具体例について、要素を小さい順に並び替えて$X(n, m)$ から重複を削除すると、</p>
+		</div>
+		<div id="demo_id_53" class="demo-option">
+			<p class="demo-typeset">$n=<span id="demo_id_54">n</span>$ と$a=<span id="demo_id_55">m</span>$ が互いに素ではなく、$(補題3)$は成り立たない。上記で示した具体例について、上記で列挙した所までの要素を小さい順に並び替えて$X(n, m)$ から重複を削除すると、</p>
+		</div>
+		<script></script>
+	</div>
+	<blockquote class="demo-equation">
+	<script id="demo_id_56"></script>
+	</blockquote>
+	<div class="demo-option" id="demo_id_57">
+		<p class="demo-typeset">となり、$X(n, m)$は$ C(n)$の同じ要素を含む、同じ集合であることが確かめられる。</p>
+	</div>
+	<div id="demo_id_58" class="demo-option">
+		<div class="demo-option" id="demo_id_59">
+			<p class="demo-typeset">となり、要素数が多すぎるため具体的な比較はここでは省略するが、$X(n, m)$は$ C(n)$の同じ要素を含む、同じ集合になっている。</p>
+		</div>
+		<div id="demo_id_60" class="demo-option">
+			<p class="demo-typeset">となり、$X(n, m)$は$ C(n)$は<em>異なる集合である</em>。</p>
+		</div>
+	</div>
+</div>
+
+<p class="demo-typeset">最後に、$C(n)$の全要素を掛けたものを$C_P(n)$、$X(n)$の全要素を掛けたものを$X_P(n, m)$とする。</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[C_P(n) = \prod_{i = 1}^{\varphi(n)} c_i  \tag{3} \]
+\[X_P(n, m) = \prod_{i = 1}^{\varphi(n)} x_i = \prod_{i = 1}^{\varphi(n)} (ac_i - nk_i) \tag{4} \]
+</p>
+</blockquote>
+
+<p class="demo-typeset">なお、2つの集合$C(n)$と、$X(n)$は、一致しているため、当然、全要素を掛けた値も一致し、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[C_P(n) = X_P(n, m) \tag{5} \]
+</p>
+</blockquote>
+
+<p>である。</p>
+
+<p class="demo-typeset">$(4)$の$\Pi$の掛け算は、、剰余の性質を使って順にを1つ1つばらしていける。
+以下では、<q>$\equiv_n$</q>を、<q>$a \equiv_n b$</q>のように使い、<q>$m とb はn を法として合同$</q>、すなわち、<q>$m とb はn で割った場合の余りが等しい$</q>という意味の記号として用いる。
+</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle X_P(n, m)$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \prod_{i = 1}^{\varphi(n)} (ac_i - nk_i)$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle ( ac_1 - nk_1 ) \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)$</td><td class="demo-typeset">$ \displaystyle (i = 1の部分を外に出す)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  -  nk_1  \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)$</td><td class="demo-typeset">$ \displaystyle (ただの式変形)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle \equiv_n$</td><td class="demo-typeset">$ \displaystyle ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  -  nk_1  \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)$</td><td class="demo-typeset">$ \displaystyle (以降、nで割った余りについて検討する)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle \equiv_n$</td><td class="demo-typeset">$ \displaystyle ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)$</td><td class="demo-typeset">$ \displaystyle (2項目はnの倍数なのでnで割った余りは0)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle \equiv_n$</td><td class="demo-typeset">$ \displaystyle m^2c_1c_2  \prod_{i = 3}^{\varphi(n)} (ac_i - nk_i)  n$</td><td class="demo-typeset">$ \displaystyle (同様に、i=2以降も繰り返す)$</td></tr>
+<tr><td/><td/><td class="demo-typeset">$ \displaystyle \vdots$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle \equiv_n$</td><td class="demo-typeset">$ \displaystyle m^{\varphi(n)}c_1c_2 \cdots c_{\varphi(n)}$</td><td class="demo-typeset">$ \displaystyle (全て展開終わり)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle \equiv_n$</td><td class="demo-typeset">$ \displaystyle m^{\varphi(n)} \prod_{i = 1}^{\varphi(n)} c_i$</td><td class="demo-typeset">$ \displaystyle (再度\Piの形で書き直す)$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">と変形できる。$(3)$より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[X_P(n, m) \equiv_n m^{\varphi(n)} C_P(n)\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">であり、$(5)$より、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[C_P(n) \equiv_n m^{\varphi(n)} C_P(n)\]
+</p>
+</blockquote>
+
+<p>が示せた。</p>
+
+<p>剰余の性質から、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[C_P(n) - m^{\varphi(n)} C_P(n) \equiv_n 0\]
+\[\left(1 - m^{\varphi(n)} \right) C_P(n) \equiv_n 0\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">である。$n$ で割った余りが$0$ ということは左辺は$n$ の倍数だが、$C_P(n)$ は$n$ と互いに素な整数を掛け合わせたものであるため、$C_P(n)$ は$n$ と互いに素である。
+よって、この等式が成り立つためには、$1 - m^{\varphi(n)}$ が$n$ の倍数である必要がある。よって、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+\[1 - m^{\varphi(n)} \equiv_n 0\]
+\[m^{\varphi(n)} \equiv_n 1\]
+\[m^{\varphi(n)} \%\ n = 1\]
+</p>
+</blockquote>
+
+<p class="demo-typeset">と変形して$(補題3)$が導ける。</p>
+
+<h4 class="demo-typeset">$(本題)$ <q>$m^{k(p-1)(q-1) + 1} \ \% \ pq = m$</q>の証明</h4>
+
+<p class="demo-typeset">準備ができたため、$(本題)$を証明する。</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle m^{k(p-1)(q-1) + 1} \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \cdot m^{k(p-1)(q-1)}  \ \% \ pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m (m^{(p-1)(q-1)})^k  \ \% \ pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m (m^{(p-1)(q-1)}  \ \% \ pq)^k  \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle (剰余の性質より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \cdot 1^k  \ \% \ pq$</td><td class="demo-typeset">$ \displaystyle ((補題5)を代入)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m \ \% \ pq$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle m$</td><td class="demo-typeset">$ \displaystyle (0 \le m \lt pqより)$</td></tr>
+<tr><td/><td/><td/><td/></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">となり、$(本題)$ が証明できた。</p>
+
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li><a href="3_inverse_element.html">逆元の計算方法</a></li>
+<li class="current">オイラーの小定理を用いた補題の証明(このページ)</li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+</body>
+</html>

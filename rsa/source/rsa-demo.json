@@ -1,0 +1,20 @@
+{
+	"output_dir": "../",
+	"import": ["demo.ts"],
+	"main_title": "RSA暗号のデモ",
+	"namespace": "RSADemo",
+	"page_list": [
+		{ "file_name": "index", "title": "RSA暗号のデモ" },
+		{ "file_name": "1_Fermat", "title": "フェルマーの小定理、オイラーの定理、孫子の定理などのデモ" },
+		{ "file_name": "2_modulo", "title": "剰余の性質と記号の定義" },
+		{ "file_name": "3_inverse_element", "title": "逆元の計算方法" },
+		{ "file_name": "4_Eulars_theorem", "title": "オイラーの小定理を用いた補題の証明" },
+		{ "file_name": "5_Sunzis_theorem", "title": "孫子の剰余定理を用いた補題の証明" },
+		{ "file_name": "6_exponential", "title": "累乗の剰余を高速に求めるアルゴリズム" }
+	],
+	"aliases": {
+		"in": { "tag": "span",       "class": "demo-inject" },
+		"eq": { "tag": "blockquote", "class": "demo-equation" },
+		"et": { "tag": "blockquote", "class": "demo-table" }
+	}
+}

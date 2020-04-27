@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="remove_background.css"></link>
+<script src="remove_background.js"></script>
+<title>背景色を透過化するページ</title>
+</head>
+<body>
+
+<h1>背景色を透過化するページ</h1>
+
+<p>
+<input type="button" id="execute_button" value="実行" disabled="disabled"></input>
+|
+<a id="download" download="result.png" href="" style="visibility: hidden">結果のダウンロード</a>
+</p>
+
+<p>透過する背景色 
+R:<input type="text" size="3" value="255" id="r"></input>
+G:<input type="text" size="3" value="255" id="g"></input>
+B:<input type="text" size="3" value="255" id="b"></input>
+←クリックしたところの色を取得―<span id="picked_color">(0,0,0)</span>
+</p>
+<p id="image_area">
+<img id="result_image" src="transparent.png" alt="ここに画像をドラッグ&amp;ドロップ" style="width:480px;height:480px;"/>
+</p>
+<p>
+結果確認用に表示する背景色: 
+<select id="background_mode">
+<option value="transparent" selected="selected">透明</option>
+<option value="specified">透過指定色</option>
+<option value="white">白</option>
+<option value="black">黒</option>
+<option value="red">赤</option>
+<option value="green">緑</option>
+<option value="blue">青</option>
+<option value="cyan">水色</option>
+<option value="magenta">赤紫</option>
+<option value="yellow">黄色</option>
+<option value="gray">灰色</option>
+</select>
+</p>
+
+<h2>使い方</h2>
+<ul>
+<li>画像データはどこにもアップロードされたりしないように造ったつもりですが、理由のいかんを問わず、本ツールを使って生じた不利益は作者は責任を負いません。</li>
+<li>画像をドラッグ&amp;ドロップする。ウェブブラウザからのドラッグ&amp;ドロップは効かない場合があるので、ローカルに保存してからドラッグ&amp;ドロップする。</li>
+<li><q>透過する背景色</q>を選択する。画像の中をクリックすると、その場所の色が設定される。</li>
+<li><q>実行</q>をクリックすると、<q>透過する背景色</q>に従って画像が<q>透過化</q>される。なお、ここで、<q>透過化</q>とは、以下のような<q>透過画像</q>を作ることを言う。
+<ol>
+<li><q>透過する背景色</q>を背景とし、その上に<q>透過画像</q>を置いたときに、元の画像との見た目が可能な限り一致する。</li>
+<li><q>透過画像</q>の各ピクセルは、1を満たす範囲で、可能な限り高い透明度となる。</li>
+<li>元々透過なピクセルは元の画像のままである。</li>
+</ol>
+<li><q>表示背景色</q>で、表示する背景色を選択できる。<q>結果確認用に表示する背景色</q>はどれを選んでも<q>透過化</q>の処理には使われず、処理結果に影響しない。結果の確認用の選択項目である。</li>
+<li><q>結果確認用に表示する背景色</q>を<q>透過指定色</q>にした場合は、表示される背景色が<q>透過する背景色</q>に設定される。すなわち、この状態での実行結果表示は、元の画像とほぼ一致する。</li>
+<li>表示されている結果の画像は、右クリックから保存など、ブラウザの通常の操作で保存できるはず。</li>
+<li><q>対象画像から背景を除去した透過pngを作りたい</q>という場合、
+このページで作成した画像は、対象物の内側部分も上記の条件を満たす範囲で問答無用で透過化されるため、そのままでは不適当である。
+そのような場合、フォトレタッチソフトで背景部分をざっくりとやや多目に削除した後、削除した輪郭部をこのページで作成した透過化画像で埋め戻すようにすると、
+輪郭部分の合成具合が良い感じの透過画像が得られる。</li>
+</ul>
+
+
+</body>
+</html>

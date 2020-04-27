@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title></title>
+<script src="encrypt.js"></script>
+<link rel="stylesheet" href="/~umedu/css/color-default2.css"></link>
+<link rel="stylesheet" href="/~umedu/css/layout-default2.css"></link>
+<link rel="stylesheet" href="encrypt.css"></link>
+</head>
+<body>
+
+
+
+<p>
+モード: <select id="mode">
+<option value="CAESAR">シーザー暗号</option>
+<option value="Substitution" selected="selected">換字式暗号</option>
+<option value="Polyalphabetic">換字式暗号(簡単な多表式換字)</option>
+</select>
+<input type="button" id="toggle_dst" value="未割り当ての文字を隠す" data-alt="未割り当ての文字を表示"></input>
+<input type="button" id="toggle_src_panel1" value="元データを隠す" data-mes="元データを"></input>
+<a href="#usage">↓【 使い方 】↓</a>
+</p>
+
+<p>
+<label><input type="radio" name="table_mode" id="input_dst" checked="checked"></input>置換先を入力</label>
+<label><input type="radio" name="table_mode" id="input_src"></input>置換元を入力</label>
+</p>
+<table id="guess">
+</table>
+
+<div class="panel">
+
+<div id="src_panel">
+<div class="usage">
+使い方
+<ol>
+<li>暗号化したい英文を上の枠内にコピー&amp;ペーストする</li>
+<li>ページ上の<q>モード</q>を選択。(<q>シーザー暗号</q>か、<q>換字式暗号</q>か、でなければ手動での解読はまず無理)</li>
+<li><q>暗号化</q>ボタンをクリックすると、暗号文が作成される</li>
+</ol>
+</div>
+<p>
+元データ
+<input type="button" id="encrypt" value="暗号化"></input>
+<input type="button" id="toggle_src_panel2" value="元データを隠す" data-mes="元データを"></input>
+</p>
+<textarea cols="80" rows="20" id="src"></textarea>
+<p>暗号表</p>
+<table id="table">
+</table>
+</div>
+
+<div>
+<table class="graph" id="graph_3"></table>
+<table class="graph" id="graph_2"></table>
+<table class="graph" id="graph_1"></table>
+</div>
+
+</div>
+
+
+
+<p id="dst" class="show"></p>
+
+<h4 id="usage">使い方</h4>
+<ul>
+<li>各アルファベットが、元々、どのアルファベットだったのかを推測して、<q>置換元</q>の部分に入力する</li>
+<li>あるいは、<q>置換元を入力</q>にモードを切り替えて、<q>置換元</q>の部分に入力する</li>
+<li><q>モード</q>が<q>シーザー暗号</q>の場合は、1文字を決める</li>
+<li><q>モード</q>が<q>換字式暗号</q>の場合は、26文字全ての割り当てを推測しきる必要がある</li>
+<li><q>未割り当ての文字を隠す</q>のボタンをクリックすると、<q>置換元</q>が未入力な文字は■に変化し、割り当てを探しやすくなる</li>
+</ul>
+
+
+<h4>注意</h4>
+<ul>
+<li>簡単なデモ、体験を目的としたページです。暗号としてはおかしい部分があります。大文字小文字・スペースをそのままにするなど、簡単に解けるようにしてあります</li>
+<li>半角アルファベットのみを暗号化し、それ以外の文字はそのままにします</li>
+<li>正解は、<q>元データを表示</q>の下にある暗号表です。これは自動で生成されます</li>
+<li><q>換字式暗号(簡単な多表式換字)</q>は、表を1文字ずつずらして、<q>置換先1</q>～<q>置換先26</q>までの表を作り、
+1文字目は<q>置換先1</q>、2文字目は<q>置換先2</q>、…と、1文字毎に暗号化に用いる表を変えています。
+27文字目は<q>置換1</q>に戻り、以下繰り返します。
+このようにすることで、暗号文の統計的な偏りを減らし、解読しづらくできます。
+ただし、この程度では規則性から簡単に統計的な偏りを用いて解読可能ですので、実際には、もっと複雑な表の作り方をする必要があります。
+ここでは説明の単純化&amp;ぱっと見でそれなりの効果が読み取れるというところでこの方式を採用しています</li>
+</ul>
+
+
+</body>
+</html>

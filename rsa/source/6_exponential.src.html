@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<h4>累乗の計算</h4>
+
+<p>$a$ を $b$ 乗したものを $l$ で割った剰余、</p>
+
+<eq><p>$a^b \ \% \ l$</p></eq>
+
+<p>を求める。</p>
+
+<h4>計算手順</h4>
+
+<p>まず、$2$進数の定義に従って、下記のように、$b$ を $2^n (x \ge 0)$ の和で表現する。</p>
+
+<eq>
+<p>$B = \{ n \mid b の2 進数表記の右からn - 1 桁目が 1 である \} とすると、$</p>
+<p>\[b = \sum_{n \in B} 2^n \tag{1}\]</p>
+</eq>
+
+<div class="demo-example">
+	<p>具体的に、</p>
+	<form class="demo-form">
+	<et>
+		a &=& $<input type="text" name="a" data-parser="BigInteger.parse"></input>$ \\
+		b &=& $<input type="text" name="b" data-parser="BigInteger.parse"></input>$ \\
+		l &=& $<input type="text" name="l" data-parser="BigInteger.parse"></input>$ & $<input type="submit" value="再計算"></input>$
+	</et>
+	</form>
+	<script class="demo-init">
+		const l = BigInteger.parse("1" + Array(20 + 1).join("0")).random();
+		const a = l.random();
+		const b = l.random();
+	</script>
+	<script class="demo-calc">
+		let result_p;
+		let c = b;
+		const list1: BigInteger[] = [];
+		const list2: number[] = [];
+		const list3: number[] = [];
+		let d = a;
+		let result = BigInteger.parse(1);
+		let n = 0;
+		let count = 0;
+		
+		while(!c.isZero()){
+			count ++;
+			const divmod = c.divmodOne(2);
+			if(divmod.rem == 1){
+				result = result.mul(d).mod(l);
+				count += 2;
+				list1.push(d);
+				list2.push(n);
+				list3[n] = 1;
+			}else{
+				list3[n] = 0;
+			}
+			d = d.mul(d).mod(l);
+			count += 2;
+			c = divmod.quo;
+			n += 1;
+		}
+		list1.reverse();
+		list2.reverse();
+		list3.reverse();
+		
+		let eq;
+	</script>
+
+	<p>のときについて計算すると、$b = <in>b</in>$ を $2$ 進数表記に直すと、</p>
+	<et data-align="lllr">
+	<td class="top">b</td> & <td class="top">=</td> & <td class="demo-typeset">$<in>format_list("", " ", "_{(2)}", list3)</in>$</td> & (2)
+	</et>
+	<p>すなわち、</p>
+	<script class="demo-calc">
+		const list4: string[] = [];
+		const list5: string[] = [];
+		const list6: string[] = [];
+		const list7: string[] = [];
+		const list8: string[] = [];
+		const list9: string[] = [];
+		for(let i = 0; i < list3.length; i ++){
+			if(list3[i] === 1){
+				const n = list3.length - i - 1;
+				const exp = "2^{" + n + "}";
+				list4.push(exp);
+				list5.push("^{" + exp + "}");
+				list6.push("a^{" + exp + "}");
+				const x = "x_{" + n + "}";
+				list7.push(x);
+				list8.push("(x_{" + n + "} \\ \\% \\ l)");
+				list9.push("y_{" + n + "}");
+			}
+		}
+	</script>
+	<et data-align="lllr">
+	<td class="top">b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " \\ +\\  ", "", list4)</in>$</td> & <td class="bottom">(3)</td>
+	</et>
+</div>
+
+<p>すると、</p>
+
+<et>
+a^b &=& a^{\sum_{n \in B} 2^n} & (数式では分かりにくいが、aの右肩に(1)の右辺が乗っている)\\
+    &=& \prod_{n \in B} a^{2^n}
+</et>
+
+<p>となる。なお、$a$ の右肩に乗っているのは、$2n$ (2エヌ)ではなく、$2^n$ (2のエヌ乗) である事に注意。</p>
+
+<div class="demo-example">
+	<et data-align="lllr">
+	<td class="top">a^b</td> & <td class="top">=</td> & <td class="wrap">a $<in>format_list("", " {^{+}}", "", list5)</in>$</td> \\
+	& <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " ", "", list6)</in>$</td> & <td class="bottom">(4)</td>
+	</et>
+</div>
+
+<p>ここで、</p>
+
+<eq><p>\[x_n = a^{2^n} \tag{5}\]</p></eq>
+<p>とすると、</p>
+
+<eq>
+<p>\[a^b = \prod_{n \in B} x_n \tag{6}\]</p>
+</eq>
+
+<p>となる。</p>
+
+<div class="demo-example">
+	<et data-align="lllr">
+	<td class="top">a^b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " ", "", list7)</in>$</td> & <td class="bottom">(7)</td>
+	</et>
+</div>
+
+<p>また、$ n \ge 1 $ のとき、</p>
+
+<et>
+x_n & = & a^{2^n} & (aの右肩に乗っているのは2nではなく2^nであることに注意。以下同じ) \\
+& = & a^{2^{(n - 1 + 1)}} & (式変形) \\
+& = & a^{2^{(n - 1)}\cdot 2} & (2^{(n-1+1)}の+1の部分を外に) \\
+& = & \left(a^{2^{(n - 1)}}\right)^2 & (累乗部分が掛け算になっているのは2重の累乗にできる) \\
+& = & x_{n-1}^2 & ((1)より x_{n-1} = a^{2^{n-1}} なので)
+</et>
+
+<p>である。またここで、以下のように、$x_n$ を $l$ で割った余りを $y_n$ とする。</p>
+
+<eq>
+<p>
+\[y_n = x_n \ \% \ l \tag{8}\]
+</p>
+</eq>
+
+<p>すると、$ n \ge 1 $ のとき、</p>
+
+<et>
+y_n & = & x_n \ \% \ l \\
+& = & x_{n - 1}^2 \ \% \ l \\
+& = & \left(x_{n - 1} \ \% \ l\right)^2 \ \% \ l & (剰余の性質より) \\
+& = & y_{n - 1}^2\ \% \ l
+</et>
+
+<p>となる。$y_n$ の値は、$n = 0$ の時は、</p>
+
+<et>
+y_0 & = & x_0 \ \% \ l \\
+& = & a^{2^0} \ \% \ l \\
+& = & a^1 \ \% \ l \\
+& = & a \ \% \ l
+</et>
+
+<p>であるため、$y_n$ は、</p>
+
+<eq>
+<p>
+\[
+y_n =
+\begin{cases}
+a \ \% \ l & (n = 0) \\
+\\
+y_{n - 1}^2\ \% \ l & (n \ge 1)
+\end{cases}
+\]
+</p>
+</eq>
+
+<p>として、各 $y_{n - 1}$ の $2$ 乗を $l$ で割っていけば順に求められる。</p>
+
+<div class="demo-example">
+	<p>具体的には、以下のように計算できる。</p>
+	<script class="demo-calc" data-inject="bq10">
+		const tbody10 = Dom.elem("tbody");
+		const bq10 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody10));
+		let calc_count = 1;
+		let y = a.mod(l);
+		let p: BigInteger;
+		if(list3[list3.length - 1] == 1){
+			p = y;
+		}else{
+			p = BigInteger.ONE;
+		}
+		tbody10.appendChild(tr("y_0", "=", "a \ \% \ l", "=", y.toString()));
+		for(let i = 1; i < list3.length; i ++){
+			y = y.mul(y).mod(l);
+			tbody10.appendChild(tr("y_{" + i + "}", "=", "y_{" + (i - 1) + "}^2 \ \% \ l", "=", y.toString()));
+			calc_count += 2;
+			if(list3[list3.length - 1 - i] == 1){
+				p = p.mul(y).mod(l);
+				calc_count += 2;
+			}
+		}
+	</script>
+</div>
+
+<p>また、$(6)$ より、</p>
+
+<eq>
+<p>\[ a^b \ \% \ l = \left( \prod_{n \in B} x_n \right) \ \% \ l\]</p>
+</eq>
+
+<p>であり、剰余の性質より、</p>
+
+<et>
+a^b \ \% \ l &= & $\[ \left\{ \prod_{n \in B} (x_n \ \% \ l) \right\} \ \% \ l \]$ \\
+ &= & $\[ \left( \prod_{n \in B} y_n \right) \ \% \ l \]$
+</et>
+
+<p>が得られる。</p>
+
+<div class="demo-example">
+	<et>
+	a^b \ \% \ l & = & <td class="wrap">$<in>format_list("", " ", "", list7)</in>$ \ \%\ l</td>
+	</et>
+	
+	<p>であり、剰余の性質を用いて式変形してから、$(6)$ を代入すると、</p>
+
+	<et>
+	a^b \ \% \ l & = & <td class="wrap">$<in>format_list("", " ", "", list8)</in>$ \ \%\ l </td> \\
+	& = & <td class="wrap">$<in>format_list("", " ", "", list9)</in>$ \ \%\ l</td>
+	</et>
+	
+	<p>が得られる。</p>
+
+</div>
+
+
+<p>後はこれを順に計算すれば良い。</p>
+<p>ただし、掛ける要素の数が多い場合、全ての乗算を終えてから $l$ で割ると、一時的に非常に巨大な数値に対する計算が必要となり、計算に時間が掛かる。
+そのため、さらに剰余の性質を用いて、乗算を1回行う毎に結果を $l$ で割った余りに置き換えてから続きの計算を行うようにする。
+すると、高々 $(l - 1)^2$ 以下の整数の計算のみで済んで、効率的に結果を求められる。
+</p>
+
+<div class="demo-example">
+	<div class="demo-if" data-cond="list9.length > 2">
+		<div class="demo-if" data-cond="list9.length > 3">
+			<p>数式にするとむしろ分かりにくいかも知れないが、以下のように計算する。</p>
+		</div>
+		<div class="demo-else">
+			<p>以下のように計算する。</p>
+		</else>
+		<script class="demo-calc">
+			const list11l: string[] = [];
+			const list11r: string[] = [];
+			for(let i = 1; i < list9.length - 1; i ++){
+				list11l.push("(" + list9[i]);
+				list11r.push("\\ \\% \\ l)");
+			}
+		</script>
+		<et>
+			<td class="top">a^b \ \% \ l</td> & <td class="top">=</td> & <td class="wrap"><in>list9[0]</in>$<in>format_list("", " ", "", list11l)</in>$<in>list9[list9.length - 1]</in>$<in>format_list("", " ", "", list11r)</in>$ \ \%\ l</td>
+		</et>
+	</div>
+	<div class="demo-else">
+		<p>要素数が少ない場合は、特にこの工夫は必要無い。</p>
+	</div>
+</div>
+
+<p>Python風に書くと、</p>
+<eq>
+<pre>
+# y_list に必要な y_n が記憶されているとする。
+# それらの値を全て掛けたものを計算する。
+# p を 1として、y_list の内容を順に掛けていく。
+p = 1
+for y in y_list:
+    p *= y
+
+# ここで、p が非常に巨大な値になっている。
+
+# l で割った余りを表示
+print(p % l)
+</pre>
+</eq>
+
+<p>ではなく、</p>
+
+<eq>
+<pre>
+p = 1
+for y in y_list:
+    # 掛け算を行う毎に、lで割った余りに置き換え、値の巨大化を防ぐ
+    p = (p * y) % l
+
+# 結果として求まる値は同じになる(途中でlで割った余りにしているため、ここでは <q>%l</q> は不要になる)
+print(p)
+</pre>
+</eq>
+
+<p>とした方が良い、ということである。</p>
+
+<div class="demo-example">
+	<p>以上のようにして計算することで、乗算と剰余算合わせて $<in>calc_count</in>$ 回の計算で、</p>
+	<eq>
+	<p>$a^b \ \% \ l = <in>p</in>$</p>
+	</eq>
+	
+	<p>が求められた。</p>
+</div>
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

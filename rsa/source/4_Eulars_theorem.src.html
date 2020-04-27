@@ -1,0 +1,540 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<h4>このページの目標</h4>
+
+<eq>
+<p>
+\[任意の素数p、q と整数k 、および、\]
+$0 以上 pq 未満でpq と$<em>$互いに素である$</em>$ような整数m に対して、$<br/>
+\[m^{k(p-1)(q-1) + 1} \ \% \ pq = m \tag{本題} \]
+</p>
+</eq>
+
+<p>となることを証明する。</p>
+
+<h4>オイラーの$\varphi$関数、オイラーの定理などを用いた補題の準備</h4>
+
+<p>ある整数 $n$ に対して、 $n$ と互いに素である $n$ 未満の整数の集合を$C(n)$ とし、$C(n)$ の要素の数を$\varphi(n)$ とすると、以下の補題が成り立つことが証明できる。</p>
+
+<et data-align="llr">
+(オイラーの\varphi関数) & 素数pに対して \varphi(p) = p - 1 & (補題1) \\
+(オイラーの\varphi関数) & 素数p、qに対して \varphi(pq) = (p - 1)(q - 1) & (補題2) \\
+(オイラーの定理) &  整数mとnがと互いに素であるなら m^{\varphi(n)} \ \% \ n = 1 & (補題3)
+</eq>
+
+<p>以上$3$つの補題が証明できれば、$(補題1)$、$(補題2)$ を$(補題3)$ に代入することで、さらに以下の補題が得られる。</p>
+
+<eq>
+<p>
+\[ 素数pと、1以上 p 未満でpと互いに素な任意の整数 m に対して、m^{p - 1}\  \% \  p = 1 \tag{補題4}\]
+\[ 2つの異なる素数p、q と、1以上 pq 未満でpqと互いに素な任意の整数 m に対して、m^{(p - 1)(q - 1)}\  \% \  pq = 1 \tag{補題5}\]
+</p>
+</eq>
+
+<p>
+以下では、$(補題1)$、$(補題2)$、$(補題3)$について順に証明し、その後に、$(本題)$を証明する。
+なお、$(補題4)$は、このページでは用いないが、<a href="5_Sunzis_theorem.html">孫子の剰余定理などを使った証明</a>で必要となる。
+</p>
+
+
+<div class="demo-example">
+	<script class="demo-calc">
+		type Number = number | BigInteger;
+		const LIMIT = 200;
+		const variables: ("p" | "q" | "m")[] = ["p", "q", "m"];
+		function calc_coprimes(n: BigInteger): [BigInteger[], boolean]{
+			let list: BigInteger[] = [BigInteger.ONE];
+			let limited = false;
+			for(let i = BigInteger.TWO; n.comp(i) > 0; i = i.add(1)){
+				if(n.gcm(i).equals(BigInteger.ONE)){
+					list.push(i);
+					if(list.length >= LIMIT){
+						limited = true;
+						break;
+					}
+				}
+			}
+			return [list, limited];
+		}
+		
+		function uniq(items: BigInteger[]): BigInteger[]{
+			const result: BigInteger[] = [];
+			let prev = BigInteger.parse(-1);
+			for(const v of items){
+				if(v.comp(prev) != 0){
+					result.push(v);
+					prev = v;
+				}
+			}
+			return result;
+		}
+		
+		function phi(n: BigInteger){
+			const factors = uniq(n.factorize());
+			let num = BigInteger.ONE;
+			let den = BigInteger.ONE;
+			for(const p of factors){
+				num = num.mul(p.sub(1));
+				den = den.mul(p);
+			}
+			return n.mul(num).div(den);
+		}
+		
+	</script>
+	<p>具体的な値、</p>
+	<form class="demo-form">
+	<et>
+		p  & = & $<input type="text" name="p" data-parser="BigInteger.parse"></input>$ \\
+		q  & = & $<input type="text" name="q" data-parser="BigInteger.parse"></input>$ \\
+		m  & = & $<input type="text" name="m" data-parser="BigInteger.parse"></input>$ & $<input type="submit" value="再計算"></input>$\\
+	</et>
+	</form>
+	<script class="demo-init">
+		const p = BigInteger.parse(3);
+		const q = BigInteger.parse(5);
+		const m = BigInteger.parse(4);
+	</script>
+	<p>に対して計算すると、</p>
+
+	<script class="demo-calc" data-inject="bq1">
+		const tbody1 = Dom.elem("tbody");
+		const tbody2 = Dom.elem("tbody");
+		const bq1 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody1), Dom.elem("table", tbody2));
+		const n = p.mul(q.toNumber());
+		const gcm_pa = p.gcm(m);
+		const gcm_qa = q.gcm(m);
+		const gcm_pq = p.gcm(q);
+		
+		const prim_p = p.isPrime();
+		const prim_q = q.isPrime();
+		const prim_a = m.isPrime();
+		
+		const [coprimes, limited] = calc_coprimes(n);
+		const is_coprime = gcm_pq.equals(BigInteger.ONE);
+
+		const x_list: BigInteger[] = [];
+		const x_list0: string[] = [];
+		for(const coprime of coprimes){
+			x_list0.push("" + m + " \\cdot " + coprime + "\\ \\% \\ " + n);
+			x_list.push(coprime.mul(m).mod(n));
+		}
+		const x_list_sorted = x_list.concat([]);
+		x_list_sorted.sort((a, b)=> a.comp(b));
+		const x_list_uniq = uniq(x_list_sorted);
+		
+		for(let i = 0; i < variables.length; i ++){
+			let v: "p" | "q" | "m" = variables[i];
+			const tr = Dom.tr(Dom.td("$" + v + "$"), Dom.td("$ = $"), Dom.td("$" + vars[v] + "$"));
+			if(vars[v].isPrime()){
+				tr.appendChild(Dom.td("$(" + v + "は素数)$"));
+			}
+			tbody1.appendChild(tr);
+		}
+		let items1: ["p" | "q" | "m", "p" | "q" | "m", BigInteger][] = [
+			["p", "q", gcm_pq],
+			["q", "m", gcm_qa],
+			["p", "m", gcm_pa],
+		];
+		for(let i = 0; i < items1.length; i ++){
+			let m = items1[i][0];
+			let b = items1[i][1];
+			let g = items1[i][2];
+			const tr = Dom.tr(Dom.elem("td","$" + m + "$"), Dom.td("$と$"), Dom.td("$" +  b + "$"), Dom.td("$ の 最大公約数は、" + g + "$"));
+			if(g.equals(BigInteger.ONE)){
+				tr.appendChild(Dom.td("$(" + m + "$ と $" + b + " は互いに素)$"));
+			}
+			tbody2.appendChild(tr);
+		}
+	</script>
+	<div class="demo-if" data-cond="prim_p && prim_q && !p.equals(q)">
+		<p>であるため、条件を満たし、</p>
+		<script class="demo-calc">
+			const x = p.sub(BigInteger.ONE).mul(q.sub(BigInteger.ONE));
+			const y = m.pow(x);
+			const z = p.mul(q);
+			
+			let yStr = y.toString();
+			if(yStr.length > 60){
+				yStr = yStr.substring(0, 20) + " \\cdots (" + (yStr.length - 40) + "桁省略) \\cdots " + yStr.substring(yStr.length - 20);
+			}
+		</script>
+		<et>
+			a^{(p - 1)(q - 1)}\  \% \  (p q)  & = &  <in>m</in>^{(<in>p</in> - 1)(<in>q</in> - 1)}\  \% \  (<in>p</in> \cdot <in>q</in>) \\
+			& = & <in>m</in>^{<in>x</in>}\ \% \ <in>z</in> \\
+			& = & <in>yStr</in>\ \%\ <in>z</in> \\
+			& = & <in>y.mod(z)</in>
+		</et>
+		<p>の通り、$(補題5)$は成り立つ。</p>
+	</div>
+	<div class="demo-else">
+		<p>であり、条件を満たさないため$(補題5)$は<em>成り立たない</em>。</p>
+	</div>
+
+</div>
+
+<h4>$(補題1)$ <q>$素数pに対して \varphi(p) = p - 1 $</q>の証明</h4>
+		
+<p>$p$ は、$0$以上$p$ 未満の任意の整数と互いに素であり、そのような整数は$p -1$ 個有る。</p>
+		
+<h4>$(補題2)$<q>$素数p、qに対して \varphi(pq) = (p - 1)(q - 1)$</q>の証明</h4>
+
+<p>
+$C(pq)$に<em>含まれない</em>、すなわち、$pq$ と$1$以外の公約数を持つ、$pq$未満の自然数について考える。
+$p$と$q$が互いに異なる素数であるなら、そのような自然数は $p$ か $q$ のいずれかを約数として持つ。
+すなわち、$pq$ 未満の$p$ の倍数と$q$ の倍数がこれに該当する。
+それぞれ、<q>$p$に$q$未満の自然数を掛けたもの</q>と、<q>$q$に$p$未満の自然数を掛けたもの</q>が該当し、要素数は$p - 1$ 個と、$q- 1$ 個である。
+</p>
+
+<div class="demo-example">
+	<p>$p = <in>p</in>$、$q = <in>q</in>$ に対して具体的に列挙すると、</p>
+	<script class="demo-calc" data-inject="bq2">
+		const tbody3 = Dom.elem("tbody");
+		const bq2 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody3));
+		let items2: [string, string, BigInteger, BigInteger][] = [
+			["p", "q", p, q],
+			["q", "p", q, p],
+		];
+		const exps: Lib.Dom.DomItem[][] = [];
+		for(let i = 0; i < items2.length; i ++){
+			const [sym, sym2, v1, v2] = items2[i];
+			const exp1 = [sym];
+			const exp2 = ["" + v1];
+			let limited = false;
+			for(let j = BigInteger.parse(2); j.comp(v2) < 0; j = j.add(1)){
+				exp1.push("" + j + "{" + sym + "}");
+				exp2.push("" + (v1.mul(j)));
+				if(j.comp(LIMIT) >= 0){
+					limited = true;
+					break;
+				}
+			}
+			tbody3.appendChild(Dom.tr(Dom.td({ className: "top" }, "$pq 未満の" + sym + "の倍数:$"), Dom.td(format_set(exp1, limited)), Dom.td("$(" + sym + " に " + sym2 + " 未満の自然数を掛けたもの" + v2.sub(1) + "個)$")));
+			tbody3.appendChild(Dom.tr(Dom.td({ className: "top right" }, "$=$"), Dom.td(format_set(exp2, limited))));
+		}
+	</script>
+	<p>となる。</p>
+</div>
+
+<p>
+$C(pq)$ は、$pq$ 未満の自然数の集合から、これら2つの集合の要素を取り除いたものである。
+またここで、$p$ と$q$ は互いに素なので、2つの集合に重複して含まれる値は存在しない。
+そのため、$C(pq)$ の要素数は、$pq$ 未満の自然数の個数である$pq - 1$ 個から、これら2つの集合の要素数を単純に引けば良く、
+</p>
+
+<eq>
+<p>
+$\varphi(pq)=(pq - 1) - (p - 1) - (q - 1)=(p - 1)(q - 1)$
+</p>
+</eq>
+<p>となる。</p>
+
+<div class="demo-example">
+	<script class="demo-calc">
+		const num_coprimes = phi(p.mul(q));
+		const length_match = p.sub(1).mul(q.sub(1)).equals(num_coprimes);
+		const coprime_set = format_set(coprimes, limited);
+		Dom.appendClass(coprime_set, "demo-typeset");
+	</script>
+	<p>$p = <in>p</in>$、$q = <in>q</in>$ に対して$C(pq)$ と$\varphi(pq)$を求めると、</p>
+	
+	<et>
+		C(pq)  &  =  &  C(<in>n</in>) \\
+		& <td class="top">=</td> & $<in>coprime_set</in>$ \\
+		\varphi(pq) &  =  & \varphi(<in>n</in>) \\
+		& = & <in>num_coprimes</in> <in>length_match ? "=" : Dom.em("\ne")</in> (<in>p</in> - 1)(<in>q</in> - 1) = (p - 1)(q - 1)
+	</et>
+
+	<div class="demo-if" data-cond="is_coprime">
+		<p>となり、$C(pq)$ は、$pq$ 未満の自然数から、前述の$p$ の倍数、$q$ の倍数を取り除いたものであることが分かり、$(補題3)$ の等式も成り立つ。</p>
+	</div>
+	<div class="demo-else">
+		<div class="demo-if" data-cond="!length_match">
+			<p>となり、$(補題3)$の等式は<em>成り立たない</em>。</p>
+		</div>
+		<div class="demo-else">
+			<p>となる。</p>
+		</div>
+	</div>
+</div>
+
+<h4>$(補題3)$ <q>$整数mとnがと互いに素であるなら m^{\varphi(n)} \ \% \ n = 1$</q>の証明</h4>
+
+<p>$C(n)$ の各要素を $c_i \ (1 \le i \lt \varphi(n))$ に対して、
+$c_i$ を $m$ 倍して$n$ で割った商を $k_i$、余りを $x_i$ とし、$x_i$ からなる集合、$X(n, m)$を考える。</p>
+
+<eq>
+<p>
+\[X(n, m) = \{ x_i \mid ある c_i \in C(n) に対して、mc_i = nk_i + x_i \} \]
+あるいは、
+\[X(n, m) = \{ x_i \mid ある c_i \in C(n) に対して、x_i = mc_i \ \% \  n \} \]
+</p>
+</eq>
+
+<div class="demo-example">
+<p>$n = pq = <in>n</in>$、$m = <in>m</in>$ に対して計算すると、</p>
+<et>
+<td class="top">X(<in>n</in>, <in>m</in>)</td> &<td class="top">=</td>& <td class="demo-typeset">$<in>format_set(x_list0, limited)</in>$</td> \\
+&<td class="top">=</td>& <td class="demo-typeset">$<in>format_set(x_list, limited)</in>$</td>
+</et>
+</div>
+
+<p>まず、このとき、$C(n)$ と、$X(n, m)$ に含まれる要素の個数が等しいことを証明する。そのためには、$C(n)$ から、$X(n,m)$ を求める変換が単射であること、すなわち、</p>
+
+<eq>
+<p>
+\[任意の i, j \ (1 \le i, j \lt \varphi(n)) に対して、 c_i \ne c_j \to x_i \ne x_j \tag{補題6}\]
+</p>
+</eq>
+
+<p>であることが証明できれば良い。</p>
+
+<p>適当な$i, j \ (1 \le i, j \lt \varphi(n))$に対して、$x_i$ と $k_i$ の定義より、</p>
+
+<eq>
+<p>
+\[m c_i = n k_i + x_i\tag{1}\]
+\[m c_j = n k_j + x_j\tag{2}\]
+</p>
+</eq>
+
+<p>$(1) - (2)$ より、</p>
+
+<eq>
+<p>
+$m(c_i - c_j) = nk_i + x_i - nk_j - x_j$
+</p>
+</eq>
+
+<p>$x_i = x_j$ の場合は、</p>
+
+<eq>
+<p>
+$m(c_i - c_j) = n(k_i - k_j)$
+</p>
+</eq>
+
+<p>となる。ここで、$m$ と$n$ は互いに素であるため、この数式が成り立つためには、$c_i - c_j$ が$n$ の倍数である必要がある。
+また、$c_i$、$c_j$ は定義より、$n$未満の自然数であるため、$-n \le c_i - c_j \le n$ であり、この範囲に含まれる$n$ の倍数は$0$ のみである。よって、</p>
+
+<eq>
+<p>
+$c_i - c_j = 0$
+</p>
+</eq>
+
+<p>であり、</p>
+
+<eq>
+<p>
+$x_i = x_j \to c_i = c_j$
+</p>
+</eq>
+
+<p>が証明でき、この対偶である$(補題6)$ も証明できた。$(補題6)$ より、$X(n, m)$は、$C(n)$ と同数の要素を持つことが分かる。</p>
+
+<p>次に、</p>
+
+<eq>
+<p>
+\[X(n, m) の各要素 x_i \ (1 \le i \le \varphi(n)) はnと互いに素\tag{補題7}\]
+</p>
+</eq>
+
+<p>であることを示す。</p>
+<p>$x_i$ の定義より、</p>
+
+<eq>
+<p>
+$x_i = ac_i - nk_i$
+</p>
+</eq>
+
+<p>なので、$x_i$ を$n$ で割った余りは、</p>
+
+<eq>
+<p>
+$x_i \ \%\  n = (ac_i - nk_i) \ \%\   n = ac_i \ \%\   n$
+</p>
+</eq>
+
+<p>である。ここで、$m$、$c_i$ は供に$n$ と互いに素であるため、$ac_i % n$ は$n$ と互いに素であり、$(補題7)$ が証明できた。</p>
+<p>以上の考察から、</p>
+
+
+<eq>
+<p>$定義より、C(n)は$<q>$n未満でnと互いに素である全ての自然数$</q>$の集合である。$</p>
+<p>$(補題6)より、X(n, m)はC(n)と同じ個数の、すなわち、$<q>$n未満でnと互いに素である全ての自然数$</q>$と同じ個数の要素を含む。$</p>
+<p>$(補題7)より、X(n, m)の各要素はn未満の自然数でnと互いに素である。$</p>
+</eq>
+
+
+<p>ということが分かった。これらを纏めると、$X(n, m)$ は、<q>$n$未満で$n$と互いに素であるような全ての自然数を含む集合</q>であることが分かるため、$X(n, m)$は$C(n)$と完全に一致する。</p>
+
+<eq>
+<p>
+$X(n, m) = C(n)$
+</p>
+</eq>
+
+
+<div class="demo-example">
+	<script class="demo-calc">
+		const exp_tbody = Dom.elem("tbody", 
+			Dom.elem("tr", Dom.td("$C(" + n + ")$"), Dom.td("$=$"), Dom.td(format_set(coprimes, limited))),
+			Dom.elem("tr", Dom.td("$X(" + n + ", " + m + ")$"), Dom.td("$=$"), Dom.td(format_set(x_list_sorted, limited)))
+		);
+		const exp_table = Dom.elem("table", { className: "demo-typeset" }, exp_tbody);
+		let x_list_match: boolean;
+	</script>
+	<div class="demo-if" data-cond="x_list.length == x_list_uniq.length">
+		<div class="demo-if" data-cond="!limited">
+			<p>上記で示した具体例について、要素を小さい順に並び替えると、</p>
+		</div>
+		<div class="demo-else">
+			<p>上記で示した具体例について、上記で列挙した所までの要素を小さい順に並び替えると、</p>
+		</div>
+		<script class="demo-calc">
+			x_list_match = true;
+			for(let i = 0; i < coprimes.length; i ++){
+				if(coprimes[i].comp(x_list_sorted[i]) != 0){
+					x_list_match = false;
+					break;
+				}
+			}
+		</script>
+	</div>
+	<div class="demo-else">
+		<div class="demo-if" data-cond="!limited">
+			<p>$n=<in>n</in>$ と$a=<in>m</in>$ が互いに素ではなく、$(補題3)$は成り立たない。上記で示した具体例について、要素を小さい順に並び替えて$X(n, m)$ から重複を削除すると、</p>
+		</div>
+		<div class="demo-else">
+			<p>$n=<in>n</in>$ と$a=<in>m</in>$ が互いに素ではなく、$(補題3)$は成り立たない。上記で示した具体例について、上記で列挙した所までの要素を小さい順に並び替えて$X(n, m)$ から重複を削除すると、</p>
+		</div>
+		<script class="demo-calc">
+			exp_tbody.appendChild(Dom.tr(Dom.td(), Dom.td("$=$"), Dom.td(format_set(x_list_uniq, limited))));
+			x_list_match = false;
+		</script>
+	</div>
+	<eq>
+	<script class="demo-calc" data-inject="exp_table"> </script>
+	</eq>
+	<div class="demo-if" data-cond="x_list_match">
+		<p>となり、$X(n, m)$は$ C(n)$の同じ要素を含む、同じ集合であることが確かめられる。</p>
+	</div>
+	<div class="demo-else">
+		<div class="demo-if" data-cond="limited && q.mul(p).gcm(m).comp(BigInteger.ONE) == 0">
+			<p>となり、要素数が多すぎるため具体的な比較はここでは省略するが、$X(n, m)$は$ C(n)$の同じ要素を含む、同じ集合になっている。</p>
+		</div>
+		<div class="demo-else">
+			<p>となり、$X(n, m)$は$ C(n)$は<em>異なる集合である</em>。</p>
+		</div>
+	</div>
+</div>
+
+<p>最後に、$C(n)$の全要素を掛けたものを$C_P(n)$、$X(n)$の全要素を掛けたものを$X_P(n, m)$とする。</p>
+
+<eq>
+<p>
+\[C_P(n) = \prod_{i = 1}^{\varphi(n)} c_i  \tag{3} \]
+\[X_P(n, m) = \prod_{i = 1}^{\varphi(n)} x_i = \prod_{i = 1}^{\varphi(n)} (ac_i - nk_i) \tag{4} \]
+</p>
+</eq>
+
+<p>なお、2つの集合$C(n)$と、$X(n)$は、一致しているため、当然、全要素を掛けた値も一致し、</p>
+
+<eq>
+<p>
+\[C_P(n) = X_P(n, m) \tag{5} \]
+</p>
+</eq>
+
+<p>である。</p>
+
+<p>$(4)$の$\Pi$の掛け算は、、剰余の性質を使って順にを1つ1つばらしていける。
+以下では、<q>$\equiv_n$</q>を、<q>$a \equiv_n b$</q>のように使い、<q>$m とb はn を法として合同$</q>、すなわち、<q>$m とb はn で割った場合の余りが等しい$</q>という意味の記号として用いる。
+</p>
+
+<et>
+X_P(n, m) & = & \prod_{i = 1}^{\varphi(n)} (ac_i - nk_i) \\
+          & = & ( ac_1 - nk_1 ) \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  & (i = 1の部分を外に出す)\\
+          & = & ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  -  nk_1  \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  & (ただの式変形)\\
+   & \equiv_n & ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  -  nk_1  \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)  & (以降、nで割った余りについて検討する)\\
+   & \equiv_n & ac_1 \prod_{i = 2}^{\varphi(n)} (ac_i - nk_i)   & (2項目はnの倍数なのでnで割った余りは0) \\
+   & \equiv_n & m^2c_1c_2  \prod_{i = 3}^{\varphi(n)} (ac_i - nk_i)  n  &(同様に、i=2以降も繰り返す)\\
+   & & \vdots  \\
+   & \equiv_n & m^{\varphi(n)}c_1c_2 \cdots c_{\varphi(n)}  &(全て展開終わり) \\
+   & \equiv_n & m^{\varphi(n)} \prod_{i = 1}^{\varphi(n)} c_i  &(再度\Piの形で書き直す)
+</et>
+
+<p>と変形できる。$(3)$より、</p>
+
+<eq>
+<p>
+\[X_P(n, m) \equiv_n m^{\varphi(n)} C_P(n)\]
+</p>
+</eq>
+
+<p>であり、$(5)$より、</p>
+
+<eq>
+<p>
+\[C_P(n) \equiv_n m^{\varphi(n)} C_P(n)\]
+</p>
+</eq>
+
+<p>が示せた。</p>
+
+<p>剰余の性質から、</p>
+
+<eq>
+<p>
+\[C_P(n) - m^{\varphi(n)} C_P(n) \equiv_n 0\]
+\[\left(1 - m^{\varphi(n)} \right) C_P(n) \equiv_n 0\]
+</p>
+</eq>
+
+<p>である。$n$ で割った余りが$0$ ということは左辺は$n$ の倍数だが、$C_P(n)$ は$n$ と互いに素な整数を掛け合わせたものであるため、$C_P(n)$ は$n$ と互いに素である。
+よって、この等式が成り立つためには、$1 - m^{\varphi(n)}$ が$n$ の倍数である必要がある。よって、</p>
+
+<eq>
+<p>
+\[1 - m^{\varphi(n)} \equiv_n 0\]
+\[m^{\varphi(n)} \equiv_n 1\]
+\[m^{\varphi(n)} \%\ n = 1\]
+</p>
+</eq>
+
+<p>と変形して$(補題3)$が導ける。</p>
+
+<h4>$(本題)$ <q>$m^{k(p-1)(q-1) + 1} \ \% \ pq = m$</q>の証明</h4>
+
+<p>準備ができたため、$(本題)$を証明する。</p>
+
+<et>
+m^{k(p-1)(q-1) + 1} \ \% \ pq & = & m \cdot m^{k(p-1)(q-1)}  \ \% \ pq \\
+& = & m (m^{(p-1)(q-1)})^k  \ \% \ pq \\
+&= & m (m^{(p-1)(q-1)}  \ \% \ pq)^k  \ \% \ pq & (剰余の性質より) \\
+&= & m \cdot 1^k  \ \% \ pq & ((補題5)を代入) \\
+&= & m \ \% \ pq \\
+&= & m & (0 \le m \lt pqより) \\
+</et>
+
+<p>となり、$(本題)$ が証明できた。</p>
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

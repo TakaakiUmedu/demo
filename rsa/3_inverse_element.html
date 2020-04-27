@@ -1,0 +1,147 @@
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>RSA暗号のデモ >> 3. 逆元の計算方法</title>
+<link rel="stylesheet" href="color-default2.css"/>
+<link rel="stylesheet" href="layout-default2.css"/>
+<link rel="stylesheet" href="math.css"/>
+<link rel="stylesheet" href="demo.css"/>
+<script src="3_inverse_element.js"></script>
+</head>
+<body>
+
+<h1>RSA暗号のデモ >> 3. 逆元の計算方法</h1>
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li class="current">逆元の計算方法(このページ)</li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+<h4>計算手順</h4>
+
+
+<div class="demo-example" id="demo_id_0">
+<script></script>
+<form id="demo_id_1" class="demo-form">
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle L$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="L" tabindex="1" id="demo_id_2"/></td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle A$</td><td class="demo-typeset">$ \displaystyle =$</td><td><input type="text" name="A" tabindex="2" id="demo_id_3"/></td><td><input type="submit" value="再計算" tabindex="3" id="demo_id_4"/></td></tr>
+</table>
+</blockquote>
+</form>
+<script></script>
+
+<p class="demo-typeset">のとき、$L$ を法とした $A$ の逆元を求める。</p>
+<p>すなわち、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle A\cdot A^{-1} \ \% \ L = 1$</td></tr>
+</table>
+</blockquote>
+
+<p class="demo-typeset">となるような、$A^{-1}$ を求める。なお、$A^{-1}$ は、ここでは、<q>$A$の$-1$乗</q> ではなく、<q>$A^{-1}$ という1つの記号</q>、とみなす)。</p>
+
+<p class="demo-typeset">まず、 $L$ と $A$ にから始めて、ユークリッドの互除法と同様に、除算して商と余りを求める操作を繰り返す。</p>
+
+<script id="demo_id_5"></script>
+
+<div class="demo-option" id="demo_id_6">
+	<p class="demo-typeset">$L$ と $A$ が互いに素でないため、逆元 $A^{-1}$ は<em>存在しない</em>。</p>
+</div>
+<div id="demo_id_7" class="demo-option">
+	<p>これらの式を、それぞれ、<q class="demo-typeset">$あまり=$</q>の形に書き換えると</p>
+	
+	<script id="demo_id_8"></script>
+	<p>これらの式の右辺は、それぞれ、1つ前と2つ前の左辺(あまり)の線形結合(整数倍して足すか引くかしたもの)になっている。
+	よって、これを逆順に代入して、1つ前と2つ前の左辺の値でくくる形に整理して、という操作を繰り返していくと、順にそれ以外の項が無くなるので、</p>
+	
+	<script id="demo_id_9"></script>
+
+<p>より、</p>
+			
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle 1$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_10">make_exp([b, a], [d, c])</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_11">q</span>L<span id="demo_id_12">inv_a.minus ? "" : "+"</span><span id="demo_id_13">inv_a</span>A$</td></tr>
+</table>
+</blockquote>
+	
+<p>という等式が得られる。これを変形して、</p>
+
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$<span id="demo_id_14">inv_a</span> A = 1 <span id="demo_id_15">q.minus ? "+" : "-"</span> <span id="demo_id_16">q.abs()</span> L$
+</p>
+</blockquote>
+
+<p class="demo-typeset">となる。この等式の両辺を $L$ で割った余りを求めると、</p>
+
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle <span id="demo_id_17">inv_a</span>A \ \% \ L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (1<span id="demo_id_18">(q.minus ? "+" : "-") + q.abs()</span>L) \ \% \ L$</td><td/></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle \{1<span id="demo_id_19">(q.minus ? "+" : "-")</span>(<span id="demo_id_20">q.abs()</span>L \ \% \ L)\} \ \% \ L$</td><td class="demo-typeset">$ \displaystyle (剰余の性質より)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle (1<span id="demo_id_21">(q.minus ? "+" : "-")</span>0) \ \% \ L$</td><td class="demo-typeset">$ \displaystyle (Lの倍数をLで割ると余りは0)$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle 1$</td><td class="demo-typeset">$ \displaystyle (Lが2以上より)$</td></tr>
+</table>
+</blockquote>
+
+<div class="demo-option" id="demo_id_22">
+<p>となり、 逆元</p>
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$A^{-1} = <span id="demo_id_23">inv_a</span>$
+</p>
+</blockquote>
+<p>が求まった。</p>
+</div>
+<div id="demo_id_24" class="demo-option">
+<p class="demo-typeset">となり、$<span id="demo_id_25">inv_a</span>$ は、逆元の条件をほぼ満たす。逆元は、$0$ 以上 $L$ 未満である必要があるため、$<span id="demo_id_26">inv_a</span>$ を $L$ で割った余りを求め、得られた</p>
+<blockquote class="demo-equation">
+<p class="demo-typeset">
+$A^{-1} = <script id="demo_id_27"></script>$
+</p>
+</blockquote>
+<p>が逆元となる。</p>
+</div>
+
+<p>実際に計算してみると、</p>
+<blockquote class="demo-equation">
+<table>
+<tr><td class="demo-typeset">$ \displaystyle A\cdot A^{-1} \ \% \ L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_28">A</span>\cdot<span id="demo_id_29">inv_a</span>\ \% \ <span id="demo_id_30">L</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_31">A.mul(inv_a)</span>\ \% \ <span id="demo_id_32">L</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_33">A.mul(inv_a).mod(vars.L)</span>$</td></tr>
+</table>
+</blockquote>
+<p>となる。</p>
+</div>
+
+
+
+</div>
+
+
+<div class="demo_toc_simple"><div>
+
+<ol start="0">
+<li><a href="index.html">RSA暗号のデモ</a></li>
+<li><a href="1_Fermat.html">フェルマーの小定理、オイラーの定理、孫子の定理などのデモ</a></li>
+<li><a href="2_modulo.html">剰余の性質と記号の定義</a></li>
+<li class="current">逆元の計算方法(このページ)</li>
+<li><a href="4_Eulars_theorem.html">オイラーの小定理を用いた補題の証明</a></li>
+<li><a href="5_Sunzis_theorem.html">孫子の剰余定理を用いた補題の証明</a></li>
+<li><a href="6_exponential.html">累乗の剰余を高速に求めるアルゴリズム</a></li>
+</ol>
+</div></div>
+
+</body>
+</html>

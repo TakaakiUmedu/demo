@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<h4>使い方と概要</h4>
+<ul>
+<li>高校でやる数学ぐらいの知識で追えるよう、式展開は過剰に細かく記載している</li>
+<li>以下、Python言語に倣って、<q>$\%$</q>記号を、<q>$a \ \% \ b$</q>のように使い、<q>$aをbで割った剰余(余り)$</q>を表す記号として用いる</li>
+<li><q>桁数</q>を適当に決めて<q>素数 $p$、$q$ の生成</q>をクリックすると、 $ p $ と $ q $ の値が自動生成される。手動で適当な素数を<q> $ p $ </q>と<q> $ q $ </q>の欄に入力しても良い</li>
+<li><q> $ e $ </q>の欄に適当な整数を入力する。RSAの暗号鍵を生成するためには、 $ e $ と $ (p-1)(q-1) $ が互いで素である必要がある</li>
+<li><q>再計算</q>をクリックすると、公開鍵<q>$\\{e,q\\}$</q>と、秘密鍵<q>$d$</q>が生成される。その際、上記の条件($p $ と $ q $ が素数、 $ e $ が $(p-1)(q-1)$ と互いに素)が満たされない場合は、エラーとなる</li>
+<li><q>暗号化したいメッセージ</q>の欄に適当なメッセージを入力する</li>
+<li><q>暗号化・復号</q>ボタンをクリックすると、暗号化結果と、復号結果などが得られる</li>
+<li><q>メッセージの数値化</q>は、メッセージをUnicodeの文字コードに従って巨大な$1$個の整数にエンコードしてある。
+		ただし、RSAでは $ pq $ 以上の数は暗号化出来ないため(計算途中で<q> $ pq $ で割った余り</q>を使うので、
+		ある整数<q>$n$</q>と、<q>$n + pq$</q>を区別出来なくなる)、 $ pq $ 未満になるよう、$m_1, m_2, \ldots$に再度、分解してある(ここでは愚直に<q> $ pq $ 進数</q>化)</li>
+<li>なお、本ページで紹介しているのは、<q>RSA暗号の手順で暗号化して復号した場合に、元通りのメッセージが得られる</q>ということの証明のみであることに注意。<em>本当に解かれない暗号</em>にするためには、$p$、$q$、$e$ の選び方などに多くの注意が必要
+<ul>
+	<li>$p=2$、$q=5$、$e=3$ など、小さな値でも成立するが、その場合は少し試しただけで公開鍵から秘密鍵が求まってしまうため、公開鍵暗号としては不適</li>
+	<li>公開鍵暗号として安全に利用するためには、 $ N = pq $ から総当たりで $ p $ と $ q $ が求められないぐらいに大きな素数を使う必要がある</li>
+	<li>その他にも、数値の選び方に様々な守るべき条件がある。<a href="https://www.slideshare.net/sonickun/rsa-n-ssmjp">RSA暗号運用でやってはいけないnのこと</a> など、<q>RSA 弱点</q>などで検索すると情報多数</li>
+	<li>条件を満たした完璧な実装は難しいため、実用的するためには、<q>RSA暗号ライブラリ</q>として公開されて広く使われているものを使うのが現実的</li>
+</ul>
+</li>
+</ul>
+
+
+<h4>暗号化、復号の仕組み</h4>
+
+<p>まず、素数 $p$ と $q$ を用意し、</p>
+<et>
+N & = & pq \\
+L & = & (p - 1)(q - 1)
+</eq>
+<p>とし、$e$ として、$1$ より大きい、$L$ と互いに素であるような自然数を適当に選ぶ。次に、</p>
+
+<et>
+ed \ \% \ L = 1 かつ 1 \lt d \le L
+</eq>
+<p>
+となるような、$d$ を求める。
+$L$ と$e$ が互いに素であるような場合には、このような条件を満たす$d$ が必ず$1$つ存在し、
+<a href="3_inverse_element.html">ユークリッドの互除法の拡張</a>を用いて計算できる。
+このような $d$ を、 $e^{-1}$ とも書き、<q>$L$ を法とする $e$ の逆元</q>と呼ぶ。
+</p>
+
+<div class="demo-example">
+	<script class="demo-init">
+		const p = BigInteger.parse(5268573307);
+		const q = BigInteger.parse(3734091287);
+		const e = BigInteger.parse(65537);
+	</script>
+	<script class="demo-calc">
+		function str_to_bi_list(str: string, law: BigInteger){
+			let utf8str = unescape(encodeURIComponent(str));
+			let num = BigInteger.ZERO;
+			let bi256 = BigInteger.parse(256);
+			for(let i = utf8str.length - 1; i >= 0; i --){
+				let code = utf8str.charCodeAt(i);
+				num = num.mul(bi256).add(BigInteger.parse(code));
+			}
+			let list = [];
+			while(!num.isZero()){
+				let div = num.divmod(law);
+				list.push(div.rem);
+				num = div.quo;
+			}
+			return list;
+		}
+		
+		function bi_list_to_str(list: BigInteger[], law: BigInteger){
+			let num = BigInteger.ZERO;
+			for(let i = list.length - 1; i >= 0; i --){
+				num = num.mul(law).add(list[i]);
+			}
+			let utf8str = "";
+			let bi256 = BigInteger.parse(256);
+			while(!num.isZero()){
+				let div = num.divmod(bi256);
+				utf8str += String.fromCharCode(div.rem.toNumber());
+				num = div.quo;
+			}
+			try{
+				return decodeURIComponent(escape(utf8str));
+			}catch(e){
+				return null;
+			}
+		}
+		
+		function create_n_digits_random_number(max_int: BigInteger, n: number){
+			while(true){
+				let p = max_int.random();
+				if(p.toString().length == n){
+					return p;
+				}
+			}
+		}
+		const primeMakeButton = Dom.getInput("make_primes_submit");
+		function create_random_primes(event: MouseEvent){
+			const inputs = [ Dom.getInput("prime_p"), Dom.getInput("prime_q") ];
+			const calc_button1 = Dom.getInput("calc_button1");
+			const calc_button2 = Dom.getInput("calc_button2");
+			primeMakeButton.disabled = true;
+			calc_button1.disabled = true;
+			calc_button2.disabled = true;
+			inputs[0].disabled = true;
+			inputs[1].disabled = true;
+
+			const primeDigits = Dom.getInput("make_primes_digits");
+			let n = parseInt(primeDigits.value);
+			if(typeof(n) != "number" || !(n > 0)){
+				n = 1;
+			}
+			primeDigits.value = "" + n;
+			let max_int_str = "1";
+			for(let i = 0; i < n; i ++){
+				max_int_str += "0";
+			}
+			const max_int = BigInteger.parse(max_int_str);
+	
+			let i = 0;
+			let p: BigInteger | undefined = undefined;
+			
+			function calc_next(){
+				if(i >= inputs.length){
+					primeMakeButton.disabled = false;
+					calc_button1.disabled = false;
+					calc_button2.disabled = false;
+				}else{
+					const num = create_n_digits_random_number(max_int, n);
+					inputs[i].value = "" + num;
+					if(num.isPrime()){
+						inputs[i].disabled = false;
+						i ++;
+					}
+					setTimeout(calc_next, 1);
+				}
+			}
+			calc_next();
+		}
+		primeMakeButton.onclick = create_random_primes;
+		primeMakeButton.disabled = false;
+
+	</script>
+
+
+	<form>
+		<p>【素数$p$、$q$ の自動生成】 桁数: <input type="text" size="20" value="10" id="make_primes_digits"/> <input type="submit" value="自動生成する" disabled="disabled" id="make_primes_submit"/></p>
+	</form>
+	<p>実際に、</p>
+	<form class="demo-form">
+		<et>
+		p &=& $<input type="text" id="prime_p" name="p" data-parser="BigInteger.parse"/>$\\
+		q &=& $<input type="text" id="prime_q" name="q" data-parser="BigInteger.parse"/>$\\
+		e &=& $<input type="text" name="e" data-parser="BigInteger.parse"/>$ & $<input type="submit" value="再計算" id="calc_button1"/>$
+		</eq>
+	</form>
+	<p>に対して計算してみると、</p>
+
+	<script class="demo-calc">
+		const N = vars.p.mul(vars.q);
+		const L = vars.p.sub(BigInteger.ONE).mul(vars.q.sub(BigInteger.ONE));
+		const d = calcInv(vars.e, L);
+	</script>
+	<et>
+		p & = & <in>p</in> & (pは素数<in>vars.p.isPrime() ? "" : "ではない"</in>) \\
+		q & = & <in>q</in> & (qは素数<in>vars.q.isPrime() ? "" : "ではない"</in>) \\
+		N & = & <in>N</in>\\
+		L & = & <in>L</in>\\
+		e & = & <in>e</in> & (eはLと互いに素<in>vars.e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない"</in>)
+	</eq>
+	<div class="demo-if" data-cond="d !== null">
+		<p>であり、$d = e^{-1}$ を求めると、</p>
+		<et>
+			d & = & <in>d</in> \\
+			ed \ \% \ L & = & <in>e</in>\cdot<in>d</in>\ \%\ <in>L</in> \\
+			& =  & <in>e.mul(d).mod(L)</in>
+		</eq>
+		<p>となる。</p>
+	</div>
+	<div class="demo-else">
+		<p>であり、条件を満たすような$d$は存在しない。</p>
+	</div>
+</div>
+
+
+<p>$ed$ を $L$ で割った商を $k$ とすると、</p>
+<et>
+ed = kL + 1 = k(p-1)(q-1) + 1
+</eq>
+<p>と表せる。ここで、$0$ 以上$N$ 未満のの任意の整数 $m$ と、素数$p$、$q$、$e$、および、上記の手順で求めた、そして求めた$N$、$L$、$d$ に対して、</p>
+
+<et>
+(m^e)^d \ \% \ N & = & m^{ed}  \ \% \ N & (式変形) \\
+                 & = & m^{k(p-1)(q-1) + 1} \ \% \ pq & (代入)
+</eq>
+		
+<p>について検討すると、</p>
+<et data-align="lr">
+m^{k(p-1)(q-1) + 1} \ \% \ pq = m & (1)
+</eq>
+<p>であることが証明できるため、</p>
+<et data-align="lr">
+(m^e)^d \ \% \ N = m & (2)
+</eq>
+<p>が成り立つ。</p>
+
+<p>(1)は、$m$ が $pq$ と互いに素な場合は<a href="4_Eulars_theorem.html"</a>オイラーの定理などを使って</a>、
+互いに素ではない場合には<a href="5_Sunzis_theorem.html">孫子の剰余定理などを使って</a>、証明できる。
+証明はそれぞれリンク先のページで紹介している。</p>
+
+<h4>RSA暗号の暗号化と復号</h4>
+<p>(2)は、以上のように$N$、$e$、$d$ を用意しておくと、$0$ 以上$n$ 未満の任意の整数$m$に対して、<q>$m$ を $e$ 乗したものを、さらに$d$ 乗して$N$ で割ると元の$m$ に戻る</q>ということを意味している。
+ただしこのままでは、$m^e$ が途方もなく巨大な整数になってしまって実用に耐えないため、<a href="2_modulo.html">剰余の性質</a>を用いて$(2)$ をさらに、
+</p>
+<et data-align="lr">
+(m^e \ \% \ N)^d \ \% \ N = m & (3)
+</eq>
+<p>と変形する。$c$ を、</p>
+<et data-align="lr">
+c = m^e \ \% \ N & (4)
+</eq>
+
+<p>とすると、$(3)$を変形して、</p>
+<et data-align="lr">
+m = c^e \ \% \ N & (5)
+</eq>
+<p>が得られる。</p>
+<et>
+公開鍵: & \{e, N\} \\
+秘密鍵: & d
+</eq>
+
+<p>
+とすると、$m$ が秘匿したい内容(数値)である場合、
+$(4)$ の<q>$m$ を$e$ 乗して$N$ で割った余りを求める計算</q>を<em>暗号化</em>、
+$(5)$ の<q>$c$ を$d$ 乗して$N$ で割った余りを求める計算</q>を<em>復号</em>として用いるとRSA暗号になる。
+</p>
+
+<p>秘密鍵 $d$ を公開鍵から求めるためには$N = pq$ の素因数分解が必要で、巨大な2つの素数の積を2つの素数に分解する計算も非常に難しいいため、
+十分に大きな素数から作られた公開鍵$\{e, N\}$ から、秘密鍵$d$ を求めることは今の技術では不可能だと考えられている。</p>
+<p>また、<q>$x$ 乗して $y$ で割った余りを求める</q>という計算は、$x$ が相当に大きな数でも比較的簡単に行えるが、その逆計算を高速に行う方法はまだ見つかっておらず、$d$ を使わずにRSA暗号を解読するのは困難だと考えられている。</p>
+<p>ただし、前述の通り、$p$、$q$、$e$ の選び方によっては想定する暗号強度が得られない可能性もあるため、注意が必要である。</p>
+
+<div class="demo-example">
+	<p>$p=<in>p</in>$、$q=<in>q</in>$、$e=<in>e</in>$ に対して実際に計算してみると、</p>
+	<p>【公開鍵】</p>
+	<et>
+		\{e, N\} = \{<in>e</in>, <in>N</in>\}
+	</eq>
+	<p>【秘密鍵】</p>
+	<div class="demo-if" data-cond="d !== null">
+		<et>
+			d = <in>d</in>
+		</eq>
+	</div>
+	<div class="demo-else">
+		<et>
+			e の逆元、d = e^{-1} の条件を満たす整数は存在しない。
+		</eq>
+	</div>
+	
+	<div class="demo-example">
+		<p>【暗号化したいメッセージ】</p>
+		<form class="demo-form">
+			<p><input type="text" name="message"/> <input type="submit" value="暗号化・復号" id="calc_button2"/></p>
+		</form>
+		<script class="demo-init">
+			const message = "RSA暗号方式のデモ";
+		</script>
+		
+		<script class="demo-calc">
+			function makeExpA(a: BigInteger, b: BigInteger, l: BigInteger){
+				return Dom.elem("a", { href: "6_exponential.html#a=" + a + ",b=" + b + ",l=" + l }, "$" + a + "^{" + b + "} \\ \\% \\ " + l + "$");
+			}
+			const m = str_to_bi_list(message, N);
+			
+			const c: BigInteger[] = [];
+			const r: BigInteger[] = [];
+			const m_tbody = Dom.elem("tbody");
+			const c_tbody = Dom.elem("tbody");
+			const r_tbody = Dom.elem("tbody");
+			let match = (d !== null);
+			for(let i = 0; i < m.length; i ++){
+				const j = i + 1;
+				c[i] = m[i].pow(e, N);
+				
+				m_tbody.appendChild(tr("m_" + j, "=", "" + m[i]));
+				c_tbody.appendChild(tr("c_" + j, "=", "m_" + j + "^e", "\\%", "N", "=", makeExpA(m[i], e, N), "=", c[i].toString()));
+				if(d !== null){
+					r[i] = c[i].pow(d, N);
+					if(!r[i].equals(m[i])){
+						match = false;
+					}
+					r_tbody.appendChild(tr("r_" + j, "=", "c_" + j + "^d", "\\%", "N", "=", makeExpA(c[i], d, N), "=", r[i].toString()));
+				}
+			}
+			let d_strs: Lib.Dom.DomItem[] = [];
+			if(d !== null){
+				const d_str_tmp = bi_list_to_str(r, N);
+				if(d_str_tmp !== null){
+					d_strs.push(d_str_tmp);
+					if(!match){
+						d_strs.push(Dom.elem("span", {style: {color: "red"}}, " 【エラー】$p$ か$q$ が素数ではないため、復号に失敗"));
+					}
+				}else{
+					d_strs.push(Dom.elem("span", {style: {color: "red"}}, " 【エラー】 UTF-8として文字列への復号に失敗(おそらく、$p$ か $q$ が素数ではない)"));
+				}
+			}else{
+				const message = "適切な $\\displaystyle d=e^{-1}$ を求められないため復号不可能";
+				r_tbody.appendChild(Dom.elem("tr", Dom.elem("td", { className: "demo-typeset" }, message)));
+				d_strs.push(Dom.span(message));
+			}
+			const r_message = Dom.span({ className: "demo-typeset" }, d_strs);
+		</script>
+		<p>【メッセージの数値化】</p>
+		<eq><table class="demo-typeset"><script class="demo-calc" data-inject="m_tbody"></script></table></eq>
+		<p>【暗号化の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
+		<eq><table class="demo-typeset"><script class="demo-calc" data-inject="c_tbody"></script></table></eq>
+		<p>【復号の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
+		<eq><table class="demo-typeset"><script class="demo-calc" data-inject="r_tbody"></script></table></eq>
+		<p>【復号の結果を再び文字列に】</p>
+		<et>$<in>r_message</in>$</eq>
+<!--
+		
+				const message = Dom.input("text", { value: "RSA暗号方式のデモ" });
+				const m_table = Dom.elem("table", { className: "eq"});
+				const c_table = Dom.elem("table", { className: "eq"});
+				const r_table = Dom.elem("table", { className: "eq"});
+				const d_span = Dom.elem("span");
+				const button = Dom.input("submit", { value: "暗号化・復号"});
+-->
+	</div>
+</div>
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

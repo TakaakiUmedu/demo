@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<p>以下では、Python言語に倣って、<q>$\%$</q>を、<q>$a \ \% \  b$</q> のように使い、<q>$m$ を$b$ で割ったときの剰余(余り)を求める演算</q>を表す記号として用いる。</p>
+<!--		
+		const example = demo.example([
+			["a", BigInteger.parse(5)], 
+			["b", BigInteger.parse(7)],
+			["c", BigInteger.parse(13)],
+		], [], ()=> {
+			return {};
+		});
+-->
+		
+<h4>分配法則のようなもの</h4>
+
+<p>
+剰余算(余りを求める計算)について、<q>2つの数を足した数を割ったの余り</q>と、<q>2つの数をそれぞれ割った余りを足した数、を割ったの余り</q>とは一致する。
+また、加算以外に減算、乗算についても同じ事が言える。
+</p>
+
+<p>すなわち、剰余算について以下の法則が成り立つ。</p>
+
+
+<et>
+(a + b) \ \% \ c & = & \{(a \ \% \ c) + (b \ \% \ c)\} \ \% \ c & = & \{a + (b \ \% \ c)\} \ \% \ c & = & \{(a \ \% \ c) + b\} \ \% \ c \\
+(a - b) \ \% \ c & = & \{(a \ \% \ c) - (b \ \% \ c)\} \ \% \ c & = & \{a - (b \ \% \ c)\} \ \% \ c & = & \{(a \ \% \ c) - b\} \ \% \ c \\
+ab \ \% \ c & = & (a \ \% \ c)(b \ \% \ c) \ \% \ c & = & a(b \ \% \ c) \ \% \ c & = & (a \ \% \ c)b \ \% \ c
+</et>
+
+<div class="demo-example">
+<p>例えば、</p>
+<script class="demo-init">
+const a = BigInteger.parse(24);
+const b = BigInteger.parse(17);
+const c = BigInteger.parse(13);
+</script>
+<form class="demo-form">
+<et>
+a &=& $<input name="a" type="text" data-parser="BigInteger.parse"></text>$ \\
+b &=& $<input name="b" type="text" data-parser="BigInteger.parse"></input>$ \\
+c &=& $<input name="c" type="text" data-parser="BigInteger.parse"></input>$ & $<input type="submit" value="再計算"></input>$
+</et>
+</form>
+<p>に対して計算してみると、</p>
+<et>
+(a + b) \ \% \ c                         & = & (<in>a</in> + <in>b</in>) \ \% \ <in>c</in>                                           & = & <in>a.add(b).mod(c)</in> \\
+\{(a \ \% \ c) + (b \ \% \ c)\} \ \% \ c & = & \{(<in>a</in> \ \% \ <in>c</in>) + (<in>b</in> \ \% \ <in>c</in>)\} \ \% \ <in>c</in> & = & <in>a.mod(c).add(b.mod(c)).mod(c)</in> \\
+\{a + (b \ \% \ c)\} \ \% \ c            & = & \{<in>a</in> + (<in>b</in> \ \% \ <in>c</in>)\} \ \% \ <in>c</in>                     & = & <in>a.add(b.mod(c)).mod(c)</in> \\
+\{(a \ \% \ c) + b\} \ \% \ c            & = & \{(<in>a</in> \ \% \ <in>c</in>) + <in>b</in>\} \ \% \ <in>c</in>                     & = & <in>a.mod(c).add(b).mod(c)</in> \\
+(a - b) \ \% \ c                         & = & (<in>a</in> - <in>b</in>) \ \% \ <in>c</in>                                           & = & <in>a.sub(b).mod(c)</in> \\
+\{(a \ \% \ c) - (b \ \% \ c)\} \ \% \ c & = & \{(<in>a</in> \ \% \ <in>c</in>) - (<in>b</in> \ \% \ <in>c</in>)\} \ \% \ <in>c</in> & = & <in>a.mod(c).sub(b.mod(c)).mod(c)</in> \\
+\{a - (b \ \% \ c)\} \ \% \ c            & = & \{<in>a</in> - (<in>b</in> \ \% \ <in>c</in>)\} \ \% \ <in>c</in>                     & = & <in>a.sub(b.mod(c)).mod(c)</in> \\
+\{(a \ \% \ c) - b\} \ \% \ c            & = & \{(<in>a</in> \ \% \ <in>c</in>) - <in>b</in>\} \ \% \ <in>c</in>                     & = & <in>a.mod(c).sub(b).mod(c)</in> \\
+ab      \ \% \ c                         & = & <in>a</in>\cdot<in>b</in>      \ \% \ <in>c</in>                                           & = & <in>a.mul(b).mod(c)</in> \\
+(a \ \% \ c)(b \ \% \ c) \ \% \ c        & = & (<in>a</in> \ \% \ <in>c</in>)(<in>b</in> \ \% \ <in>c</in>) \ \% \ <in>c</in>        & = & <in>a.mod(c).mul(b).mod(c).mod(c)</in> \\
+a(b \ \% \ c) \ \% \ c                   & = & <in>a</in>\cdot(<in>b</in> \ \% \ <in>c</in>) \ \% \ <in>c</in>                            & = & <in>a.mul(b).mod(c).mod(c)</in> \\
+(a \ \% \ c)b \ \% \ c                   & = & (<in>a</in> \ \% \ <in>c</in>)\cdot<in>b</in> \ \% \ <in>c</in>                            & = & <in>a.mod(c).mul(b).mod(c)</in>
+</et>
+<p>と、一致が確かめられる。</p>
+</div>
+
+<h4>証明</h4>
+<p>これらは、$c$ で割った商と余りを適当な変数と置いて計算すると簡単に証明できる。まず、$b$ を $c$ で割った商と余りをそれぞれ $b_q$、$b_r$ として、</p>
+
+<et data-align="lr">
+b  = b_qc + b_r & (1)
+</et>
+
+<p>と表せる。$(1)$を、$a+b$、$a-b$、$ab$ にそれぞれ代入すると、</p>
+
+<et data-align="lllllr">
+a + b & = & a + b_qc + b_r & = & b_qc + (a + b_r) & (2) \\
+a - b & = & a - (b_qc + b_r) & = & b_qc + (a - b_r) & (3) \\
+ab & = & a(b_qc + b_r) & = & ab_qc + ab_r & (4)
+</et>
+
+
+<p>となる。さらに、$a + b_r$、$a - b_r$、$ab_r$ を $c$ で割った余りと商をそれぞれ、$x_q$、$x_r$、$y_q$、$y_r$、$z_q$、$z_r$とすると、</p>
+<et data-align="lllr">
+a + b_r & = & x_qc + x_r & (5) \\
+a - b_r & = & y_qc + y_r & (6) \\
+ab_r & = & z_qc + z_r & (7)
+</et>
+
+<p>$(2)$、$(3)$、$(4)$に、$(5)$、$(6)$、$(7)$をそれぞれ代入して、</p>
+
+<et data-align="lllr">
+a + b & = & b_qc + (x_qc + x_r) & = & (b_q + x_q)c + x_r \\
+a - b & = & b_qc + (y_qc + y_r) & = & (b_q + y_q)c + y_r \\
+ab & = & ab_qc + (z_qc + z_r) & = & (ab_q + z_q)c + z_r
+</et>
+
+<p>となる。$x_r$、$y_r$、$z_r$は、それぞれ $0$ 以上 $c$ 未満の整数で、他の要素も全て整数であるため、これらを $c$ で割った余りは、それぞれ $x_r$、$y_r$、$z_r$ である。
+同様の議論を $a$ を $c$ で割った商と余りについても行うと、分配法則が全て証明できる。</p>
+
+<h4>発展</h4>
+
+<p>複雑な数式についても、この法則を繰り返して適用することで、式の一部を、<q>$c$ で割った余り</q>に置き換えることができる。雑に言うと、以下のような主張ができる。</p>
+
+
+
+<et>
+&lt;加減乗算からなる数式X&gt; \ \% \ c & = & &lt;加減乗算からなる数式Xの途中に「\% \ c」を追加したもの&gt; \ \% \ c
+</et>
+
+
+<p>以下のような事も証明できる。</p>
+
+<et>
+加減乗算を繰り返した後、最後に整数 M で割った余りを求める処理の場合、 \\
+計算途中で途中の値をMで割った余りに置き換えても、答えは変わらない。
+</et>
+
+
+<p>
+競技プログラミングなどによく見られる、<q>解答は$10^9 + 7$で割った余りで出力せよ</q>という出題はこれを意図している。
+最終的に $M$ で割った余りを算出するのであれば、計算途中で値が大きくなりすぎる前に、適宜、$M$ で割った余りに置き換える、という処理を挟むことで、巨大な数を扱わずに済んで計算が高速化できる。
+</p>
+
+<h4>除算(割り算)は?</h4>
+
+<p>除算に関しては、割り切れるような場合についてであっても、上記のような法則は必ずしも成り立たない。反例として、例えば、</p>
+
+<et>
+a & = & 24 \\
+b & = & 12 \\
+c & = & 8
+</et>
+
+<p>のとき、</p>
+
+<et>
+\frac{\;a\;}{\;b\;} & = & 2 \\
+\frac{\;a\;}{\;b\;} \ \% \ c & = & 2 \\
+\frac{\;a \ \% \ c\;}{\;b\;} \ \% \ c & = & 0 \\
+\frac{\;a\;}{\;b \ \% \ c\;} \ \% \ c & = & 6
+</et>
+
+<p>となり、$c$ での剰余算をどこに挟んでも値が変化する。</p>
+
+<p>ただし、$b$ と $c$ が互いに素である場合は、下記のように、逆元を用いて同様の結果を得ることができる。互いに素であるような$2$つの整数に対しては、</p>
+
+<et>
+b\cdot b^{-1} \ \% \ c = 1
+</et>
+
+<p>となるような、$c$ を法とする $b$ の逆元 $b^{-1}$ が存在する。そのような逆元は<a href = "3_inverse_element.html">ユークリッドの互除法の拡張</a>を用いて求められる。</p>
+
+<div class="demo-example">
+	<script class="demo-calc">
+	const invB = calcInv(vars.b, vars.c);
+	</script>
+	<div class="demo-if" data-cond="invB !== null">
+		<p>例えば、$b = <in>b</in>$、$c = <in>c</in>$ の場合、</p>
+		<et>
+		b^{-1} = <in>invB</in>
+		</et>
+		<p>とすると、</p>
+		<et>
+		b \cdot b^{-1} \ \% c = <in>b</in>\cdot<in>invB</in>\ \% \ <in>c</in> = <in>b.mul(invB).mod(c)</in>
+		</et>
+		<p>となる。</p>
+	</div>
+	<div class="demo-else">
+		<p>例えば、$b = <in>b</in>$、$c = <in>c</in>$ の場合、$b$ と $c$ の最大公約数は、<in>b.gcm(c)</in>であり、互いに素ではないため、逆元は存在しない。</p>
+	</div>
+</div>
+
+<p>そのため、分母と $c$ が互いに素である場合は、逆元で計算を行える。</p>
+
+<p>$a$ が $b$ で割り切れ、$b$ と $c$ が互いに素である場合、</p>
+		
+<et>
+\frac{\;a\;}{\;b\;} \ \% \ c & = & a \frac{\;1\;}{\;b\;} \cdot 1 \ \% \ c \\
+& = & a \frac{\;1\;}{\;b\;} (b \cdot b^{-1} \ \% \ c) \ \% \ c & (逆元の定義より) \\
+& = & a \frac{\;1\;}{\;b\;} b \cdot b^{-1} \ \% \ c & (上記で証明した掛け算に対する剰余の性質より) \\
+& = & a b^{-1} \ \% \ c
+</et>
+
+<p>と式展開できて、$c$ で割った余りに関しては、$b$ の逆数である $\displaystyle \frac{\;1\;}{\;b\;}$ を掛けても、$c$ を法とする $b$ の逆元である $b^{-1}$ を掛けても結果が同じになることが確かめられる。</p>
+
+<p>以上の事から、計算途中の割り切れる除算については、分母が、剰余算に使われる法 $c$ と互いに素である場合には、除算を分母の逆元の乗算に置き換えても、同じ結果が得られる。
+なお、$c$ が素数の場合には、任意の分母と互いに素になるため、常にこの変換を行うことができる。</p>
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

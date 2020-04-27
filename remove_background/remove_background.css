@@ -1,0 +1,12 @@
+#picked_color{
+	border-style: solid;
+	border-color: green;
+	border-width: 1px;
+}
+#result_image, canvas{
+	background: url("transparent.png");
+	border-style: solid;
+	border-color: cyan;
+	border-width: 2px;
+	padding: 10px;
+}

@@ -1,0 +1,42 @@
+div#graph{
+	margin: 0.5em;
+}
+
+div#control{
+	margin: 0.5em;
+}
+
+div#control p{
+	text-indent: 0;
+	margin: 0.1em 1em;
+	line-height: 2.2em;
+}
+
+span.panel{
+	margin: 0 0.5em;
+	padding: 0.5em 0.5em;
+	background-color: #8aa;
+	border-radius: 10px;
+}
+
+span.group{
+	margin: 0.2em;
+	padding: 0.2em 0.5em;
+	background-color: #cff;
+	border-radius: 10px;
+}
+.graph div{
+	padding: 0.4em;
+	background-color: #cfc;
+	border-radius: 10px;
+}
+.error{
+	color: #e00;
+}
+div#text_message{
+	flex-flow:row nowrap;
+	display: flex;
+}
+div#text_message ul{
+	margin: 0.5em;
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html lang="ja" xmlns:d="demo">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title class="demo-title"></title>
+<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="math.css"></link>
+<link rel="stylesheet" href="demo.css"></link>
+</head>
+<body>
+
+<h1 class="demo-title"></h1>
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+<!--
+<h4>定義</h4>
+<p>
+以下では、Python言語に倣って、<q>$\%$</q>を、<q>$a \ \% \  b$</q> のように使い、$a$ を$b$ で割ったときの剰余(余り)を求める演算を表す記号として用いる。
+</p>
+<p>
+また、<q>$\equiv_n$</q>を、<q>$a \equiv_n b$</q> のように使い、<q>$a$ と$b$ は$n$ を法として合同</q>、すなわち、<q>$a$ と$b$ は$n$ で割った場合の余りが等しい</q>という意味の記号として用いる。
+特に$0 \le b \lt n$ の場合、$b$ は $a$ を $n$ で割った余りとなる。
+</p>
+-->
+
+<h4>このページの目標</h4>
+<et data-align="lr">
+任意の素数p、q と整数k 、および、\\
+0 以上 pq 未満でpq と$<q>$互いに素ではない$</q>$整数m に対して、\\
+m^{k(p-1)(q-1) + 1} \ \% \ pq = m & (本題)
+</et>
+<p>となることを証明する。</p>
+
+<h4>孫子の剰余定理などを使った補題の準備</h4>
+<p><a href="https://ja.wikipedia.org/wiki/%E4%B8%AD%E5%9B%BD%E3%81%AE%E5%89%B0%E4%BD%99%E5%AE%9A%E7%90%86">孫子の定理</a>により、以下が成り立つ。</p>
+<et data-align="lr">
+未知の整数x があった時、2つの異なる素数p、q を用いて、\\
+xをp で割った余りが a であり、\\
+xをq で割った余りが b であるという情報が得られれば、\\
+条件に合致するような整数xの候補を、0以上pq未満の範囲から必ず1つだけ見つけられる。& (補題1)
+</et>
+
+
+<p>この$(補題1)$は、そのような $x$ の候補が下記の手順で求められることから示せる。</p>
+<et data-align="lr">
+2つの異なる素数p、q があり、\\
+未知の整数xをp で割った余りが a であり、qで割った余りが b だという情報が得られたとする。\\
+そのようなp、q に対しては、pu + qv = 1 となるようなu、v を求めることができ、\\
+そのようにして求めたu、vについて、x をpq で割った余りと、整数y =aqv + bpuをpqで割った余りは等しい。 & (補題2)
+</et>
+<p>以下では、$(補題2)$の手順の正しさを確かめる。</p>
+
+<h4>$x$を求める手順</h4>
+<p>まず、以下が成り立つ整数$u$、$v$ を求める。</p>
+<et data-align="lr">
+pu + qv = 1 & (1)
+</et>
+
+<p>$(2)$の両辺を $q$ で割った余りを求めると、</p>
+<et>
+(pu + qv) \ \% \ q & = &  1 \ \% \ q \\
+pu \ \% \ q & = &  1  & (左辺は剰余の性質より、右辺は1を素数で割った余りは1なので)
+</et>
+
+<p>となる。$pu \ \% \ q = 1$ となるような$u$、すなわち、$p$ の$q$ を法とする逆元は、<a>{:href=&gt;""}ユークリッドの互除法の拡張</a>を用いて求められる。その後、$pu + qv = 1$ を解けば、$v$ も求まる。</p>
+<p>同様に$(2)$の両辺を $p$ で割った余りを求めると、</p>
+<et>
+(pu + qv) \ \% \ p & = &  1 \ \% \ p \\
+qv \ \% \ p & = &  1  & (左辺は剰余の性質より、右辺は1を素数で割った余りは1なので)
+</et>
+<p>となる。</p>
+
+<div class="demo-example">
+	<form class="demo-form">
+	<p>実際に、</p>
+	<et>
+	p & = & $<input name="p" data-parser="BigInteger.parse"/>$ \\
+	q & = & $<input name="q" data-parser="BigInteger.parse"/>$ & $<input type="submit" value="再計算"/>$
+	</et>
+	<p>に対して計算してみると、</p>
+	</form>
+	<script class="demo-init">
+	const N = BigInteger.parse(10).pow(6);
+	const p = N.random();
+	const q = N.random();
+	</script>
+	<script class="demo-calc">
+		const u = calcInv(p, q);
+		let v: null | BigInteger = null;
+	</script>
+	<div class="demo-if" data-cond="u !== null">
+		<script class="demo-calc">
+			v = BigInteger.ONE.sub(p.mul(u)).div(q);
+			const t = p.mul(u).add(q.mul(v));
+		</script>
+		<eq>
+		<p>$\displaystyle u = <span class="demo-inject">u</span>$</p>
+		<p>$\displaystyle v = <span class="demo-inject">v</span>$</p>
+		</eq>
+		<p>が求まり、検算すると、</p>
+		<et>
+		pu + qv     & = & <span class="demo-inject">p</span>\cdot<span class="demo-inject">u</span>+<span class="demo-inject">q</span>\cdot(<span class="demo-inject">v</span>) \\
+		            & = & <span class="demo-inject">t</span> \\
+		pu \ \% \ q & = & <span class="demo-inject">p</span>\cdot<span class="demo-inject">u</span>\ \% \ <span class="demo-inject">q</span> \\
+		            & = & <span class="demo-inject">p.mul(u).mod(q)</span> \\
+		qv \ \% \ p & = & <span class="demo-inject">q</span>\cdot(<span class="demo-inject">v</span>)\ \% \ <span class="demo-inject">p</span> \\
+		            & = & <span class="demo-inject">q.mul(v).mod(p)</span> \\
+		</et>
+		<p>と、$1$ となることが確かめられる。</p>
+	</div>
+	<div class="demo-else">
+		<p>$p$ と $q$ が互いに素ではないため、条件を満たす $u$ が求められない。</p>
+	</div>
+</div>
+<p>次に、$y = aqv + bpu$ で求まる整数$y$ について考える。$y$ を$p$ 、および、$q$ で割った余りを求めると、</p>
+<et>
+y \ \% \ p & = & (aqv + bpu)\ \% \ p \\
+           & = & \{(aqv \ \% \ p) + (bpu \ \% \ p)\}\ \% \ p \\
+           & = & aqv \ \% \ p \\
+           & = & (a \ \% \ p)(qv \ \% \ p) \ \% \ p \\
+           & = & a \ \% \ p & ((4)より) \\
+           & = & a & (元々aはpで割った余りとして求められた数なので) \\
+y \ \% \ q & = & (aqv + bpu)\ \% \ q \\
+           & = & \{(aqv \ \% \ q) + (bpu \ \% \ q)\}\ \% \ q \\
+           & = & bqu \ \% \ q \\
+           & = & (b \ \% \ q)(pu \ \% \ q) \ \% \ q \\
+           & = & b \ \% \ q & ((3)より) \\
+           & = & b & (元々bはqで割った余りとして求められた数なので)
+</et>
+<p>
+となり、$y$ は $p$ で割ると$a$ 余り、$q$ で割ると$b$ 余る整数であることが分かり、ぞれぞれの余りが、$x$ のものと一致する。
+また、$y$ に $p$ と $q$ の公倍数である $pq$ の倍数を足したり引いたりしても、$p$ や $q$ で割った余りは変化しない。
+そのため$x$ の条件である、$0$ 以上 $pq$ 未満になるように$pq$ の倍数を$y$ に足すと $x$ が求められる。
+あるいは、$y$ を$pq$ で割った余りが $x$ であるとも言える。</p>
+<p>以上により、$(補題2)$が示せた。</p>
+<div class="demo-example">
+	<div class="demo-if" data-cond="u !== null && v !== null">
+		<div class="demo-example">
+			<form class="demo-form">
+			<p>上で求めた $p$、$q$ に対する $u$、$v$ について、</p>
+			<et>
+				a & = & $<input name="a" data-parser="BigInteger.parse"/>$ \\
+				b & = & $<input name="b" data-parser="BigInteger.parse"/>$ & $<input type="submit" value="再計算"/>$
+			</et>
+			<p>の場合の $x$、$y$ を求めてみると、 </p>
+			</form>
+			<script class="demo-init">
+				const a = p.random();
+				const b = q.random();
+			</script>
+			<script class="demo-calc">
+				const y = a.mul(q).mul(v).add(b.mul(p).mul(u));
+				const x = y.mod(p.mul(q));
+				const a2 = x.mod(p);
+				const b2 = x.mod(q);
+			</script>
+			<et>
+			y & = & aqv + bpu \\
+			  & = & <span class="demo-inject">a</span>\cdot<span class="demo-inject">q</span>\cdot<span class="demo-inject">u</span> + <span class="demo-inject">b</span>\cdot<span class="demo-inject">p</span>\cdot <span class="demo-inject">v</span> \\
+			  & = & <span class="demo-inject">y</span> \\
+			x & = & y \ \% \ pq \\
+			  & = & <span class="demo-inject">y</span> \ \% \ <span class="demo-inject">p.mul(q)</span> \\
+			  & = & <span class="demo-inject">x</span>
+			</et>
+			<p>と$x$が求まり、$p$、$q$で割った余りを試すと、</p>
+			<et>
+			x \ \% \ p & = & <span class="demo-inject">a2</span> \\
+			x \ \% \ q & = & <span class="demo-inject">b2</span>
+			</et>
+			<div class="demo-if" data-cond="a2.equals(a)">
+				<div class="demo-if" data-cond="b2.equals(b)">
+					<p>となり、$a$、$b$と一致する事が確かめられる。</p>
+				</div>
+				<div class="demo-else">
+					<p>となり、$a$ は一致するが、$b$ は一致しない。これは、$b = <span class="demo-inject">b</span>$ が $q = <span class="demo-inject">q</span>$ 以上であり、<q>$b$ は $x$ を$q$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p>$b$ を $q$ で割った余り、$b \ \% \ q = <span class="demo-inject">b.mod(q)</span>$ とは一致する。</p>
+				</div>
+			</div>
+			<div class="demo-else">
+				<div class="demo-if" data-cond="b2.equals(b)">
+					<p>となり、$b$ は一致するが、$a$ は一致しない。これは、$a = <span class="demo-inject">a</span>$ が $q = <span class="demo-inject">p</span>$ 以上であり、<q>$a$ は $x$ を$p$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p>$a$ を $p$ で割った余り、$a \ \% \ p = <span class="demo-inject">a.mod(p)</span>$ とは一致する。</p>
+				</div>
+				<div class="demo-else">
+					<p>となり、$a$ も $b$ も一致しない。これは、$a = <span class="demo-inject">a</span>$、$b = <span class="demo-inject">b</span>$ が、ぞれぞれ $p = <span class="demo-inject">p</span>$、$q = <span class="demo-inject">q</span>$ 以上であり、<q>$a$、$b$ は $x$ をそれぞれ$p$、$q$ で割った余りである</q>、という前提に反しているためである。</p>
+					<p>$a$、$b$ をそれぞれ $p$、$q$ で割った余り、$a \ \% \ p = <span class="demo-inject">a.mod(p)</span>$、$b \ \% \ q = <span class="demo-inject">b.mod(q)</span>$ とは一致する。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="demo-else" id="option_3">
+		<p>$p$ と $q$ が互いに素ではないため、条件を満たす $u$ が求められない。</p>
+	</div>
+</div>
+
+<h4>$(本題)$の証明</h4>
+<p>$m$ が $pq$ と互いに素ではない場合、$p$ と$q$ が素数であるため、$m$ は、$p$ か $q$ の少なくとも一方と互いに素ではない。</p>
+<p>まず、$m$ が $p$ と $q$ の両方と互いに素ではない場合を考えると、$p$ と $q$ が素数であるため、$m$ は $pq$ の倍数でなければならない。定義より $0 \le m \lt pq$ を満たすような $pq$ の倍数は、$m = 0$ のみであり、この場合、$(本題)$ は自明に成り立つ。よって、残る、$m$ が $p$ と $q$ のいずれか一方と互いに素ではなく、他方とは素である場合について証明できればよい。</p>
+<p>$m$ が $q$ と素ではなく、$p$ とは互いに素である場合、$q$ は素数であるため、$m$ は $q$ の倍数でなければならない。そのため、$m$ を $q$ で割った商を $i$、$m$ を $p$ で割った商を $j$、余りを $l$ とすると、$m$ は、</p>
+<eq>
+<p>\[m=iq \  \ (mはqの倍数) \tag{4}\]</p>
+<p>\[m=jp + l \ \ \ (mをpで割るとl余る) \tag{5}\]</p>
+</eq>
+<p>と表すことができる。</p>
+<p>下記のように $(本題)$ の左辺で $pq$ で割った余りを求めている対象の $m$ の累乗を $x$ とおき、$x$ について考察する。</p>
+<eq>
+<p>$\displaystyle x = m^{k(p - 1)(q - 1) + 1}$</p>
+</eq>
+<p>$x$ を $p$ で割った余りを求めると、</p>
+<et>
+x \ \% \ p & = & m^{k(p - 1)(q - 1) + 1} \ \% \ p \\
+           & = & m \cdot m^{k(p - 1)(q - 1)} \ \% \ p \\
+           & = & m \cdot m^{(p - 1)\cdot k(q - 1)} \ \% \ p \\
+           & = & m (m^{(p - 1)})^{k(q - 1)} \ \% \ p \\
+           & = & m (m^{(p - 1)} \ \% \ p)^{k(q - 1)} \ \% \ p & (剰余の性質より)
+</et>
+<p>と式変形できる。ここで、<a href="4_Eulars_theorem.html"</a>オイラーの定理</a>より、</p>
+<eq>
+<p>\[ 素数pと、1以上 p 未満でpと互いに素な任意の整数 a に対して、a^{(p - 1)}\  \% \  p = 1 \tag{7}\]</p>
+</eq>
+<p>であるため、</p>
+<et>
+x \ \% \ p & =  & m \cdot 1^{k(q - 1)} \ \% \ p & ((7)を代入して) \\
+           & =  & m \ \% \ p \\
+           & =  & l & (lの定義より)
+</et>
+<p>である。一方で、$m$ は $q$ の倍数であるため、$m$ を複数回掛け合わせた $x$ も $q$ の倍数である。よって、$x$ を $q$ で割った余りは $0$であるため、</p>
+<et>
+x \ \% \ p &  =  & l \\
+x \ \% \ q &  =  & 0
+</et>
+<p>となる。よって、$x$ は、$p$ で割ると $l$ 余り、$q$ で割ると $0$ 余るような整数である。そこで、$a = l$、$b = 0$ として、$(補題2)$を適用すると、$u$、$v$ が、</p>
+<e>
+<p>\[pu + qv = 1 \tag{8}\]</p>
+</eq>
+<p>となるような整数であるとき、</p>
+<et>
+x \ \% \ pq & = & (aqv + bpu) \ \% \ pq \\
+            & = & (lqv + 0 \cdot pu) \ \% \ pq \\
+            & = & lqv \ \% \ pq
+</et>
+<p>が成立するということが言える。補題を証明するためには $u$ と $v$ については具体的に値を求める必要はなく、そのまま式変形を続けると、</p>
+<et>
+x \ \% \ pq & =  &  iq \cdot (1 - pu) \ \% \ pq & ((5)、(8)を代入) \\
+            & =  &  i(q - pqu) pq \\
+            & =  &  i\{q - (pqu \ \% \ pq)\} \ \% \ pq & (剰余の性質より) \\
+            & =  &  i(q - 0)\ \% \ pq & (pquをpqで割ると余りは0) \\
+            & =  &  iq  \ \% \ pq \\
+            & =  &  m \ \% \ pq \\
+            & =  &  m  & (元々の仮定よりm \lt pqなので)
+</et>
+<p>となり、$(本題)$ $x = \ \% \ pqm^{k(p-1)(q-1) + 1} \ \% \ pq = m$ が証明できた。</p>
+<p>最後に、$m$ が $p$ と互いに素でない場合には、上記の議論を $p$ と $q$ を入れ替えて行えばよく、以上で全ての場合について証明ができた。</p>
+
+<div class="demo_toc_simple"><div class="demo-toc"></div></div>
+
+</body>
+</html>

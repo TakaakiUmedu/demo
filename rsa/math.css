@@ -1,0 +1,127 @@
+p{
+	text-indent: 0;
+	text-align : left;
+}
+
+div.demo-equation{
+	display: flex;
+	margin: 0 7em 1.5em 7em;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+div.demo-equation p{
+	text-indent: -1em;
+	padding: 0 0 0 1em;
+	margin: 0 0 0 0;
+	vertical-align: baseline;
+}
+
+blockquote.demo-equation table{
+	background-color: transparent;
+	border-color: transparent;
+	border-width: 0;
+	margin: 0;
+}
+blockquote.demo-equation table tr, blockquote.demo-equation table td{
+/*	background-color: transparent;
+	border-color: transparent;*/
+	padding: 0.5em 0.25em;
+}
+
+blockquote.demo-equation{
+	width: 1em;
+	white-space: nowrap;
+	font-size:110%;
+}
+
+blockquote.demo-equation table td.wrap{
+	width: auto;
+	white-space: normal;
+}
+
+blockquote.demo-equation table td.number{
+	width: auto;
+	white-space: normal;
+	text-align: right;
+}
+
+/*
+blockquote.demo-equation table tr:not(.withnumber) td:last-child, blockquote.demo-equation table tr.withnumber tr:not(:last-child) td:last-child, blockquote.demo-equation table tr.withnumber td:nth-last-of-type(2){
+	width: auto;
+	white-space: normal;
+}
+
+blockquote.demo-equation table tr.withnumber tr:last-child td:last-child{
+	width: 1em;
+	white-space: nowrap;
+	text-align: right;
+}
+blockquote.demo-equation table tr{
+	vertical-align: top;
+}
+
+blockquote.demo-equation table tr.bottom{
+	vertical-align: bottom;
+}
+*/
+
+blockquote.demo-equation{
+	background-color : #FFF4FF;
+	border-color : #E7A3AE;
+	border-style: solid;
+	border-width: 4px;
+	padding: 0 1em;
+	width: calc(100% - 10em);
+	margin-left: 5em;
+	margin-right: 5em;
+	font-size: 100%;
+	box-sizing: border-box;
+}
+
+span.mod{
+	font-size: 80%;
+}
+
+sub, sup{
+	font-size: 90%;
+}
+
+
+
+
+.demo-example {
+	border-color : #7E7EA3;
+	border : solid 2px #448;
+	padding: 0.5em 1em;
+	margin: 0.5em 5em;
+}
+
+.demo-example .demo-example {
+	border-style : none;
+	border-width : 0;
+	padding: 0;
+	margin: 0;
+}
+
+.demo-example blockquote.demo-equation {
+	border-color : #7E7EA3;
+	background-color: #F4F4FF;
+	border-width: 2px;
+	margin: 0.5em;
+	width: calc(100% - 1em);
+}
+.demo-example blockquote.demo-equation table, .demo-example blockquote.demo-equation td, .demo-example blockquote.demo-equation tr{
+	background-color: transparent;
+}
+.demo-example p, .demo-example blockquote p{
+	margin: 0.5em;
+}
+
+td.right{
+	text-align: right;
+}
+
+td.left{
+	text-align: left;
+}
