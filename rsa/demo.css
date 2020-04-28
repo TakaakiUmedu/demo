@@ -75,3 +75,22 @@ blockquote.demo-equation table td.right{
 	visibility: visible;
 }
 */
+
+.source .com{
+	color: #7ac;
+	font-style: italic;
+}
+
+.source .num, .source .res, .source .fun{
+	color: #490;
+}
+
+.source .res{
+	font-weight: bold;
+}
+
+.source .op{
+	color: #b2f;
+	font-weight: bold;
+}
+

@@ -63,6 +63,7 @@ namespace RSADemo{
 			let eq;
 			set_value("demo_id_6", b);
 			set_value("demo_id_7", format_list("", " ", "_{(2)}", list3));
+			const list4_0: string[] = [];
 			const list4: string[] = [];
 			const list5: string[] = [];
 			const list6: string[] = [];
@@ -72,6 +73,7 @@ namespace RSADemo{
 			for(let i = 0; i < list3.length; i ++){
 				if(list3[i] === 1){
 					const n = list3.length - i - 1;
+					list4_0.push("" + n);
 					const exp = "2^{" + n + "}";
 					list4.push(exp);
 					list5.push("^{" + exp + "}");
@@ -82,10 +84,11 @@ namespace RSADemo{
 					list9.push("y_{" + n + "}");
 				}
 			}
-			set_value("demo_id_8", format_list("", " \\ +\\  ", "", list4));
-			set_value("demo_id_10", format_list("", " {^{+}}", "", list5));
-			set_value("demo_id_11", format_list("", " ", "", list6));
-			set_value("demo_id_13", format_list("", " ", "", list7));
+			set_value("demo_id_8", format_set(list4_0, false));
+			set_value("demo_id_9", format_list("", " \\ +\\  ", "", list4));
+			set_value("demo_id_11", format_list("", " {^{+}}", "", list5));
+			set_value("demo_id_12", format_list("", " ", "", list6));
+			set_value("demo_id_14", format_list("", "\\;", "", list7));
 			const tbody10 = Dom.elem("tbody");
 			const bq10 = Dom.elem("blockquote", { className: "demo-equation demo-typeset" }, Dom.elem("table", tbody10));
 			let calc_count = 1;
@@ -96,29 +99,29 @@ namespace RSADemo{
 			}else{
 				p = BigInteger.ONE;
 			}
-			tbody10.appendChild(tr("y_0", "=", "a \ \% \ l", "=", y.toString()));
+			tbody10.appendChild(tr("y_0", "=", "a \\ \\% \\ l", "=", y.toString()));
 			for(let i = 1; i < list3.length; i ++){
 				y = y.mul(y).mod(l);
-				tbody10.appendChild(tr("y_{" + i + "}", "=", "y_{" + (i - 1) + "}^2 \ \% \ l", "=", y.toString()));
+				tbody10.appendChild(tr("y_{" + i + "}", "=", "y_{" + (i - 1) + "}^2 \\ \\% \\ l", "=", y.toString()));
 				calc_count += 2;
 				if(list3[list3.length - 1 - i] == 1){
 					p = p.mul(y).mod(l);
 					calc_count += 2;
 				}
 			}
-			set_value("demo_id_15", bq10);
-			set_value("demo_id_17", format_list("", " ", "", list7));
-			set_value("demo_id_18", format_list("", " ", "", list8));
-			set_value("demo_id_19", format_list("", " ", "", list9));
+			set_value("demo_id_16", bq10);
+			set_value("demo_id_18", format_list("", "\\; ", "", list7));
+			set_value("demo_id_19", format_list("", " ", "", list8));
+			set_value("demo_id_20", format_list("", "\\; ", "", list9));
 			if(list9.length > 2){
-				show_branch("demo_id_21");
+				show_branch("demo_id_22");
 				
 				if(list9.length > 3){
-					show_branch("demo_id_22");
+					show_branch("demo_id_23");
 					
 				}
 				else{
-					show_branch("demo_id_23");
+					show_branch("demo_id_24");
 					
 				}
 				const list11l: string[] = [];
@@ -127,19 +130,19 @@ namespace RSADemo{
 					list11l.push("(" + list9[i]);
 					list11r.push("\\ \\% \\ l)");
 				}
-				set_value("demo_id_24", list9[0]);
-				set_value("demo_id_25", format_list("", " ", "", list11l));
-				set_value("demo_id_26", list9[list9.length - 1]);
-				set_value("demo_id_27", format_list("", " ", "", list11r));
+				set_value("demo_id_25", list9[0]);
+				set_value("demo_id_26", format_list("", " ", "", list11l));
+				set_value("demo_id_27", list9[list9.length - 1]);
+				set_value("demo_id_28", format_list("", " ", "", list11r));
 			}
 			else{
-				show_branch("demo_id_28");
+				show_branch("demo_id_29");
 				
 			}
-			set_value("demo_id_30", calc_count);
-			set_value("demo_id_31", p);
+			set_value("demo_id_31", calc_count);
+			set_value("demo_id_32", p);
 		}
 		
-		Lib.MathDemo.register(["demo_id_0", "demo_id_9", "demo_id_12", "demo_id_14", "demo_id_16", "demo_id_20", "demo_id_29"], "demo_id_1", "demo_id_5", initialize, reload, update);
+		Lib.MathDemo.register(["demo_id_0", "demo_id_10", "demo_id_13", "demo_id_15", "demo_id_17", "demo_id_21", "demo_id_30"], "demo_id_1", "demo_id_5", initialize, reload, update);
 	}
 }

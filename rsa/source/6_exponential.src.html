@@ -85,6 +85,7 @@
 	</et>
 	<p>すなわち、</p>
 	<script class="demo-calc">
+		const list4_0: string[] = [];
 		const list4: string[] = [];
 		const list5: string[] = [];
 		const list6: string[] = [];
@@ -94,6 +95,7 @@
 		for(let i = 0; i < list3.length; i ++){
 			if(list3[i] === 1){
 				const n = list3.length - i - 1;
+				list4_0.push("" + n);
 				const exp = "2^{" + n + "}";
 				list4.push(exp);
 				list5.push("^{" + exp + "}");
@@ -106,7 +108,8 @@
 		}
 	</script>
 	<et data-align="lllr">
-	<td class="top">b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " \\ +\\  ", "", list4)</in>$</td> & <td class="bottom">(3)</td>
+	<td class="top">B</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_set(list4_0, false)</in>$</td> & <td class="bottom"></td> \\
+	<td class="top">b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " \\ +\\  ", "", list4)</in>$</td> & <td class="bottom">(3)</td> \\
 	</et>
 </div>
 
@@ -139,7 +142,7 @@ a^b &=& a^{\sum_{n \in B} 2^n} & (数式では分かりにくいが、aの右肩
 
 <div class="demo-example">
 	<et data-align="lllr">
-	<td class="top">a^b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", " ", "", list7)</in>$</td> & <td class="bottom">(7)</td>
+	<td class="top">a^b</td> & <td class="top">=</td> & <td class="demo-typeset wrap">$<in>format_list("", "\\;", "", list7)</in>$</td> & <td class="bottom">(7)</td>
 	</et>
 </div>
 
@@ -209,10 +212,10 @@ y_{n - 1}^2\ \% \ l & (n \ge 1)
 		}else{
 			p = BigInteger.ONE;
 		}
-		tbody10.appendChild(tr("y_0", "=", "a \ \% \ l", "=", y.toString()));
+		tbody10.appendChild(tr("y_0", "=", "a \\ \\% \\ l", "=", y.toString()));
 		for(let i = 1; i < list3.length; i ++){
 			y = y.mul(y).mod(l);
-			tbody10.appendChild(tr("y_{" + i + "}", "=", "y_{" + (i - 1) + "}^2 \ \% \ l", "=", y.toString()));
+			tbody10.appendChild(tr("y_{" + i + "}", "=", "y_{" + (i - 1) + "}^2 \\ \\% \\ l", "=", y.toString()));
 			calc_count += 2;
 			if(list3[list3.length - 1 - i] == 1){
 				p = p.mul(y).mod(l);
@@ -239,14 +242,14 @@ a^b \ \% \ l &= & $\[ \left\{ \prod_{n \in B} (x_n \ \% \ l) \right\} \ \% \ l \
 
 <div class="demo-example">
 	<et>
-	a^b \ \% \ l & = & <td class="wrap">$<in>format_list("", " ", "", list7)</in>$ \ \%\ l</td>
+	a^b \ \% \ l & = & <td class="wrap">$<in>format_list("", "\\; ", "", list7)</in>$ \ \%\ l</td>
 	</et>
 	
 	<p>であり、剰余の性質を用いて式変形してから、$(6)$ を代入すると、</p>
 
 	<et>
 	a^b \ \% \ l & = & <td class="wrap">$<in>format_list("", " ", "", list8)</in>$ \ \%\ l </td> \\
-	& = & <td class="wrap">$<in>format_list("", " ", "", list9)</in>$ \ \%\ l</td>
+	& = & <td class="wrap">$<in>format_list("", "\\; ", "", list9)</in>$ \ \%\ l</td>
 	</et>
 	
 	<p>が得られる。</p>
@@ -277,7 +280,7 @@ a^b \ \% \ l &= & $\[ \left\{ \prod_{n \in B} (x_n \ \% \ l) \right\} \ \% \ l \
 			}
 		</script>
 		<et>
-			<td class="top">a^b \ \% \ l</td> & <td class="top">=</td> & <td class="wrap"><in>list9[0]</in>$<in>format_list("", " ", "", list11l)</in>$<in>list9[list9.length - 1]</in>$<in>format_list("", " ", "", list11r)</in>$ \ \%\ l</td>
+			<td class="top">a^b \ \% \ l</td> & <td class="top">=</td> & <td class="wrap"><in>list9[0]</in>$<in>format_list("", " ", "", list11l)</in>$\;<in>list9[list9.length - 1]</in>$<in>format_list("", " ", "", list11r)</in>$ \ \%\ l</td>
 		</et>
 	</div>
 	<div class="demo-else">
@@ -287,32 +290,32 @@ a^b \ \% \ l &= & $\[ \left\{ \prod_{n \in B} (x_n \ \% \ l) \right\} \ \% \ l \
 
 <p>Python風に書くと、</p>
 <eq>
-<pre>
-# y_list に必要な y_n が記憶されているとする。
-# それらの値を全て掛けたものを計算する。
-# p を 1として、y_list の内容を順に掛けていく。
-p = 1
-for y in y_list:
-    p *= y
+<pre class="source">
+<span class="com"># y_list に必要な y_n が記憶されているとする。</span>
+<span class="com"># それらの値を全て掛けたものを計算する。</span>
+<span class="com"># p を 1として、y_list の内容を順に掛けていく。</span>
+p <span class="op">=</span> <span class="num">1</span>
+<span class="res">for</span> y <span class="res">in</span> y_list:
+    p <span class="op">*=</span> y
 
-# ここで、p が非常に巨大な値になっている。
+<span class="com"># ここで、p が非常に巨大な値になっている。</span>
 
-# l で割った余りを表示
-print(p % l)
+<span class="com"># l で割った余りを表示</span>
+<span class="fun">print</span>(p <span class="op">%</span> l)
 </pre>
 </eq>
 
 <p>ではなく、</p>
 
 <eq>
-<pre>
-p = 1
+<pre class="source">
+p <span class="op">=</span> 1
 for y in y_list:
-    # 掛け算を行う毎に、lで割った余りに置き換え、値の巨大化を防ぐ
-    p = (p * y) % l
+    <span class="com"># 掛け算を行う毎に、lで割った余りに置き換え、値の巨大化を防ぐ</span>
+    p = (p <span class="op">*</span> y) <span class="op">%</span> l
 
-# 結果として求まる値は同じになる(途中でlで割った余りにしているため、ここでは <q>%l</q> は不要になる)
-print(p)
+<span class="com"># 結果として求まる値は同じになる(途中でlで割った余りにしているため、ここでは <q>%l</q> は不要になる)</span>
+<span class="fun">print</span>(p)
 </pre>
 </eq>
 
