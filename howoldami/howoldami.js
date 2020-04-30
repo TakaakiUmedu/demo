@@ -10,7 +10,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 const [year, month, day] = match.slice(1).map((s) => parseInt(s));
                 const now = new Date();
                 let age = now.getFullYear() - year;
-                if (month > now.getMonth() + 1 || day > now.getDate()) {
+                if ((month > now.getMonth() + 1) || month == now.getMonth() + 1 && day > now.getDate()) {
                     age -= 1;
                 }
                 ageText.nodeValue = "" + age;
