@@ -1,0 +1,63 @@
+
+
+#message, #calc{
+	float: left;
+}
+
+#digests{
+	clear: both;
+}
+
+table {
+	margin: 1em;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #aff;
+}
+
+td, th {
+	border: solid 2px #8cc;
+	padding: 0.1em 0.2em;
+}
+
+
+tr.char td, tr.char th {
+	border-width: 2px 2px 0 2px;
+}
+
+tr.code td, tr.code th {
+	border-width: 0 2px 2px 2px;
+}
+
+tr.char td, tr.char th {
+	border-width: 2px 2px 0 2px;
+}
+
+tr.char td{
+	text-align: center;
+}
+
+tr.code td, tr.sum td {
+	text-align: right;
+	font-family: monospace;
+}
+
+#digests td{
+	text-align: left;
+	font-family: monospace;
+}
+
+th{
+	text-align: right;
+}
+
+q{
+	color: #04f;
+}
+
+em{
+	font-style: normal;
+	color: #b00;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>ダイジェスト関数のデモ</title>
+<script src="digest.js"></script>
+<link rel="stylesheet" href="digest.css"/>
+</head>
+<body>
+
+<h1>ダイジェスト関数のデモ</h1>
+
+<textarea id="message" cols="20" rows="20">ここにダイジェスト値を求めたいメッセージを入力</textarea>
+
+<table id="calc">
+<caption>駄目ダイジェストの計算</caption>
+<thead id="useless_head"></tbody>
+<tbody id="useless_body"></tbody>
+<tfoot id="useless_foot"></tfoot>
+</table>
+
+<table id="digests">
+<tr><th>駄目ダイジェスト</th><td id="useless"></td></tr>
+<tr><th>SHA-1</th><td id="SHA-1"></td></tr>
+<tr><th>SHA-256</th><td id="SHA-256"></td></tr>
+<tr><th>SHA-384</th><td id="SHA-384"></td></tr>
+<tr><th>SHA-512</th><td id="SHA-512"></td></tr>
+</table>
+
+<ul>
+<li>上記で計算している<q>駄目ダイジェスト</q>は、駄目な例
+  <ul>
+    <li>計算手順
+      <ul>
+        <li>メッセージを1行16文字の表に書き入れる</li>
+        <li>それぞれの文字の文字コードを求める</li>
+        <li>16列それぞれに対して、縦の1列の文字コードの合計値を求める</li>
+        <li>求めた文字コードの合計値を、256で割り、その余りを16進数に変換</li>
+        <li>変換したものを繋げる</li>
+      </ul>
+    </li>
+    <li>ダイジェスト関数の例として、以下の要件は満たしている
+      <ul>
+        <li>あるデータ(メッセージ)に対して、常に同じ値になる</li>
+        <li>データに対して、意味のある数値になっている必要は無い</li>
+        <li>データ全体の要約になっている</li>
+      </ul>
+    </li>
+    <li>一方で、以下の重要な要件を満たしていないので実用に耐えない
+      <ul>
+        <li>どんな値になるのか容易に予想できる</li>
+        <li>あるダイジェストになるような元データを逆算できる</li>
+        <li>ダイジェストを変えないようにデータを改竄できる</li>
+      </ul>
+    </li>
+    <li>例えば、以下のような攻撃を防げない
+      <ul>
+        <li><q>甲は乙に対して1個辺り900円の代金を支払ってメロンを100個を発注した</q>という契約を結び、代金の支払い済みの証拠として乙が電子署名したとする</li>
+        <li><q>甲は乙に対して1個辺り<em>1</em>00円の代金を支払ってメロンを<em>9</em>00個を発注した</q>と、甲が契約書を改竄しても、駄目ダイジェスト関数で求めたダイジェスト値は変わらないため、改竄を見抜けない</li>
+        <li>先の電子署名が<q>改竄されていない証拠</q>としては役に立たない</li>
+        <li>実用的に使われている暗号学的ハッシュ関数では、このような、ダイジェスト値が変わらないような改竄は、暗号解読と同様に難しい</li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li><q>SHA-1</q>は、暗号・電子署名分野で利用するには、そろそろ寿命が尽きた</li>
+<li><q>SHA-256</q>以上の複雑なものが現在の主流</li>
+<li>以前には<q>MD5(message digest algorithm 5)</q>などが良く使われていたが、寿命が尽きた</li>
+</ul>
+
+</body>
+</html>
