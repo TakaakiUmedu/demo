@@ -166,19 +166,21 @@ $L$ と$e$ が互いに素であるような場合には、このような条件
 		e &=& $<input type="text" name="e" data-parser="BigInteger.parse"/>$ & $<input type="submit" value="再計算" id="calc_button1"/>$
 		</eq>
 	</form>
-	<p>に対して計算してみると、</p>
-
 	<script class="demo-calc">
-		const N = vars.p.mul(vars.q);
-		const L = vars.p.sub(BigInteger.ONE).mul(vars.q.sub(BigInteger.ONE));
-		const d = calcInv(vars.e, L);
+		const N = p.mul(q);
+		const L = p.sub(BigInteger.ONE).mul(q.sub(BigInteger.ONE));
+		const d = calcInv(e, L);
 	</script>
+	<p>に対して計算してみると、(計算過程は<script class="demo-calc" data-inject="link">
+		const link = Dom.elem("a", { href: "3_inverse_element.html#L=" + L + ",A=" + e }, "こちら");
+	</script>)</p>
+
 	<et>
-		p & = & <in>p</in> & (pは素数<in>vars.p.isPrime() ? "" : "ではない"</in>) \\
-		q & = & <in>q</in> & (qは素数<in>vars.q.isPrime() ? "" : "ではない"</in>) \\
+		p & = & <in>p</in> & (pは素数<in>p.isPrime() ? "" : "ではない"</in>) \\
+		q & = & <in>q</in> & (qは素数<in>q.isPrime() ? "" : "ではない"</in>) \\
 		N & = & <in>N</in>\\
 		L & = & <in>L</in>\\
-		e & = & <in>e</in> & (eはLと互いに素<in>vars.e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない"</in>)
+		e & = & <in>e</in> & (eはLと互いに素<in>e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない"</in>)
 	</eq>
 	<div class="demo-if" data-cond="d !== null">
 		<p>であり、$d = e^{-1}$ を求めると、</p>

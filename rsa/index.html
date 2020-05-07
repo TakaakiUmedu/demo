@@ -88,30 +88,30 @@ $L$ と$e$ が互いに素であるような場合には、このような条件
 </table>
 </blockquote>
 	</form>
-	<p>に対して計算してみると、</p>
-
 	<script></script>
+	<p>に対して計算してみると、(計算過程は、<script id="demo_id_3"></script>)</p>
+
 	<blockquote class="demo-equation">
 <table>
-<tr><td class="demo-typeset">$ \displaystyle p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_3">p</span>$</td><td class="demo-typeset">$ \displaystyle (pは素数<span id="demo_id_4">vars.p.isPrime() ? "" : "ではない"</span>)$</td></tr>
-<tr><td class="demo-typeset">$ \displaystyle q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_5">q</span>$</td><td class="demo-typeset">$ \displaystyle (qは素数<span id="demo_id_6">vars.q.isPrime() ? "" : "ではない"</span>)$</td></tr>
-<tr><td class="demo-typeset">$ \displaystyle N$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_7">N</span>$</td><td/></tr>
-<tr><td class="demo-typeset">$ \displaystyle L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_8">L</span>$</td><td/></tr>
-<tr><td class="demo-typeset">$ \displaystyle e$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_9">e</span>$</td><td class="demo-typeset">$ \displaystyle (eはLと互いに素<span id="demo_id_10">vars.e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない"</span>)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle p$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_4">p</span>$</td><td class="demo-typeset">$ \displaystyle (pは素数<span id="demo_id_5">p.isPrime() ? "" : "ではない"</span>)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle q$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_6">q</span>$</td><td class="demo-typeset">$ \displaystyle (qは素数<span id="demo_id_7">q.isPrime() ? "" : "ではない"</span>)$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle N$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_8">N</span>$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_9">L</span>$</td><td/></tr>
+<tr><td class="demo-typeset">$ \displaystyle e$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_10">e</span>$</td><td class="demo-typeset">$ \displaystyle (eはLと互いに素<span id="demo_id_11">e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない"</span>)$</td></tr>
 </table>
 </blockquote>
-	<div class="demo-option" id="demo_id_11">
+	<div class="demo-option" id="demo_id_12">
 		<p class="demo-typeset">であり、$d = e^{-1}$ を求めると、</p>
 		<blockquote class="demo-equation">
 <table>
-<tr><td class="demo-typeset">$ \displaystyle d$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_12">d</span>$</td></tr>
-<tr><td class="demo-typeset">$ \displaystyle ed \ \% \ L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_13">e</span>\cdot<span id="demo_id_14">d</span>\ \%\ <span id="demo_id_15">L</span>$</td></tr>
-<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_16">e.mul(d).mod(L)</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle d$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_13">d</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle ed \ \% \ L$</td><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_14">e</span>\cdot<span id="demo_id_15">d</span>\ \%\ <span id="demo_id_16">L</span>$</td></tr>
+<tr><td/><td class="demo-typeset">$ \displaystyle =$</td><td class="demo-typeset">$ \displaystyle <span id="demo_id_17">e.mul(d).mod(L)</span>$</td></tr>
 </table>
 </blockquote>
 		<p>となる。</p>
 	</div>
-	<div id="demo_id_17" class="demo-option">
+	<div id="demo_id_18" class="demo-option">
 		<p class="demo-typeset">であり、条件を満たすような$d$は存在しない。</p>
 	</div>
 </div>
@@ -191,23 +191,23 @@ $(5)$ の<q>$c$ を$d$ 乗して$N$ で割った余りを求める計算</q>を<
 <p class="demo-typeset">また、<q>$x$ 乗して $y$ で割った余りを求める</q>という計算は、$x$ が相当に大きな数でも比較的簡単に行えるが、その逆計算を高速に行う方法はまだ見つかっておらず、$d$ を使わずにRSA暗号を解読するのは困難だと考えられている。</p>
 <p class="demo-typeset">ただし、前述の通り、$p$、$q$、$e$ の選び方によっては想定する暗号強度が得られない可能性もあるため、注意が必要である。</p>
 
-<div class="demo-example" id="demo_id_18">
-	<p class="demo-typeset">$p=<span id="demo_id_19">p</span>$、$q=<span id="demo_id_20">q</span>$、$e=<span id="demo_id_21">e</span>$ に対して実際に計算してみると、</p>
+<div class="demo-example" id="demo_id_19">
+	<p class="demo-typeset">$p=<span id="demo_id_20">p</span>$、$q=<span id="demo_id_21">q</span>$、$e=<span id="demo_id_22">e</span>$ に対して実際に計算してみると、</p>
 	<p>【公開鍵】</p>
 	<blockquote class="demo-equation">
 <table>
-<tr><td class="demo-typeset">$ \displaystyle \{e, N\} = \{<span id="demo_id_22">e</span>,<span id="demo_id_23">N</span>\}$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle \{e, N\} = \{<span id="demo_id_23">e</span>,<span id="demo_id_24">N</span>\}$</td></tr>
 </table>
 </blockquote>
 	<p>【秘密鍵】</p>
-	<div class="demo-option" id="demo_id_24">
+	<div class="demo-option" id="demo_id_25">
 		<blockquote class="demo-equation">
 <table>
-<tr><td class="demo-typeset">$ \displaystyle d =<span id="demo_id_25">d</span>$</td></tr>
+<tr><td class="demo-typeset">$ \displaystyle d =<span id="demo_id_26">d</span>$</td></tr>
 </table>
 </blockquote>
 	</div>
-	<div id="demo_id_26" class="demo-option">
+	<div id="demo_id_27" class="demo-option">
 		<blockquote class="demo-equation">
 <table>
 <tr><td class="demo-typeset">$ \displaystyle e の逆元、d = e^{-1} の条件を満たす整数は存在しない。$</td></tr>
@@ -215,24 +215,24 @@ $(5)$ の<q>$c$ を$d$ 乗して$N$ で割った余りを求める計算</q>を<
 </blockquote>
 	</div>
 	
-	<div class="demo-example" id="demo_id_27">
+	<div class="demo-example" id="demo_id_28">
 		<p>【暗号化したいメッセージ】</p>
-		<form id="demo_id_28" class="demo-form">
-			<p><input type="text" name="message" tabindex="5" id="demo_id_29"/> <input type="submit" value="暗号化・復号" id="calc_button2" tabindex="6"/></p>
+		<form id="demo_id_29" class="demo-form">
+			<p><input type="text" name="message" tabindex="5" id="demo_id_30"/> <input type="submit" value="暗号化・復号" id="calc_button2" tabindex="6"/></p>
 		</form>
 		<script></script>
 		
 		<script></script>
 		<p>【メッセージの数値化】</p>
-		<blockquote class="demo-equation"><table class="demo-typeset"><script id="demo_id_30"></script></table></blockquote>
-		<p>【暗号化の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
 		<blockquote class="demo-equation"><table class="demo-typeset"><script id="demo_id_31"></script></table></blockquote>
-		<p>【復号の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
+		<p>【暗号化の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
 		<blockquote class="demo-equation"><table class="demo-typeset"><script id="demo_id_32"></script></table></blockquote>
+		<p>【復号の計算結果】(下記の計算式をクリックで計算過程を表示)</p>
+		<blockquote class="demo-equation"><table class="demo-typeset"><script id="demo_id_33"></script></table></blockquote>
 		<p>【復号の結果を再び文字列に】</p>
 		<blockquote class="demo-equation">
 <table>
-<tr><td><span id="demo_id_33">r_message</span></td></tr>
+<tr><td><span id="demo_id_34">r_message</span></td></tr>
 </table>
 </blockquote>
 

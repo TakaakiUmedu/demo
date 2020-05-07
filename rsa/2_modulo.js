@@ -1034,6 +1034,10 @@ var Lib;
             return getElementWithType(HTMLInputElement, id);
         }
         Dom.getInput = getInput;
+        function getTextArea(id) {
+            return getElementWithType(HTMLTextAreaElement, id);
+        }
+        Dom.getTextArea = getTextArea;
         function getForm(id) {
             return getElementWithType(HTMLFormElement, id);
         }
@@ -3367,18 +3371,6 @@ var Lib;
                     this.formTable[elem.id] = elem;
                 }
             });
-            /*			for(const elem of items){
-                            this.templateTable[elem.id] = elem.content;
-                            this.collectExamples(elem.content);
-                            const div = Dom.elem("div", { id: elem.id, className: "demo-example" });
-                            elem.id = "";
-                            Dom.replace(elem, div);
-                            Dom.eachDescendantElement(elem.content, (elem)=> {
-                                if(elem instanceof HTMLScriptElement){
-                                    Dom.clear(elem);
-                                }
-                            });
-                        }*/
         }
         typeset(elem, skipExample = false) {
             const targets = [];

@@ -118,55 +118,57 @@ namespace RSADemo{
 			}
 			primeMakeButton.onclick = create_random_primes;
 			primeMakeButton.disabled = false;
-			const N = vars.p.mul(vars.q);
-			const L = vars.p.sub(BigInteger.ONE).mul(vars.q.sub(BigInteger.ONE));
-			const d = calcInv(vars.e, L);
-			set_value("demo_id_3", p);
-			set_value("demo_id_4", vars.p.isPrime() ? "" : "ではない");
-			set_value("demo_id_5", q);
-			set_value("demo_id_6", vars.q.isPrime() ? "" : "ではない");
-			set_value("demo_id_7", N);
-			set_value("demo_id_8", L);
-			set_value("demo_id_9", e);
-			set_value("demo_id_10", vars.e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない");
+			const N = p.mul(q);
+			const L = p.sub(BigInteger.ONE).mul(q.sub(BigInteger.ONE));
+			const d = calcInv(e, L);
+			const link = Dom.elem("a", { href: "3_inverse_element.html#L=" + L + ",A=" + e }, "こちら");
+			set_value("demo_id_3", link);
+			set_value("demo_id_4", p);
+			set_value("demo_id_5", p.isPrime() ? "" : "ではない");
+			set_value("demo_id_6", q);
+			set_value("demo_id_7", q.isPrime() ? "" : "ではない");
+			set_value("demo_id_8", N);
+			set_value("demo_id_9", L);
+			set_value("demo_id_10", e);
+			set_value("demo_id_11", e.gcm(L).equals(BigInteger.ONE) ? "" : "ではない");
 			if(d !== null){
-				show_branch("demo_id_11");
+				show_branch("demo_id_12");
 				
-				set_value("demo_id_12", d);
-				set_value("demo_id_13", e);
-				set_value("demo_id_14", d);
-				set_value("demo_id_15", L);
-				set_value("demo_id_16", e.mul(d).mod(L));
+				set_value("demo_id_13", d);
+				set_value("demo_id_14", e);
+				set_value("demo_id_15", d);
+				set_value("demo_id_16", L);
+				set_value("demo_id_17", e.mul(d).mod(L));
 			}
 			else{
-				show_branch("demo_id_17");
+				show_branch("demo_id_18");
 				
 			}
-			set_value("demo_id_19", p);
-			set_value("demo_id_20", q);
-			set_value("demo_id_21", e);
+			set_value("demo_id_20", p);
+			set_value("demo_id_21", q);
 			set_value("demo_id_22", e);
-			set_value("demo_id_23", N);
+			set_value("demo_id_23", e);
+			set_value("demo_id_24", N);
 			if(d !== null){
-				show_branch("demo_id_24");
+				show_branch("demo_id_25");
 				
-				set_value("demo_id_25", d);
+				set_value("demo_id_26", d);
 			}
 			else{
-				show_branch("demo_id_26");
+				show_branch("demo_id_27");
 				
 			}
 			{
 				function initialize(checkParam: (name: string, defaultValue: string)=> string){
 					const message = "RSA暗号方式のデモ";
 					
-					Dom.getInput("demo_id_29").value = checkParam("message", "" + message);
+					Dom.getInput("demo_id_30").value = checkParam("message", "" + message);
 					
 					return { message };
 				}
 				
 				function reload(): ReturnType<typeof initialize>{
-					const message = Dom.getInput("demo_id_29").value;
+					const message = Dom.getInput("demo_id_30").value;
 					
 					return { message };
 				}
@@ -217,18 +219,18 @@ namespace RSADemo{
 					}
 					const r_message = Dom.span({ className: "demo-typeset" }, d_strs);
 					
-					set_value("demo_id_30", m_tbody);
+					set_value("demo_id_31", m_tbody);
 					
-					set_value("demo_id_31", c_tbody);
+					set_value("demo_id_32", c_tbody);
 					
-					set_value("demo_id_32", r_tbody);
-					set_value("demo_id_33", r_message);
+					set_value("demo_id_33", r_tbody);
+					set_value("demo_id_34", r_message);
 				}
 				
-				Lib.MathDemo.register(["demo_id_27"], "demo_id_28", "calc_button2", initialize, reload, update);
+				Lib.MathDemo.register(["demo_id_28"], "demo_id_29", "calc_button2", initialize, reload, update);
 			}
 		}
 		
-		Lib.MathDemo.register(["demo_id_0", "demo_id_18"], "demo_id_1", "calc_button1", initialize, reload, update);
+		Lib.MathDemo.register(["demo_id_0", "demo_id_19"], "demo_id_1", "calc_button1", initialize, reload, update);
 	}
 }
