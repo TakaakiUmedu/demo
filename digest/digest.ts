@@ -1,5 +1,7 @@
 /// <reference path="../mylib/mylib.ts"/>
 /// <reference path="../mylib/mylib.dom.ts"/>
+/// <reference path="./CryptoJS.d.ts"/>
+/// <reference path="./crc.ts"/>
 
 namespace Digest{
 	const Dom = Lib.Dom;
@@ -8,8 +10,14 @@ namespace Digest{
 	const DigestAlgorithms: DigestAlgorithm[] = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
 	const TableWidth = 16;
 	
+	type CryptoJSAlgorithm = "MD5" | "SHA3" | "RIPEMD160";
+	const CryptoJSAlgorithms: CryptoJSAlgorithm[] = ["MD5", "SHA3", "RIPEMD160"];
+	
+	type CRCAlgorithm = "CRC16" | "CRC32" | "CRC64";
+	const CRCAlgorithms: CRCAlgorithm[] = ["CRC16", "CRC32", "CRC64"];
+	
 	class Main{
-		private readonly digests = Dom.getElements(...DigestAlgorithms);
+		private readonly digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms);
 		private readonly message = Dom.getTextArea("message");
 		private readonly useless = Dom.getElement("useless");
 		private readonly useless_body = Dom.getElement("useless_body");
@@ -41,10 +49,27 @@ namespace Digest{
 				Dom.setText(this.digests[algorithm], "ブラウザが未対応");
 			}
 		}
+		
+		private calcCryptoJSDigest(message: string, algorithm: CryptoJSAlgorithm){
+			Dom.setText(this.digests[algorithm], CryptoJS[algorithm](message));
+		}
+		
+		private calcCRCDigest(message: string, algorithm: CRCAlgorithm){
+			Dom.setText(this.digests[algorithm], CRC[algorithm](message));
+		}
+		
 		private readonly calcDigests = ()=> {
 			const message = this.message.value;
 			for(const algorithm of DigestAlgorithms){
 				this.calcDigest(message, algorithm);
+			}
+			
+			for(const algorithm of CryptoJSAlgorithms){
+				this.calcCryptoJSDigest(message, algorithm);
+			}
+			
+			for(const algorithm of CRCAlgorithms){
+				this.calcCRCDigest(message, algorithm);
 			}
 			
 			Dom.clear(this.useless_body);

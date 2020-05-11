@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <title>ダイジェスト関数のデモ</title>
+<script src="./CryptoJS/rollups/md5.js"></script>
+<script src="./CryptoJS/rollups/sha3.js"></script>
+<script src="./CryptoJS/rollups/ripemd160.js"></script>
 <script src="digest.js"></script>
 <link rel="stylesheet" href="digest.css"/>
 </head>
@@ -21,10 +24,16 @@
 
 <table id="digests">
 <tr><th>駄目ダイジェスト</th><td id="useless"></td></tr>
+<tr><th>CRC-16</th><td id="CRC16"></td></tr>
+<tr><th>CRC-32</th><td id="CRC32"></td></tr>
+<tr><th>CRC-64</th><td id="CRC64"></td></tr>
+<tr><th>MD5</th><td id="MD5"></td></tr>
 <tr><th>SHA-1</th><td id="SHA-1"></td></tr>
 <tr><th>SHA-256</th><td id="SHA-256"></td></tr>
 <tr><th>SHA-384</th><td id="SHA-384"></td></tr>
 <tr><th>SHA-512</th><td id="SHA-512"></td></tr>
+<tr><th>SHA3</th><td id="SHA3"></td></tr>
+<tr><th>RIPEMD160</th><td id="RIPEMD160"></td></tr>
 </table>
 
 <ul>

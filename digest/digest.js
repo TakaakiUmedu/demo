@@ -595,6 +595,14 @@ var Lib;
             parent.insertBefore(newNode, existingNode);
         }
         Dom.insertBefore = insertBefore;
+        function insertAfter(newNode, existingNode) {
+            const parent = existingNode.parentNode;
+            if (parent === null) {
+                throw new NodeNotFound("not in tree");
+            }
+            parent.insertBefore(newNode, existingNode.nextSibling);
+        }
+        Dom.insertAfter = insertAfter;
         function insertFirst(target, ...args) {
             let list = [];
             Lib.forEachRecursive(args, (item) => list.push(item));
@@ -1143,18 +1151,88 @@ var Lib;
         Dom.disableForm = disableForm;
     })(Dom = Lib.Dom || (Lib.Dom = {}));
 })(Lib || (Lib = {}));
+var CRC;
+(function (CRC_1) {
+    const CRC16_POLY = 0xa001n;
+    const CRC32_POLY = 0xedb88320n;
+    const CRC64_POLY = 0xc96c5795d7870f42n;
+    const Tables = new Map();
+    function calcTable(poly) {
+        let table = Tables.get(poly);
+        if (table !== undefined) {
+            return table;
+        }
+        table = [];
+        for (let i = 0n; i < 256; i++) {
+            let value = i;
+            for (let shift = 0n; shift < 8; shift++) {
+                if (value & 1n) {
+                    value = (value >> 1n) ^ poly;
+                }
+                else {
+                    value >>= 1n;
+                }
+            }
+            table.push(value);
+        }
+        Tables.set(poly, table);
+        return table;
+    }
+    function CRC(message, table, digestLength) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        const start = digestLength > 2n ? (1n << (digestLength * 8n)) - 1n : 0n;
+        let digest = start;
+        for (let i = 0; i < data.length; i++) {
+            digest = table[Number((digest ^ BigInt(data[i])) & 0xffn)] ^ (digest >> 8n);
+        }
+        if (digestLength > 2n) {
+            digest = digest ^ start;
+        }
+        let result = "";
+        for (let i = 0; i < digestLength; i++) {
+            const s = Number(digest & 0xffn).toString(16);
+            if (s.length < 2) {
+                result = "0" + s + result;
+            }
+            else {
+                result = s + result;
+            }
+            digest >>= 8n;
+        }
+        return result;
+    }
+    function CRC16(message) {
+        return CRC(message, calcTable(CRC16_POLY), 2n);
+    }
+    CRC_1.CRC16 = CRC16;
+    function CRC32(message) {
+        return CRC(message, calcTable(CRC32_POLY), 4n);
+    }
+    CRC_1.CRC32 = CRC32;
+    function CRC64(message) {
+        return CRC(message, calcTable(CRC64_POLY), 8n);
+    }
+    CRC_1.CRC64 = CRC64;
+})(CRC || (CRC = {}));
 /// <reference path="../mylib/mylib.ts"/>
 /// <reference path="../mylib/mylib.dom.ts"/>
+/// <reference path="./CryptoJS.d.ts"/>
+/// <reference path="./crc.ts"/>
 var Digest;
 /// <reference path="../mylib/mylib.ts"/>
 /// <reference path="../mylib/mylib.dom.ts"/>
+/// <reference path="./CryptoJS.d.ts"/>
+/// <reference path="./crc.ts"/>
 (function (Digest) {
     const Dom = Lib.Dom;
     const DigestAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
     const TableWidth = 16;
+    const CryptoJSAlgorithms = ["MD5", "SHA3", "RIPEMD160"];
+    const CRCAlgorithms = ["CRC16", "CRC32", "CRC64"];
     class Main {
         constructor() {
-            this.digests = Dom.getElements(...DigestAlgorithms);
+            this.digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms);
             this.message = Dom.getTextArea("message");
             this.useless = Dom.getElement("useless");
             this.useless_body = Dom.getElement("useless_body");
@@ -1174,6 +1252,12 @@ var Digest;
                 const message = this.message.value;
                 for (const algorithm of DigestAlgorithms) {
                     this.calcDigest(message, algorithm);
+                }
+                for (const algorithm of CryptoJSAlgorithms) {
+                    this.calcCryptoJSDigest(message, algorithm);
+                }
+                for (const algorithm of CRCAlgorithms) {
+                    this.calcCRCDigest(message, algorithm);
                 }
                 Dom.clear(this.useless_body);
                 let trData = null;
@@ -1251,6 +1335,12 @@ var Digest;
             else {
                 Dom.setText(this.digests[algorithm], "ブラウザが未対応");
             }
+        }
+        calcCryptoJSDigest(message, algorithm) {
+            Dom.setText(this.digests[algorithm], CryptoJS[algorithm](message));
+        }
+        calcCRCDigest(message, algorithm) {
+            Dom.setText(this.digests[algorithm], CRC[algorithm](message));
         }
         static initialize() {
             new Main();
