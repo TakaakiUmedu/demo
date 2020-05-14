@@ -13,17 +13,23 @@
 
 <h1>ダイジェスト関数のデモ</h1>
 
-<textarea id="message" cols="20" rows="20">ここにダイジェスト値を求めたいメッセージを入力</textarea>
+<div id="calc_area">
+<textarea id="message" cols="32" rows="20">ここにダイジェスト値を求めたいメッセージを入力</textarea>
 
+<div>
+<p>駄目ダイジェストの計算</p>
 <table id="calc">
-<caption>駄目ダイジェストの計算</caption>
 <thead id="useless_head"></tbody>
 <tbody id="useless_body"></tbody>
 <tfoot id="useless_foot"></tfoot>
 </table>
+</div>
+</div>
 
 <table id="digests">
 <tr><th>駄目ダイジェスト</th><td id="useless"></td></tr>
+<tr><th>チェックサム</th><td id="CHECKSUM"></td></tr>
+<tr><th>XOR</th><td id="XOR"></td></tr>
 <tr><th>CRC-16</th><td id="CRC16"></td></tr>
 <tr><th>CRC-32</th><td id="CRC32"></td></tr>
 <tr><th>CRC-64</th><td id="CRC64"></td></tr>
@@ -72,9 +78,12 @@
     </li>
   </ul>
 </li>
+<li>チェックサム、XORは、昔のゲームのセーブデータの定番</li>
+<li>CRC(Cyclic Redundancy Check、巡回冗長検査)は、誤り検出・訂正技術で、不意のデータの破損などを検出するのが主目的</li>
+<li>以前には<q>MD5(message digest algorithm 5)</q>などが良く使われていたが、寿命が尽きた</li>
 <li><q>SHA-1</q>は、暗号・電子署名分野で利用するには、そろそろ寿命が尽きた</li>
 <li><q>SHA-256</q>以上の複雑なものが現在の主流</li>
-<li>以前には<q>MD5(message digest algorithm 5)</q>などが良く使われていたが、寿命が尽きた</li>
+<li>このページでは<a href="https://code.google.com/archive/p/crypto-js/">crypto-js</a>を、MD5、SHA3、RIPEMD160の計算に用いています</li>
 </ul>
 
 </body>

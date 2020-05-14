@@ -1,0 +1,115 @@
+.null{
+	background-color: #555;
+}
+.パリティ{
+	background-color: #aaf;
+}
+.データ{
+	background-color: #8f8;
+}
+p, ul, ol, li{
+	margin-left: 1em;
+	margin-right: 1em;
+	padding : 0;
+}
+.エラー td.データ, .エラー td.結果, .エラー th{
+	background-color: #f00;
+	color: black;
+}
+.正常 td.データ, .正常 th{
+	background-color: #8f8;
+	color: black;
+}
+td{
+	text-align: center;
+}
+td.appendix{
+	text-align: left;
+}
+td.訂正済み{
+	background-color: #ff8;
+}
+h5{
+	font-size: large;
+	background-color: #f88;
+	margin-left: 2em;
+	margin-right: 2em;
+	padding: 0.2em;
+}
+
+
+td.paren, td.paren img{
+	border-width: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+table.matrix{
+	border-collapse: collapse;
+	display: inline-table;
+	vertical-align: middle;
+}
+table.matrix{
+	margin: 0.5em;
+	background-color: transparent;
+}
+table.matrix tr, table.matrix td{
+	border-width: 0px;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0 0.25em;
+}
+table.matrix td.paren{
+	margin: 0.2em;
+	border-style: solid;
+	border-color: black;
+	padding: 0;
+}
+
+
+table.matrix.tr {
+	padding: 0px;
+	margin: 0px;
+	border-width: 0px;
+}
+
+div.math{
+	margin: 1em 3em;
+	vertical-align: middle;
+}
+
+table.parity{
+	width: auto;
+	height: auto;
+	font-size: 80%;
+	box-sizing: border-box;
+	table-layout: fixed;
+}
+
+table.parity tr td{
+	width: 4em;
+	box-sizing: border-box;
+	padding: 0;
+}
+table.parity tr th{
+	white-space: nowrap;
+	overflow: hidden;
+	width: 4em;
+	box-sizing: border-box;
+	padding: 0;
+}
+
+table.parity tr td div{
+	width: 5em;
+	height: 2em;
+	white-space: nowrap;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+table.parity tr th div{
+	width: 5em;
+	height: 2em;
+	white-space: nowrap;
+	box-sizing: border-box;
+	overflow: hidden;
+}

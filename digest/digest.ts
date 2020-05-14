@@ -16,8 +16,11 @@ namespace Digest{
 	type CRCAlgorithm = "CRC16" | "CRC32" | "CRC64";
 	const CRCAlgorithms: CRCAlgorithm[] = ["CRC16", "CRC32", "CRC64"];
 	
+	type ClassicAlgorithm = "CHECKSUM" | "XOR";
+	const ClassicAlgorithms: ClassicAlgorithm[] = ["CHECKSUM", "XOR"];
+	
 	class Main{
-		private readonly digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms);
+		private readonly digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms, ...ClassicAlgorithms);
 		private readonly message = Dom.getTextArea("message");
 		private readonly useless = Dom.getElement("useless");
 		private readonly useless_body = Dom.getElement("useless_body");
@@ -54,7 +57,7 @@ namespace Digest{
 			Dom.setText(this.digests[algorithm], CryptoJS[algorithm](message));
 		}
 		
-		private calcCRCDigest(message: string, algorithm: CRCAlgorithm){
+		private calcCRCDigest(message: string, algorithm: CRCAlgorithm | ClassicAlgorithm){
 			Dom.setText(this.digests[algorithm], CRC[algorithm](message));
 		}
 		
@@ -69,6 +72,10 @@ namespace Digest{
 			}
 			
 			for(const algorithm of CRCAlgorithms){
+				this.calcCRCDigest(message, algorithm);
+			}
+			
+			for(const algorithm of ClassicAlgorithms){
 				this.calcCRCDigest(message, algorithm);
 			}
 			
@@ -128,10 +135,11 @@ namespace Digest{
 		};
 		
 		private constructor(){
-			Dom.append(this.useless_head, Dom.elem("th"));
+			const head_tr = Dom.elem("tr", Dom.elem("th"));
+			Dom.append(this.useless_head, head_tr);
 			Dom.append(this.useless_foot, Dom.elem("th", "合計"));
 			for(let i = 1; i <= TableWidth; i ++){
-				Dom.append(this.useless_head, Dom.elem("th", i));
+				Dom.append(head_tr, Dom.elem("th", i));
 			}
 			Dom.addEventListener(this.message, "keyup", this.calcDigests);
 			this.calcDigests();

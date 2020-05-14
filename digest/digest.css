@@ -1,38 +1,76 @@
 
-
-#message, #calc{
-	float: left;
+#calc_area{
+	white-space: nowrap;
 }
 
-#digests{
-	clear: both;
+#calc_area textarea, #calc_area div{
+	display: inline-block;
+	vertical-align: top;
 }
 
-table {
-	margin: 1em;
-	border-collapse: collapse;
+thead, tbody, tfoot{
+	margin: 0;
+	padding: 0;
+	border-width: 0;
 }
+
+#calc_area div table{
+	height: 20em;
+	overflow: auto;
+	display:block;
+	border-spacing: 0;
+}
+
+table{
+	margin: 2px;
+	padding: 0;
+	border-collapse: separate;
+}
+#calc_area div table thead tr th{
+#	position: sticky;
+	top: 0;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+#calc_area div table tfoot tr th, #calc_area div table tfoot tr td{
+#	position: sticky;
+	bottom: 0;
+	box-sizing: border-box;
+	mergin: 0;
+}
+
 
 th {
 	background-color: #aff;
 }
 
-td, th {
-	border: solid 2px #8cc;
+table, td, th {
+	border-style: solid;
+	border-width: 0px;
+	border-color: #8cc;
 	padding: 0.1em 0.2em;
 }
 
+td, th{
+	border-left-width: 2px;
+	border-top-width: 2px;
+}
+
+td:last-child, th:last-child{
+	border-right-width: 2px;
+}
+
+tr:last-child td, tr:last-child th{
+	border-bottom-width: 2px;
+}
 
 tr.char td, tr.char th {
-	border-width: 2px 2px 0 2px;
+	white-space: nowrap;
 }
 
 tr.code td, tr.code th {
-	border-width: 0 2px 2px 2px;
-}
-
-tr.char td, tr.char th {
-	border-width: 2px 2px 0 2px;
+	border-top-width: 0;
 }
 
 tr.char td{

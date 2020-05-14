@@ -64,4 +64,35 @@ module CRC{
 	export function CRC64(message: string): string{
 		return CRC(message, calcTable(CRC64_POLY), 8n);
 	}
+	
+	export function CHECKSUM(message: string): string{
+		const encoder = new TextEncoder();
+		const data = encoder.encode(message);
+		let sum = 0;
+		for(let i = 0; i < data.length; i ++){
+			sum = (sum + data[i]) % 256;
+		}
+		let s = sum.toString(16);
+		if(s.length < 2){
+			return "0" + s
+		}else{
+			return s;
+		}
+	}
+	
+	export function XOR(message: string): string{
+		const encoder = new TextEncoder();
+		const data = encoder.encode(message);
+		let sum = 0;
+		for(let i = 0; i < data.length; i ++){
+			sum = (sum ^ data[i]) % 256;
+		}
+		let s = sum.toString(16);
+		if(s.length < 2){
+			return "0" + s
+		}else{
+			return s;
+		}
+	}
+	
 }
