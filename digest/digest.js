@@ -1214,6 +1214,38 @@ var CRC;
         return CRC(message, calcTable(CRC64_POLY), 8n);
     }
     CRC_1.CRC64 = CRC64;
+    function CHECKSUM(message) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+            sum = (sum + data[i]) % 256;
+        }
+        let s = sum.toString(16);
+        if (s.length < 2) {
+            return "0" + s;
+        }
+        else {
+            return s;
+        }
+    }
+    CRC_1.CHECKSUM = CHECKSUM;
+    function XOR(message) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(message);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+            sum = (sum ^ data[i]) % 256;
+        }
+        let s = sum.toString(16);
+        if (s.length < 2) {
+            return "0" + s;
+        }
+        else {
+            return s;
+        }
+    }
+    CRC_1.XOR = XOR;
 })(CRC || (CRC = {}));
 /// <reference path="../mylib/mylib.ts"/>
 /// <reference path="../mylib/mylib.dom.ts"/>
@@ -1230,9 +1262,10 @@ var Digest;
     const TableWidth = 16;
     const CryptoJSAlgorithms = ["MD5", "SHA3", "RIPEMD160"];
     const CRCAlgorithms = ["CRC16", "CRC32", "CRC64"];
+    const ClassicAlgorithms = ["CHECKSUM", "XOR"];
     class Main {
         constructor() {
-            this.digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms);
+            this.digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms, ...ClassicAlgorithms);
             this.message = Dom.getTextArea("message");
             this.useless = Dom.getElement("useless");
             this.useless_body = Dom.getElement("useless_body");
@@ -1257,6 +1290,9 @@ var Digest;
                     this.calcCryptoJSDigest(message, algorithm);
                 }
                 for (const algorithm of CRCAlgorithms) {
+                    this.calcCRCDigest(message, algorithm);
+                }
+                for (const algorithm of ClassicAlgorithms) {
                     this.calcCRCDigest(message, algorithm);
                 }
                 Dom.clear(this.useless_body);
@@ -1313,10 +1349,11 @@ var Digest;
                 Dom.append(this.useless_foot, tr_foot3);
                 Dom.setText(this.useless, useless_digest);
             };
-            Dom.append(this.useless_head, Dom.elem("th"));
+            const head_tr = Dom.elem("tr", Dom.elem("th"));
+            Dom.append(this.useless_head, head_tr);
             Dom.append(this.useless_foot, Dom.elem("th", "合計"));
             for (let i = 1; i <= TableWidth; i++) {
-                Dom.append(this.useless_head, Dom.elem("th", i));
+                Dom.append(head_tr, Dom.elem("th", i));
             }
             Dom.addEventListener(this.message, "keyup", this.calcDigests);
             this.calcDigests();
