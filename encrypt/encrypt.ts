@@ -22,7 +22,7 @@ namespace Demo{
 		}
 		
 		private readonly elems = Dom.combineTables(
-			Dom.getInputs("encrypt", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"),
+			Dom.getInputs("encrypt", "import", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"),
 			Dom.getTextAreas("src"),
 			Dom.getSelects("mode"),
 			Dom.getElements("dst", "graph_1", "graph_2", "graph_3", "src_panel", "table", "guess"),
@@ -30,7 +30,13 @@ namespace Demo{
 		
 //		private readonly guess: Lib.Hash<HTMLInputElement> = {};
 		
+		private import = ()=> {
+			this.import_target_str(false);
+		}
 		private encrypt = ()=> {
+			this.import_target_str(true);
+		}
+		private import_target_str(encrypt: boolean){
 			const src = this.elems.src.value;
 			Dom.clear(this.elems.dst);
 			let dst_str = "";
@@ -47,7 +53,7 @@ namespace Demo{
 						dst_str += s;
 					}
 				}else{
-					let c = this.replaceList[(index + (this.mode == "Polyalphabetic" ? i : 0)) % ALPHABETS.length];
+					let c = encrypt ? this.replaceList[(index + (this.mode == "Polyalphabetic" ? i : 0)) % ALPHABETS.length] : ALPHABETS[index];
 					if(isLower){
 						c = c.toLowerCase();
 					}
@@ -60,7 +66,7 @@ namespace Demo{
 					dst_str += c;
 				}
 			}
-	
+			
 			const counts_1: Lib.Hash<number> = {};
 			const counts_2: Lib.Hash<number> = {};
 			const counts_3: Lib.Hash<number> = {};
@@ -101,7 +107,7 @@ namespace Demo{
 			this.hideSrcPanel();
 			
 			this.updateTables();
-		};
+		}
 		
 		private makeGraph(graph: HTMLElement, caption: string, data: Lib.Hash<number>){
 			const list: [string, number][] = [];
@@ -353,6 +359,7 @@ namespace Demo{
 				UPPER2INDEX[ALPHABETS[i]] = i;
 			}
 			Dom.addEventListener(this.elems.encrypt, "click", this.encrypt);
+			Dom.addEventListener(this.elems.import, "click", this.import);
 			Dom.addEventListener(this.elems.toggle_dst, "click", this.toggleDst);
 			Dom.addEventListener(this.elems.toggle_src_panel1, "click", this.toggleSrcPanel);
 			Dom.addEventListener(this.elems.toggle_src_panel2, "click", this.toggleSrcPanel);

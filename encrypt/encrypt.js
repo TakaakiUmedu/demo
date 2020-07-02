@@ -595,6 +595,14 @@ var Lib;
             parent.insertBefore(newNode, existingNode);
         }
         Dom.insertBefore = insertBefore;
+        function insertAfter(newNode, existingNode) {
+            const parent = existingNode.parentNode;
+            if (parent === null) {
+                throw new NodeNotFound("not in tree");
+            }
+            parent.insertBefore(newNode, existingNode.nextSibling);
+        }
+        Dom.insertAfter = insertAfter;
         function insertFirst(target, ...args) {
             let list = [];
             Lib.forEachRecursive(args, (item) => list.push(item));
@@ -1017,6 +1025,10 @@ var Lib;
             return getElementWithType(HTMLInputElement, id);
         }
         Dom.getInput = getInput;
+        function getTextArea(id) {
+            return getElementWithType(HTMLTextAreaElement, id);
+        }
+        Dom.getTextArea = getTextArea;
         function getForm(id) {
             return getElementWithType(HTMLFormElement, id);
         }
@@ -1150,80 +1162,13 @@ var Demo;
     class Encryption {
         constructor() {
             this.replaceList = [];
-            this.elems = Dom.combineTables(Dom.getInputs("encrypt", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"), Dom.getTextAreas("src"), Dom.getSelects("mode"), Dom.getElements("dst", "graph_1", "graph_2", "graph_3", "src_panel", "table", "guess"));
+            this.elems = Dom.combineTables(Dom.getInputs("encrypt", "import", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"), Dom.getTextAreas("src"), Dom.getSelects("mode"), Dom.getElements("dst", "graph_1", "graph_2", "graph_3", "src_panel", "table", "guess"));
             //		private readonly guess: Lib.Hash<HTMLInputElement> = {};
+            this.import = () => {
+                this.import_target_str(false);
+            };
             this.encrypt = () => {
-                const src = this.elems.src.value;
-                Dom.clear(this.elems.dst);
-                let dst_str = "";
-                let curWord = null;
-                for (let i = 0; i < src.length; i++) {
-                    const s = src[i];
-                    const sU = s.toUpperCase();
-                    const isLower = (sU !== s);
-                    const index = UPPER2INDEX[sU];
-                    if (index == undefined) {
-                        Dom.append(this.elems.dst, s);
-                        curWord = null;
-                        if (s == ' ' || s == '.') {
-                            dst_str += s;
-                        }
-                    }
-                    else {
-                        let c = this.replaceList[(index + (this.mode == "Polyalphabetic" ? i : 0)) % ALPHABETS.length];
-                        if (isLower) {
-                            c = c.toLowerCase();
-                        }
-                        if (curWord == null) {
-                            curWord = document.createElement("span");
-                            curWord.className = "word";
-                            Dom.append(this.elems.dst, curWord);
-                        }
-                        Dom.append(curWord, this.makeSpan(c));
-                        dst_str += c;
-                    }
-                }
-                const counts_1 = {};
-                const counts_2 = {};
-                const counts_3 = {};
-                let c1 = "";
-                let c2 = "";
-                for (let i = 0; i < dst_str.length; i++) {
-                    let c0 = dst_str[i].toUpperCase();
-                    if (UPPER2INDEX[c0] !== undefined) {
-                        if (counts_1[c0] == undefined) {
-                            counts_1[c0] = 1;
-                        }
-                        else {
-                            counts_1[c0]++;
-                        }
-                        if (i > 0 && UPPER2INDEX[c1] !== undefined) {
-                            const p = c1 + c0;
-                            if (counts_2[p] == undefined) {
-                                counts_2[p] = 1;
-                            }
-                            else {
-                                counts_2[p]++;
-                            }
-                            if (i > 1 && UPPER2INDEX[c2] !== undefined) {
-                                const t = c2 + p;
-                                if (counts_3[t] == undefined) {
-                                    counts_3[t] = 1;
-                                }
-                                else {
-                                    counts_3[t]++;
-                                }
-                            }
-                        }
-                    }
-                    c2 = c1;
-                    c1 = c0;
-                }
-                this.makeGraph(this.elems.graph_1, "出現回数", counts_1);
-                this.makeGraph(this.elems.graph_2, "出現回数(2文字)", counts_2);
-                this.makeGraph(this.elems.graph_3, "出現回数(3文字)", counts_3);
-                this.hideSrcPanel();
-                this.updateTables();
+                this.import_target_str(true);
             };
             this.prevUpdatedInput = null;
             this.prevUpdateInputValue = null;
@@ -1290,6 +1235,7 @@ var Demo;
                 UPPER2INDEX[ALPHABETS[i]] = i;
             }
             Dom.addEventListener(this.elems.encrypt, "click", this.encrypt);
+            Dom.addEventListener(this.elems.import, "click", this.import);
             Dom.addEventListener(this.elems.toggle_dst, "click", this.toggleDst);
             Dom.addEventListener(this.elems.toggle_src_panel1, "click", this.toggleSrcPanel);
             Dom.addEventListener(this.elems.toggle_src_panel2, "click", this.toggleSrcPanel);
@@ -1303,6 +1249,79 @@ var Demo;
         }
         makeSpan(c) {
             return Dom.elem("span", { className: "not_assigned", dataset: { c: c } }, c);
+        }
+        import_target_str(encrypt) {
+            const src = this.elems.src.value;
+            Dom.clear(this.elems.dst);
+            let dst_str = "";
+            let curWord = null;
+            for (let i = 0; i < src.length; i++) {
+                const s = src[i];
+                const sU = s.toUpperCase();
+                const isLower = (sU !== s);
+                const index = UPPER2INDEX[sU];
+                if (index == undefined) {
+                    Dom.append(this.elems.dst, s);
+                    curWord = null;
+                    if (s == ' ' || s == '.') {
+                        dst_str += s;
+                    }
+                }
+                else {
+                    let c = encrypt ? this.replaceList[(index + (this.mode == "Polyalphabetic" ? i : 0)) % ALPHABETS.length] : ALPHABETS[index];
+                    if (isLower) {
+                        c = c.toLowerCase();
+                    }
+                    if (curWord == null) {
+                        curWord = document.createElement("span");
+                        curWord.className = "word";
+                        Dom.append(this.elems.dst, curWord);
+                    }
+                    Dom.append(curWord, this.makeSpan(c));
+                    dst_str += c;
+                }
+            }
+            const counts_1 = {};
+            const counts_2 = {};
+            const counts_3 = {};
+            let c1 = "";
+            let c2 = "";
+            for (let i = 0; i < dst_str.length; i++) {
+                let c0 = dst_str[i].toUpperCase();
+                if (UPPER2INDEX[c0] !== undefined) {
+                    if (counts_1[c0] == undefined) {
+                        counts_1[c0] = 1;
+                    }
+                    else {
+                        counts_1[c0]++;
+                    }
+                    if (i > 0 && UPPER2INDEX[c1] !== undefined) {
+                        const p = c1 + c0;
+                        if (counts_2[p] == undefined) {
+                            counts_2[p] = 1;
+                        }
+                        else {
+                            counts_2[p]++;
+                        }
+                        if (i > 1 && UPPER2INDEX[c2] !== undefined) {
+                            const t = c2 + p;
+                            if (counts_3[t] == undefined) {
+                                counts_3[t] = 1;
+                            }
+                            else {
+                                counts_3[t]++;
+                            }
+                        }
+                    }
+                }
+                c2 = c1;
+                c1 = c0;
+            }
+            this.makeGraph(this.elems.graph_1, "出現回数", counts_1);
+            this.makeGraph(this.elems.graph_2, "出現回数(2文字)", counts_2);
+            this.makeGraph(this.elems.graph_3, "出現回数(3文字)", counts_3);
+            this.hideSrcPanel();
+            this.updateTables();
         }
         makeGraph(graph, caption, data) {
             const list = [];
