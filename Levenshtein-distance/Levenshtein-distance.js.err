@@ -1,0 +1,1414 @@
+"use strict";
+/// <reference path="./mylib.ts" />
+///// <reference path="./mylib.dom_tagnames.d.ts" />
+///// <reference path="./mylib.html_element_map.ts" />
+var Lib;
+/// <reference path="./mylib.ts" />
+///// <reference path="./mylib.dom_tagnames.d.ts" />
+///// <reference path="./mylib.html_element_map.ts" />
+(function (Lib) {
+    //	function camelToSnake(str: string){
+    //		return str.replace(/([A-Z])/g, (match, p1)=> "-" + p1.toLowerCase());
+    //	}
+    let Dom;
+    (function (Dom) {
+        class NodeNotFound extends Error {
+            constructor(message) {
+                super(message);
+                this.name = new.target.name;
+                Object.setPrototypeOf(this, new.target.prototype);
+            }
+        }
+        Dom.NodeNotFound = NodeNotFound;
+        function elem(name, ...args) {
+            const element = createElement(name);
+            for (const arg of args) {
+                if (arg instanceof Node || typeof arg === "number" || typeof arg === "string" || Array.isArray(arg)) {
+                    append(element, arg);
+                }
+                else {
+                    setAttributes(element, arg);
+                }
+            }
+            return element;
+        }
+        Dom.elem = elem;
+        function setAttributes(element, attributes) {
+            if (attributes) {
+                let aName;
+                for (aName in attributes) {
+                    let match;
+                    if (aName === "style") {
+                        const style = attributes.style;
+                        if (style) {
+                            let sName;
+                            for (sName in style) {
+                                const sValue = style[sName];
+                                if (sValue) {
+                                    element.style[sName] = sValue;
+                                }
+                            }
+                        }
+                    }
+                    else if (aName === "dataset") {
+                        const dataset = attributes.dataset;
+                        if (dataset) {
+                            for (const sName in dataset) {
+                                element.dataset[sName] = dataset[sName];
+                            }
+                        }
+                    }
+                    else {
+                        const aValue = attributes[aName];
+                        if (aValue === undefined || aValue === null) {
+                            continue;
+                        }
+                        if (aName === "className") {
+                            element.setAttribute("class", "" + aValue);
+                        }
+                        else {
+                            const aNameStr = aName.toString();
+                            if ((match = aNameStr.match(/^on(.*)/))) {
+                                let event = match[1];
+                                if (aValue instanceof Function) {
+                                    element.addEventListener(event, aValue); // unsafe any = EventListener guarded by Attributes<N>["on*"]
+                                }
+                                else if (aValue instanceof Object && aValue.hasOwnProperty("handleEvent")) {
+                                    element.addEventListener(event, aValue); // unsafe any = EventListenerObject guarded by Attributes<N>["on*"]
+                                }
+                                else {
+                                    throw new NodeNotFound("invalid event handler specified for \"" + aName + "\"");
+                                }
+                            }
+                            else {
+                                element.setAttribute(aNameStr, "" + aValue);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Dom.setAttributes = setAttributes;
+        function input(type, ...args) {
+            let element = elem("input", ...args);
+            element.type = type;
+            return element;
+        }
+        Dom.input = input;
+        function checkbox(label, attributes) {
+            let checkbox = input("checkbox");
+            if (attributes) {
+                setAttributes(checkbox, attributes);
+            }
+            let element = elem("label", checkbox, label);
+            return {
+                checkbox: checkbox,
+                label: element,
+            };
+        }
+        Dom.checkbox = checkbox;
+        function radio(label, attributes) {
+            let radio = input("radio");
+            if (attributes) {
+                setAttributes(radio, attributes);
+            }
+            let element = elem("label", radio, label);
+            return {
+                radio: radio,
+                label: element,
+            };
+        }
+        Dom.radio = radio;
+        function em(...args) {
+            return elem("em", ...args);
+        }
+        Dom.em = em;
+        function span(...args) {
+            return elem("span", ...args);
+        }
+        Dom.span = span;
+        function tr(...args) {
+            const tr = elem("tr");
+            for (const item of args) {
+                if (item instanceof HTMLTableCellElement) {
+                    append(tr, item);
+                }
+                else {
+                    append(tr, td(item));
+                }
+            }
+            return tr;
+        }
+        Dom.tr = tr;
+        function td(...args) {
+            return elem("td", ...args);
+        }
+        Dom.td = td;
+        function q(...args) {
+            return elem("q", ...args);
+        }
+        Dom.q = q;
+        function radiosWithState(name, attributes, ...items) {
+            const radios = Dom.radios(name, attributes, ...items);
+            let checked;
+            for (const radio of radios.radios) {
+                if (radio.checked) {
+                    checked = radio.value;
+                    break;
+                }
+            }
+            const state = { value: checked };
+            for (const radio of radios.radios) {
+                addEventListener(radio, "click", (function (state, value) {
+                    return () => { state.value = value; };
+                })(state, radio.value));
+            }
+            return { labels: radios.labels, radios: radios.radios, state: state };
+        }
+        Dom.radiosWithState = radiosWithState;
+        function radioSelecterCallbackMaker(value, callback) {
+            return () => callback(value);
+        }
+        function radioSelecter(name, items, checked, callback) {
+            const labels = [];
+            for (const item of items) {
+                let value, label;
+                if (typeof (item) === "string") {
+                    value = label = item;
+                }
+                else {
+                    value = item[0];
+                    label = item[1];
+                }
+                const radio = input("radio", { name: name, value: value });
+                if (checked === value) {
+                    radio.checked = true;
+                }
+                const labelElem = elem("label", radio, label);
+                if (callback) {
+                    addEventListener(labelElem, "click", radioSelecterCallbackMaker(value, callback));
+                }
+                labels.push(labelElem);
+            }
+            if (checked !== null && checked !== undefined && callback) {
+                callback(checked);
+            }
+            return labels;
+        }
+        Dom.radioSelecter = radioSelecter;
+        function radios(name, attributes, ...items) {
+            let firstRadio = null;
+            let radios = [];
+            let labels = [];
+            let checked = false;
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                let value;
+                let label;
+                let additionalAttributes;
+                if (typeof (item) === "string") {
+                    value = label = item;
+                    additionalAttributes = undefined;
+                }
+                else {
+                    value = item.value;
+                    if (item.label) {
+                        label = item.label;
+                    }
+                    else {
+                        label = value;
+                    }
+                    additionalAttributes = item.attributes;
+                }
+                let { radio, label: radioLabel } = Dom.radio(label, attributes);
+                radio.name = name;
+                radio.value = value;
+                setAttributes(radio, additionalAttributes);
+                if (radio.checked) {
+                    checked = true;
+                }
+                if (!firstRadio) {
+                    firstRadio = radio;
+                }
+                radios.push(radio);
+                labels.push(radioLabel);
+            }
+            if (!checked && firstRadio) {
+                firstRadio.checked = true;
+            }
+            return { labels, radios };
+        }
+        Dom.radios = radios;
+        function text(str) {
+            return document.createTextNode(str.toString());
+        }
+        Dom.text = text;
+        function findElement(id) {
+            const element = document.getElementById(id);
+            if (element instanceof HTMLElement) {
+                return element;
+            }
+            else {
+                return undefined;
+            }
+        }
+        Dom.findElement = findElement;
+        function getElement(id) {
+            const element = findElement(id);
+            if (element) {
+                return element;
+            }
+            else {
+                throw new NodeNotFound("cannot find target with id \"" + id + "\"");
+            }
+        }
+        Dom.getElement = getElement;
+        function getFirstText(element) {
+            let result = findFirstText(element);
+            if (result) {
+                return result;
+            }
+            else {
+                const textNode = text("");
+                append(element, textNode);
+                return textNode;
+            }
+        }
+        Dom.getFirstText = getFirstText;
+        function prepareTarget(target) {
+            if (target instanceof Element) {
+                return target;
+            }
+            else {
+                return getElement(target.toString());
+            }
+        }
+        Dom.prepareTarget = prepareTarget;
+        function addOne(element, item) {
+            element.appendChild(item instanceof Node ? item : text(item));
+        }
+        function insertBefore(newNode, existingNode) {
+            const parent = existingNode.parentNode;
+            if (parent === null) {
+                throw new NodeNotFound("not in tree");
+            }
+            parent.insertBefore(newNode, existingNode);
+        }
+        Dom.insertBefore = insertBefore;
+        function insertAfter(newNode, existingNode) {
+            const parent = existingNode.parentNode;
+            if (parent === null) {
+                throw new NodeNotFound("not in tree");
+            }
+            parent.insertBefore(newNode, existingNode.nextSibling);
+        }
+        Dom.insertAfter = insertAfter;
+        function insertFirst(target, ...args) {
+            let list = [];
+            Lib.forEachRecursive(args, (item) => list.push(item));
+            let element = prepareTarget(target);
+            for (let i = list.length - 1; i >= 0; i--) {
+                element.insertBefore(toElement(list[i]), element.firstChild);
+            }
+        }
+        Dom.insertFirst = insertFirst;
+        function append(target, ...args) {
+            let element = prepareTarget(target);
+            Lib.forEachRecursive(args, (item) => addOne(element, item));
+        }
+        Dom.append = append;
+        function toElement(item) {
+            if (item instanceof Node) {
+                return item;
+            }
+            else {
+                return text(item.toString());
+            }
+        }
+        Dom.toElement = toElement;
+        function clear(target) {
+            let element = prepareTarget(target);
+            let c;
+            while (c = element.firstChild) {
+                element.removeChild(c);
+            }
+        }
+        Dom.clear = clear;
+        function hasClass(target, value) {
+            let element = prepareTarget(target);
+            return element.className !== undefined && (" " + element.className + " ").indexOf(" " + value + " ") >= 0;
+        }
+        Dom.hasClass = hasClass;
+        function appendClass(target, value) {
+            let element = prepareTarget(target);
+            if (element.className === undefined || element.className == "") {
+                return element.className = value;
+            }
+            else if (hasClass(element, value)) {
+                return element.className;
+            }
+            else {
+                return element.className += " " + value;
+            }
+        }
+        Dom.appendClass = appendClass;
+        function remove(target) {
+            const parent = target.parentNode;
+            if (parent) {
+                parent.removeChild(target);
+            }
+        }
+        Dom.remove = remove;
+        function removeClass(target, value) {
+            let element = prepareTarget(target);
+            if (element.className === undefined || element.className == "") {
+                return "";
+            }
+            else {
+                let classNames = element.className.split(" ");
+                let newClassNames = [];
+                for (let i = 0; i < classNames.length; i++) {
+                    let name = classNames[i];
+                    if (name.length > 0 && name != value) {
+                        newClassNames.push(name);
+                    }
+                }
+                return element.className = newClassNames.join(" ");
+            }
+        }
+        Dom.removeClass = removeClass;
+        function eachChild(element, task) {
+            for (let node = element.firstChild; node; node = node.nextSibling) {
+                if (task(node) === "break") {
+                    return false;
+                }
+            }
+            return true;
+        }
+        Dom.eachChild = eachChild;
+        function eachChildElement(element, task) {
+            return eachChild(element, (child) => {
+                if (child instanceof HTMLElement) {
+                    return task(child);
+                }
+            });
+        }
+        Dom.eachChildElement = eachChildElement;
+        function eachChildTag(element, name, task) {
+            return eachChildElement(element, (child) => {
+                const childElem = asSpecificElement(name, child);
+                if (childElem !== null) {
+                    return task(child);
+                }
+            });
+        }
+        Dom.eachChildTag = eachChildTag;
+        // returns false iff task returns "break"
+        function eachDescendant(element, task) {
+            const result = task(element);
+            if (result === "break") {
+                return false;
+            }
+            if (result === "skip") {
+                return true;
+            }
+            return eachChild(element, (child) => {
+                if (!eachDescendant(child, task)) {
+                    return "break";
+                }
+                return;
+            });
+        }
+        Dom.eachDescendant = eachDescendant;
+        function eachDescendantElement(element, task) {
+            return eachDescendant(element, (child) => {
+                if (child instanceof HTMLElement) {
+                    return task(child);
+                }
+            });
+        }
+        Dom.eachDescendantElement = eachDescendantElement;
+        function eachDescendantTag(element, name, task) {
+            return eachDescendantElement(element, (child) => {
+                const childElem = asSpecificElement(name, child);
+                if (childElem !== null) {
+                    return task(childElem);
+                }
+            });
+        }
+        Dom.eachDescendantTag = eachDescendantTag;
+        /*
+                export function forEachTag<N extends TagName>(element: Element | Document, name: N, task: (element: ElementTypeOf<N>)=>void){
+                    if(element instanceof Element && element.tagName.toLowerCase() === name){
+                        task(element as any);
+                    }
+                    let children = element.getElementsByTagName(name);
+                    for(let i = 0; i < children.length; i ++){
+                        task(children[i]);
+                    }
+                }
+        */ /*
+                export type RepeatedTaskFor<T extends Node> = (node: T) => void | "break";
+        
+                export function forEachChildElement(node: Node | Document, task: RepeatedTaskFor<HTMLElement>): boolean{
+                    return forEachChild(node, (child)=> {
+                        if(child instanceof HTMLElement){
+                            if(task(child) === "break"){
+                                return "break";
+                            }
+                        }
+                        return;
+                    });
+                }
+                
+                export function forEachChild(node: Node | Document, task: RepeatedTaskFor<Node>): boolean{
+                    for(let child: Node | null = node.firstChild; child !== null; child = child.nextSibling){
+                        if(task(child) === "break"){
+                            return false;
+                        }
+                    }
+                    
+                    return true;
+                }
+                
+                export function forEachNode(node: Node, task: RepeatedTaskFor<Node>): boolean{
+                    if(task(node) === "break"){
+                        return false;
+                    }
+                    return forEachChild(node, (node)=> {
+                        if(forEachNode(node, task)){
+                            return;
+                        }else{
+                            return "break";
+                        }
+                    });
+                }*/
+        function cloneNode(node) {
+            if (node instanceof HTMLElement) {
+                return clone(node);
+            }
+            else if (node instanceof Text) {
+                return cloneText(node);
+            }
+            return null;
+        }
+        Dom.cloneNode = cloneNode;
+        function cloneText(text) {
+            return document.createTextNode(text.nodeValue || "");
+        }
+        Dom.cloneText = cloneText;
+        function cloneShallow(element) {
+            const newElement = createElement(getTagName(element)); // guarded by tagName
+            for (let i = 0; i < element.attributes.length; i++) {
+                let attribute = element.attributes[i];
+                if (attribute.name == "style") {
+                    let subTable = element.style;
+                    for (let sName in subTable) {
+                        if (sName !== "length" && sName !== "parentRule") {
+                            try {
+                                newElement.style[sName] = subTable[sName];
+                            }
+                            catch (e) {
+                            }
+                        }
+                    }
+                }
+                else {
+                    let match = attribute.name.match(/^data-(.*)/);
+                    if (match == null) {
+                        newElement.setAttribute(attribute.name, attribute.value);
+                    }
+                }
+            }
+            for (let name in element.dataset) {
+                newElement.dataset[name] = element.dataset[name];
+            }
+            return newElement;
+        }
+        Dom.cloneShallow = cloneShallow;
+        function clone(element) {
+            const newElement = cloneShallow(element);
+            for (let child = element.firstChild; child != null; child = child.nextSibling) {
+                if (child instanceof HTMLElement) {
+                    newElement.appendChild(clone(child));
+                }
+                else if (child instanceof Text) {
+                    newElement.appendChild(cloneText(child));
+                }
+            }
+            return newElement;
+        }
+        Dom.clone = clone;
+        function br() {
+            return elem("br");
+        }
+        Dom.br = br;
+        function getCanvasContext2D(canvas) {
+            const context = canvas.getContext("2d");
+            if (context instanceof CanvasRenderingContext2D) {
+                return context;
+            }
+            throw new NodeNotFound("cannot get canvas context 2D");
+        }
+        function canvas2D(attributes) {
+            const canvas = elem("canvas");
+            if (attributes) {
+                setAttributes(canvas, attributes);
+            }
+            return { canvas, context: getCanvasContext2D(canvas) };
+        }
+        Dom.canvas2D = canvas2D;
+        function getCanvas(id) {
+            const canvas = getElementWithType(HTMLCanvasElement, id);
+            return { canvas, context: getCanvasContext2D(canvas) };
+        }
+        Dom.getCanvas = getCanvas;
+        class ElementWithText {
+            constructor(element, text) {
+                this.element = element;
+                this.text = text;
+                this.style = this.element.style;
+            }
+            static create(tagName, text, attributes) {
+                const textNode = Dom.text(text);
+                const element = elem(tagName, textNode);
+                if (attributes) {
+                    setAttributes(element, attributes);
+                }
+                return new ElementWithText(element, textNode);
+            }
+            set(text) {
+                this.text.nodeValue = text.toString();
+            }
+            get() {
+                return this.text.nodeValue || "";
+            }
+        }
+        Dom.ElementWithText = ElementWithText;
+        function innerText(target) {
+            if (target instanceof Text) {
+                return target.nodeValue || "";
+            }
+            else {
+                const elem = prepareTarget(target);
+                let text = "";
+                eachDescendant(elem, (node) => {
+                    if (node instanceof Text) {
+                        text += node.nodeValue;
+                    }
+                });
+                return text;
+            }
+        }
+        Dom.innerText = innerText;
+        function findFirstText(elem) {
+            let text = null;
+            eachDescendant(elem, (node) => {
+                if (node instanceof Text) {
+                    text = node;
+                    return "break";
+                }
+                else {
+                    return;
+                }
+            });
+            return text;
+        }
+        Dom.findFirstText = findFirstText;
+        function setText(elem, value) {
+            const str = value.toString();
+            if (eachDescendant(elem, (node) => {
+                if (node instanceof Text) {
+                    node.nodeValue = str;
+                    return "break";
+                }
+                else {
+                    return;
+                }
+            })) {
+                append(elem, str);
+            }
+        }
+        Dom.setText = setText;
+        function findFirstTag(elem, name) {
+            let elem_found = null;
+            eachDescendantTag(elem, name, (elem) => {
+                elem_found = elem;
+                return "break";
+            });
+            return elem_found;
+        }
+        Dom.findFirstTag = findFirstTag;
+        function addEventListener(element, event, listener, options) {
+            let useCapture;
+            if (typeof (options) === "boolean" || options === undefined) {
+                useCapture = options;
+            }
+            else {
+                if (isPassiveSupported()) {
+                    useCapture = options; // for { passive : true }
+                }
+                else {
+                    useCapture = options.capture;
+                }
+            }
+            element.addEventListener(event, listener, useCapture);
+        }
+        Dom.addEventListener = addEventListener;
+        function setEventListeners(type, event_name, table, useCapture) {
+            for (const id in table) {
+                getElementWithType(type, id).addEventListener(event_name, table[id], useCapture);
+            }
+        }
+        Dom.setEventListeners = setEventListeners;
+        const IdTable = {};
+        function createId(name) {
+            if (name === undefined) {
+                name = "";
+            }
+            let index = IdTable[name];
+            if (index === undefined) {
+                index = 0;
+            }
+            else {
+                index++;
+            }
+            while (true) {
+                const id = name + index;
+                if (!document.getElementById(id)) {
+                    IdTable[name] = index;
+                    return id;
+                }
+                index++;
+            }
+        }
+        Dom.createId = createId;
+        function replace(oldElem, newElem) {
+            const parent = oldElem.parentNode;
+            if (parent === null) {
+                throw new NodeNotFound("node is not in tree");
+            }
+            parent.insertBefore(newElem, oldElem);
+            parent.removeChild(oldElem);
+        }
+        Dom.replace = replace;
+        // unsafe
+        function findElementWithType(TYPE, id) {
+            const element = document.getElementById(id);
+            if (element && element instanceof TYPE) {
+                return element;
+            }
+            else {
+                return null;
+            }
+        }
+        Dom.findElementWithType = findElementWithType;
+        function getElementWithType(TYPE, id) {
+            const element = findElementWithType(TYPE, id);
+            if (element) {
+                return element;
+            }
+            else {
+                throw new NodeNotFound("cannot find target: " + id);
+            }
+        }
+        Dom.getElementWithType = getElementWithType;
+        function getInput(id) {
+            return getElementWithType(HTMLInputElement, id);
+        }
+        Dom.getInput = getInput;
+        function getTextArea(id) {
+            return getElementWithType(HTMLTextAreaElement, id);
+        }
+        Dom.getTextArea = getTextArea;
+        function getForm(id) {
+            return getElementWithType(HTMLFormElement, id);
+        }
+        Dom.getForm = getForm;
+        function getElementWithText(id) {
+            const element = getElement(id);
+            const text = getFirstText(element);
+            return new ElementWithText(element, text);
+        }
+        Dom.getElementWithText = getElementWithText;
+        function getSpecifiedItems(getFunction, ids) {
+            const table = {};
+            for (let i = 0; i < ids.length; i++) {
+                const id = ids[i];
+                table[id] = getFunction(id);
+            }
+            return table;
+        }
+        const DisableableElements = [
+            HTMLTextAreaElement,
+            HTMLSelectElement,
+            HTMLOptionElement,
+            HTMLOptGroupElement,
+            HTMLLinkElement,
+            HTMLInputElement,
+            HTMLFieldSetElement,
+            HTMLButtonElement,
+        ];
+        function isDisableable(elem) {
+            for (const type of DisableableElements) {
+                if (elem instanceof type) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        Dom.isDisableable = isDisableable;
+        function getDisableableElement(id) {
+            const elem = asDisableable(getElement(id));
+            if (elem) {
+                return elem;
+            }
+            else {
+                throw new NodeNotFound("cannot find disableabletarget: " + id);
+                ;
+            }
+        }
+        Dom.getDisableableElement = getDisableableElement;
+        let dummyIdNumber = 0;
+        function ensureId(elem) {
+            if (elem.id === null) {
+                while (true) {
+                    const dummyId = "tmp-" + dummyIdNumber;
+                    if (document.getElementById(dummyId) === null) {
+                        elem.id = dummyId;
+                        break;
+                    }
+                    dummyIdNumber++;
+                }
+            }
+            return elem.id;
+        }
+        Dom.ensureId = ensureId;
+        function getTexts(...ids) {
+            return getSpecifiedItems((id) => getFirstText(getElement(id)), ids);
+        }
+        Dom.getTexts = getTexts;
+        function getElementsWithText(...ids) {
+            return getSpecifiedItems((id) => getElementWithText(id), ids);
+        }
+        Dom.getElementsWithText = getElementsWithText;
+        function getTypedElements(ids, elementClass) {
+            return getSpecifiedItems((id) => getElementWithType(elementClass, id), ids);
+        }
+        Dom.getTypedElements = getTypedElements;
+        function getElements(...idList) {
+            return getTypedElements(idList, HTMLElement);
+        }
+        Dom.getElements = getElements;
+        function getInputs(...idList) {
+            return getTypedElements(idList, HTMLInputElement);
+        }
+        Dom.getInputs = getInputs;
+        function getOutputs(...idList) {
+            return getTypedElements(idList, HTMLOutputElement);
+        }
+        Dom.getOutputs = getOutputs;
+        function getForms(...idList) {
+            return getTypedElements(idList, HTMLFormElement);
+        }
+        Dom.getForms = getForms;
+        function getSelects(...idList) {
+            return getTypedElements(idList, HTMLSelectElement);
+        }
+        Dom.getSelects = getSelects;
+        function getOptions(...idList) {
+            return getTypedElements(idList, HTMLOptionElement);
+        }
+        Dom.getOptions = getOptions;
+        function getAnchors(...idList) {
+            return getTypedElements(idList, HTMLAnchorElement);
+        }
+        Dom.getAnchors = getAnchors;
+        function getTextAreas(...idList) {
+            return getTypedElements(idList, HTMLTextAreaElement);
+        }
+        Dom.getTextAreas = getTextAreas;
+        function getImages(...idList) {
+            return getTypedElements(idList, HTMLImageElement);
+        }
+        Dom.getImages = getImages;
+        function combineTables(t1, t2, t3, t4, t5, t6, t7, t8, t9) {
+            const table = {};
+            for (const t of [
+                t1,
+                t2,
+                t3,
+                t4,
+                t5,
+                t6,
+                t7,
+                t8,
+                t9,
+            ]) {
+                if (t) {
+                    for (const name in t) {
+                        table[name] = t[name]; // 
+                    }
+                }
+            }
+            return table;
+        }
+        Dom.combineTables = combineTables;
+        function findInput(id) {
+            return findElementWithType(HTMLInputElement, id);
+        }
+        Dom.findInput = findInput;
+        function setFormDisabled(form, disabled) {
+            for (let i = 0; i < form.elements.length; i++) {
+                const element = asDisableable(form.elements[i]);
+                if (element) {
+                    element.disabled = disabled;
+                }
+            }
+        }
+        Dom.setFormDisabled = setFormDisabled;
+        function enableForm(form) {
+            setFormDisabled(form, false);
+        }
+        Dom.enableForm = enableForm;
+        function disableForm(form) {
+            setFormDisabled(form, true);
+        }
+        Dom.disableForm = disableForm;
+        let passiveSupported = undefined;
+        function isPassiveSupported() {
+            if (passiveSupported === undefined) {
+                passiveSupported = false;
+                const f = () => { };
+                const options = Object.defineProperty({}, "passive", {
+                    get: function () {
+                        passiveSupported = true;
+                    }
+                });
+                window.addEventListener("test", options, options);
+                window.removeEventListener("test", options, options);
+            }
+            return passiveSupported;
+        }
+        Dom.isPassiveSupported = isPassiveSupported;
+        // unsafe function
+        function asSpecificElement(name, element) {
+            if (element instanceof HTMLElement && getTagName(element) === name) {
+                return element; // cast guarded by name
+            }
+            else {
+                return null;
+            }
+        }
+        Dom.asSpecificElement = asSpecificElement;
+        // unsafe function
+        function createElement(name) {
+            return document.createElement(name); // cast guarded by name
+        }
+        // unsafe function
+        function getTagName(elem) {
+            return elem.tagName.toLowerCase(); // cast guarded by tagName
+        }
+        // unsafe function
+        function asDisableable(elem) {
+            if (isDisableable(elem)) {
+                return elem;
+            }
+            else {
+                return null;
+            }
+        }
+        Dom.asDisableable = asDisableable;
+        /*		export function getTypedElement<T extends HTMLElement>(id: string, TYPE: any): T{
+                    const element = document.getElementById(id);
+                    if(element){
+                        if(element instanceof TYPE){
+                            return element as T;
+                        }else{
+                            throw new NodeNotFound("element with id = " + id + " has invalid tagName");
+                        }
+                    }else{
+                        throw new NodeNotFound("cannot find target: " + id);
+                    }
+                }*/
+    })(Dom = Lib.Dom || (Lib.Dom = {}));
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.dom.ts"/>
+var Lib;
+/// <reference path="./mylib.dom.ts"/>
+(function (Lib) {
+    Lib.isTouchDevice = false;
+    function setUserAgent() {
+        if (window.ontouchstart) {
+            Lib.isTouchDevice = true;
+        }
+    }
+    /*
+    export function cloneObject(obj: object): object{
+        let ret = {};
+        for(let name in obj){
+            Object.defineProperty(ret, name, Object.getOwnPropertyDescriptor(obj, name));
+        }
+        return ret;
+//		return Object.assign({}, obj);
+    }
+    */
+    function toPx(val) {
+        if (val > 0.1) {
+            return "" + Math.round(val) + "px";
+        }
+        else if (val < -0.1) {
+            return "-" + Math.round(-val) + "px";
+        }
+        else {
+            return "0px";
+        }
+    }
+    Lib.toPx = toPx;
+    function cloneHash(src) {
+        let ret = {};
+        for (let name in src) {
+            ret[name] = src[name];
+        }
+        return ret;
+    }
+    Lib.cloneHash = cloneHash;
+    var gDebgugWindow = null;
+    function argumentsToMessage(...args) {
+        var message = "";
+        if (args.length > 0) {
+            message = args[0];
+            for (var i = 1; i < args.length; i++) {
+                message += "," + args[i].toString();
+            }
+        }
+        return message;
+    }
+    function debugOutput(...args) {
+        var message = argumentsToMessage(args);
+        var pElement = document.createElement("p");
+        pElement.appendChild(document.createTextNode(message));
+        var debugWindowDiv = document.getElementById("debug_window");
+        if (debugWindowDiv) {
+            debugWindowDiv.appendChild(pElement);
+        }
+        else {
+            if (gDebgugWindow == null) {
+                var div = document.createElement("div");
+                div.style.position = "absolute";
+                div.style.borderStyle = "solid";
+                div.style.borderColor = "black";
+                div.style.borderWidth = "2px";
+                div.style.padding = "0px";
+                div.style.backgroundColor = "white";
+                div.style.color = "black";
+                div.style.fontSize = "small";
+                div.style.fontFamily = "monospace";
+                document.body.appendChild(div);
+                gDebgugWindow = div;
+            }
+            pElement.style.border = "0px";
+            pElement.style.margin = "0px";
+            pElement.style.padding = "0px";
+            pElement.style.textIndent = "0px";
+            gDebgugWindow.style.top = toPx(document.documentElement ? document.documentElement.scrollTop : 0);
+            if (gDebgugWindow.firstChild != null) {
+                gDebgugWindow.insertBefore(pElement, gDebgugWindow.firstChild);
+            }
+            else {
+                gDebgugWindow.appendChild(pElement);
+            }
+        }
+    }
+    Lib.debugOutput = debugOutput;
+    function infoOutputFixed(...args) {
+        var message = argumentsToMessage(args);
+        var pElement = document.createElement("p");
+        pElement.appendChild(document.createTextNode(message));
+        var infoDiv = document.getElementById("info");
+        if (infoDiv == null) {
+            infoDiv = Lib.Dom.elem("div", { style: { position: "fixed", top: "10px", left: "10px", border: "solid 2px #faa", backgroundColor: "#fee" } });
+            Lib.Dom.append(document.body, infoDiv);
+        }
+        infoDiv.appendChild(pElement);
+    }
+    Lib.infoOutputFixed = infoOutputFixed;
+    function infoOutput(...args) {
+        var message = argumentsToMessage(args);
+        var pElement = document.createElement("p");
+        pElement.appendChild(document.createTextNode(message));
+        var infoDiv = document.getElementById("info");
+        if (infoDiv) {
+            infoDiv.appendChild(pElement);
+        }
+        else {
+            document.body.appendChild(pElement);
+        }
+    }
+    Lib.infoOutput = infoOutput;
+    function doNothing(..._) {
+    }
+    Lib.doNothing = doNothing;
+    function setExecuteOnLoadHandler(eventName, target, handler) {
+        if (document.readyState == "complete") {
+            handler();
+        }
+        else {
+            var initialized = false;
+            var func = function () {
+                if (initialized) {
+                    return;
+                }
+                initialized = true;
+                handler();
+                target.removeEventListener(eventName, func, false);
+            };
+            target.addEventListener(eventName, func, false);
+        }
+    }
+    function executeOnDomLoad(handler) {
+        setExecuteOnLoadHandler("DOMContentLoaded", window, handler);
+    }
+    Lib.executeOnDomLoad = executeOnDomLoad;
+    function executeOnLoad(handler, image) {
+        if (image === undefined) {
+            setExecuteOnLoadHandler("load", window, handler);
+        }
+        else {
+            let newHandler = handler;
+            setExecuteOnLoadHandler("load", image, () => { newHandler(image); });
+        }
+    }
+    Lib.executeOnLoad = executeOnLoad;
+    function indexer() {
+        var index = 0;
+        return function () {
+            return index++;
+        };
+    }
+    Lib.indexer = indexer;
+    function forEachRecursive(item, callback) {
+        if (Array.isArray(item)) {
+            for (var i = 0; i < item.length; i++) {
+                forEachRecursive(item[i], callback);
+            }
+        }
+        else {
+            callback(item);
+        }
+    }
+    Lib.forEachRecursive = forEachRecursive;
+    class StableHash {
+        constructor() {
+            this.list = [];
+            this.table = {};
+        }
+        push(key, value) {
+            if (this.table[key] == undefined) {
+                this.list.push(key);
+                this.table[key] = value;
+            }
+        }
+        get(key) {
+            return this.table[key];
+        }
+        forEach(callback) {
+            let list = this.list.concat();
+            for (let i = 0; i < list.length; i++) {
+                let key = list[i];
+                if (callback(key, this.table[key], i) === false) {
+                    break;
+                }
+            }
+        }
+        remove(key) {
+            let index = this.list.indexOf(key);
+            if (index >= 0) {
+                this.list.splice(index, 1);
+            }
+            if (this.table[key]) {
+                delete this.table[key];
+            }
+        }
+        keys() {
+            return this.list.concat();
+        }
+        values() {
+            return this.list.map((key) => { return this.table[key]; });
+        }
+        count() {
+            return this.list.length;
+        }
+        map(callback) {
+            return this.list.map((key, index) => {
+                return callback(key, this.table[key], index);
+            });
+        }
+        freeze() {
+            Object.freeze(this.list);
+            Object.freeze(this.table);
+        }
+    }
+    Lib.StableHash = StableHash;
+    function convertIfDefined(item, convert) {
+        if (item === null || item === undefined) {
+            return undefined;
+        }
+        else {
+            return convert(item);
+        }
+    }
+    Lib.convertIfDefined = convertIfDefined;
+    function convertOrDefault(item, convert, defaultValue) {
+        if (item === null || item === undefined) {
+            return defaultValue;
+        }
+        else {
+            return convert(item);
+        }
+    }
+    Lib.convertOrDefault = convertOrDefault;
+    function randomPick(array) {
+        return array[Math.floor(Math.random() * array.length)];
+    }
+    Lib.randomPick = randomPick;
+    function randomPop(array) {
+        const len = array.length;
+        if (len <= 0) {
+            return undefined;
+        }
+        return array.splice(Math.floor(Math.random() * len), 1)[0];
+    }
+    Lib.randomPop = randomPop;
+    function weightedRandomPop(array, weights) {
+        const len = array.length;
+        if (len <= 0) {
+            return undefined;
+        }
+        let index;
+        if (typeof (weights) === "function") {
+            index = weightedItemChoice(array, weights);
+        }
+        else {
+            index = weightedChoice(weights);
+            weights.splice(index, 1)[0];
+        }
+        return array.splice(index, 1)[0];
+    }
+    Lib.weightedRandomPop = weightedRandomPop;
+    function weightedChoice(weights) {
+        const sum = weights.reduce((a, c) => a + c);
+        let value = Math.random() * sum;
+        for (let i = 0; i < weights.length - 1; i++) {
+            value -= weights[i];
+            if (value < 0) {
+                return i;
+            }
+        }
+        return weights.length - 1;
+    }
+    function weightedItemChoice(items, getWeightFunc) {
+        const sum = items.reduce((a, c) => a + getWeightFunc(c), 0);
+        let value = Math.random() * sum;
+        for (let i = 0; i < items.length - 1; i++) {
+            value -= getWeightFunc(items[i]);
+            if (value < 0) {
+                return i;
+            }
+        }
+        return items.length - 1;
+    }
+    class BaseException extends Error {
+        constructor(message) {
+            super(message);
+            this.name = new.target.name;
+            Object.setPrototypeOf(this, new.target.prototype);
+        }
+    }
+    Lib.BaseException = BaseException;
+    function shuffle(array) {
+        for (let i = 0; i < array.length; i++) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+        }
+    }
+    Lib.shuffle = shuffle;
+    function checkAndGetOption(item) {
+        return (item !== null && item !== undefined) ? item : null;
+    }
+    Lib.checkAndGetOption = checkAndGetOption;
+    function checkAndMapOption(item, map) {
+        return (item !== null && item !== undefined) ? map(item) : null;
+    }
+    Lib.checkAndMapOption = checkAndMapOption;
+    setUserAgent();
+})(Lib || (Lib = {}));
+/// <reference path="mylib/mylib.ts"/>
+/// <reference path="mylib/mylib.dom.ts"/>
+var Levenshtein_distance;
+/// <reference path="mylib/mylib.ts"/>
+/// <reference path="mylib/mylib.dom.ts"/>
+(function (Levenshtein_distance) {
+    const Dom = Lib.Dom;
+    const cursor = "⌶";
+    class Demo {
+        constructor() {
+            this.elems = Dom.combineTables(Dom.getInputs("from", "to", "restart", "pass", "replace", "delete", "insert", "undo", "calc"), Dom.getElements("to_rest", "to_done", "from_rest", "history"));
+            this.canvasPair = Dom.getCanvas("canvas");
+            this.canvas = this.canvasPair.canvas;
+            this.context = this.canvasPair.context;
+            this.history = [];
+            this.pass = () => {
+                if (this.to_rest.length > 0 && this.from_rest.length > 0) {
+                    const l = this.from_rest[0];
+                    if (this.to_rest[0] == l) {
+                        this.advanceEdit(this.to_done + l, this.to_rest.substr(1), this.from_rest.substr(1), 0, this.elems.pass.value);
+                    }
+                }
+            };
+            this.del = () => {
+                if (this.from_rest.length > 0) {
+                    const l = this.from_rest[0];
+                    this.advanceEdit(this.to_done, this.to_rest, this.from_rest.substr(1), 1, this.elems.delete.value);
+                }
+            };
+            this.replace = () => {
+                if (this.to_rest.length > 0 && this.from_rest.length > 0) {
+                    const l1 = this.to_rest[0];
+                    const l2 = this.from_rest[0];
+                    this.advanceEdit(this.to_done + l1, this.to_rest.substr(1), this.from_rest.substr(1), 1, this.elems.replace.value);
+                }
+            };
+            this.insert = () => {
+                if (this.to_rest.length > 0) {
+                    const l = this.to_rest[0];
+                    this.advanceEdit(this.to_done + l, this.to_rest.substr(1), this.from_rest, 1, this.elems.insert.value);
+                }
+            };
+            this.undo = () => {
+                if (this.history.length > 1) {
+                    const entry = this.history.pop();
+                    if (entry !== undefined) {
+                        const [count, to_done, to_rest, from_rest, tr] = entry;
+                        Dom.remove(tr);
+                        this.setTexts(to_done, to_rest, from_rest);
+                    }
+                }
+            };
+            this.calc = () => {
+                const s1 = this.elems.to.value;
+                const s2 = this.elems.from.value;
+                const l1 = s1.length;
+                const l2 = s2.length;
+                for (let i = 0; i < l1; i++) {
+                    for (let j = 0; j < l2; j++) {
+                        this.drawArrow(i, j, false, true);
+                        this.drawArrow(i, j, true, false);
+                        this.drawArrow(i, j, true, true);
+                    }
+                }
+            };
+            Dom.addEventListener(this.elems.restart, "click", () => {
+                this.initialize();
+            });
+            Dom.addEventListener(this.elems.pass, "click", this.pass);
+            Dom.addEventListener(this.elems.delete, "click", this.del);
+            Dom.addEventListener(this.elems.replace, "click", this.replace);
+            Dom.addEventListener(this.elems.insert, "click", this.insert);
+            Dom.addEventListener(this.elems.undo, "click", this.undo);
+            Dom.addEventListener(this.elems.calc, "click", this.calc);
+            this.initialize();
+        }
+        static initialize() {
+            new Demo();
+        }
+        initialize() {
+            this.history = [];
+            Dom.clear(this.elems.history);
+            this.advanceEdit("", this.elems.to.value, this.elems.from.value, 0, "編集開始");
+        }
+        advanceEdit(to_done, to_rest, from_rest, count, history) {
+            count += this.history.length == 0 ? 0 : this.history[this.history.length - 1][0];
+            const tr = Dom.tr(history, Dom.td(to_done, Dom.span(" ⌶ ", { className: "caret" }), from_rest), count + "手");
+            Dom.append(this.elems.history, tr);
+            this.history.push([count, this.to_done, this.to_rest, this.from_rest, tr]);
+            this.setTexts(to_done, to_rest, from_rest);
+        }
+        setTexts(to_done, to_rest, from_rest) {
+            this.to_done = to_done;
+            this.to_rest = to_rest;
+            this.from_rest = from_rest;
+            Dom.setText(this.elems.to_done, this.to_done);
+            Dom.setText(this.elems.to_rest, this.to_rest);
+            Dom.setText(this.elems.from_rest, this.from_rest);
+            const l1 = this.to_rest.length > 0 ? this.to_rest[0] : "-";
+            const l2 = this.from_rest.length > 0 ? this.from_rest[0] : "-";
+            this.elems.pass.value = "“" + l2 + "”をそのまま通す";
+            this.elems.replace.value = "“" + l1 + "”を“" + l2 + "”に置換";
+            this.elems.delete.value = "“" + l2 + "”を削除";
+            this.elems.insert.value = "“" + l1 + "”を挿入";
+            if (this.from_rest.length > 0 && this.to_rest.length > 0) {
+                if (l1 == l2) {
+                    this.elems.pass.disabled = false;
+                    this.elems.replace.disabled = true;
+                }
+                else {
+                    this.elems.pass.disabled = true;
+                    this.elems.replace.disabled = false;
+                }
+            }
+            else {
+                this.elems.pass.disabled = true;
+                this.elems.replace.disabled = true;
+            }
+            this.elems.delete.disabled = !(this.from_rest.length > 0);
+            this.elems.insert.disabled = !(this.to_rest.length > 0);
+            this.elems.undo.disabled = this.history.length == 1;
+        }
+        drawArrow(x, y, dx, dy) {
+            const M = 50;
+            const H = 50;
+            const W = 50;
+            const R = 10;
+            const A = 5;
+            const Rd = math.sqrt(R) / 2;
+            const Ad = math.sqrt(A) / 2;
+            if (!dx) {
+                this.context.beginPath();
+                this.context.moveTo(M + x * W, M + y * H + R);
+                this.context.lineTo(M + x * W, M + (y + 1) * H - R);
+                this.context.stroke();
+                this.context.beginPath();
+                this.context.moveTo(M + x * W - A, M + (y + 1) * H - R - A);
+                this.context.lineTo(M + x * W, M + (y + 1) * H - R);
+                this.context.lineTo(M + x * W + A, M + (y + 1) * H - R - A);
+                this.context.stroke();
+            }
+            else if (!dy) {
+                this.context.beginPath();
+                this.context.moveTo(M + x * W + R, M + y * H);
+                this.context.lineTo(M + (x + 1) * W - R, M + y * H);
+                this.context.stroke();
+                this.context.beginPath();
+                this.context.moveTo(M + (x + 1) * W - R - A, M + y * H - A);
+                this.context.lineTo(M + (x + 1) * W - R, M + y * H);
+                this.context.lineTo(M + (x + 1) * W - R - A, M + y * H + A);
+                this.context.stroke();
+            }
+            else {
+                this.context.beginPath();
+                this.context.moveTo(M + x * W + Rd, M + y * H + Rd);
+                this.context.lineTo(M + (x + 1) * W - Rd, M + (y + 1) * H - Rd);
+                this.context.stroke();
+                this.context.beginPath();
+                this.context.moveTo(M + (x + 1) * W - R - A, M + y * H - A);
+                this.context.lineTo(M + (x + 1) * W - R, M + y * H);
+                this.context.lineTo(M + (x + 1) * W - R - A, M + y * H + A);
+                this.context.stroke();
+            }
+        }
+    }
+    Lib.executeOnDomLoad(Demo.initialize);
+})(Levenshtein_distance || (Levenshtein_distance = {}));

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<title>レーベンシュタイン距離(編集距離)のデモ</title>
+<link rel="stylesheet" href="Levenshtein-distance.css"/>
+<script src="Levenshtein-distance.js"></script>
+</head>
+<body>
+<div id="edit_frame">
+  <div id="edit">
+    <h1>レーベンシュタイン距離(編集距離)のデモ</h1>
+    <p id="target">編集元: <input id="from" type="text" value="scence"/> &nbsp;&nbsp;&nbsp; 編集先: <input id="to" type="text" value="science"/> &nbsp;&nbsp;&nbsp; <input id="restart" type="button" value="やり直す"/></p>
+    <div id="state">
+      <div id="done"><span id="to_done"></span><span id="to_rest"></span></div>
+      <div class="arrow"> ← </div>
+      <div id="center">⌶</div>
+      <div class="arrow"> ← </div>
+      <div id="rest"><span id="from_rest"></span></div>
+    </div>
+    <div id="control">
+      <input id="pass" type="button" value=" をそのまま通す"/>
+      <input id="replace" type="button" value=" を に置換"/>
+      <input id="delete" type="button" value=" を削除"/>
+      <input id="insert" type="button" value=" を挿入"/>
+      <input id="undo" type="button" value="1手戻す"/>
+    </div>
+    <p><input id="calc" type="button" value="図を表示"/>
+    &nbsp;&nbsp;&nbsp; <label><input id="show_arrows" type="checkbox" checked="chedked">矢印を表示</input></label>
+    &nbsp;&nbsp;&nbsp; <label><input id="show_states" type="checkbox">状態を表示</input></label>
+    &nbsp;&nbsp;&nbsp; <label><input id="show_distances" type="checkbox">最短距離を表示</input></label>
+    </p>
+    <div id="svg_frame" style="display:none;">
+      <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+  <div>
+    <table id="history_frame">
+      <thead id="history_title"><tr><th id="history_edit_title">編集内容</th><th id="history_state_title">編集中の状態</th><th id="history_count_title">手数</th></tr></thead>
+      <tbody id="history"></tbody>
+    </table>
+  </div>
+</div>
+
+<ul>
+<li>図の点線は、0手で移動できる状態遷移。実線は、1手かかる状態遷移</li>
+<li>なお、上記の方針で<q>最短</q>が確実に得られるかどうか? に関しては、もう少し考察が必要</li>
+<li>例えば、<q>かきらぬばたこ</q>から、<q>からばこ</q>へ編集する事を考える
+  <ul>
+    <li><q>か(き)ら(ぬ)ば(た)こ</q>の括弧内の文字を消せば良い</li>
+    <li>その場合、<q>た</q>、<q>ぬ</q>、<q>き</q>の順番に削除して<q>からばこ</q>を得る、という手順は、上記の方針では検討対象に含まれない</li>
+    <li>上記の方針で最短手数を探した場合には、同じ3手となる、<q>き</q>、<q>ぬ</q>、<q>た</q>の順番に削除する、という手順は見つかる</li>
+    <li><q>どんな場合でも、最短手順のうちの少なくとも1つが探索対象に入っているか?</q>は自明ではない</li>
+  </ul>
+</li>
+<li><q>探索対象に入っている</q>事は以下のような方針で証明できる
+  <ul>
+    <li>最小の操作回数となる編集手順を1つ用意できたとする。これを編集手順Xと呼ぶことにする</li>
+    <li>編集手順Xで最終的に得られた文字列を構成する文字は、<q>編集元にあった文字が削除されずに手つかずでそのまま残された部分</q>か、<q>挿入や置換で新たに付け加えられた部分</q>かの2種類である</li>
+    <li>各部分文字列を、<q>そのまま<sub>1</sub></q>、<q>そのまま<sub>2</sub></q>、…、と、<q>挿入<sub>1</sub></q>、<q>挿入<sub>2</sub></q>、…とそれぞれ呼ぶことにして、編集先の文字列は、<br/><q>挿入<sub>1</sub></q>-<q>そのまま<sub>1</sub></q>-<q>挿入<sub>2</sub></q>-<q>そのまま<sub>2</sub></q>-…-<q>そのまま<sub>k</sub></q>-<q>挿入<sub>k+1</sub></q><br/>というように表せる(先頭と末尾の<q>挿入</q>は長さが0の場合もある)</li>
+    <li>一方で、編集距離における<q>編集</q>で、元々あった文字の位置の前後が入れ替わることはないので(削除されて同じ文字が挿入された場合は、<q>そのまま</q>には該当しない)、編集元の文字列は、<br/><q>削除される部分<sub>1</sub></q>-<q>そのまま<sub>1</sub></q>-<q>削除される部分<sub>2</sub></q>-<q>そのまま<sub>2</sub></q>-…-<q>そのまま<sub>k</sub></q>-<q>削除される部分<sub>k+1</sub></q><br/>と表すことができるはずである</li>
+    <li>よって、文字列の先頭から、<q>どこをそのまま残すか?</q>を探りつつ順に最短の編集手順を探索していく中で、Xと同じ手順ではなくてもXと同手数の編集手順は必ず発見できる</li>
+  </ul>
+</li>
+</ul>
+
+</body>
+</html>

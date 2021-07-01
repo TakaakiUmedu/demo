@@ -1,0 +1,130 @@
+#edit_frame{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+#edit{
+	flex-grow: 1;
+}
+#state{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+#center{
+	padding: 0.2em;
+	border: solid 2px lightgray;
+	font-size:200%;
+}
+#done, #rest{
+	flex-grow: 1;
+}
+#done{
+	text-align: right;
+}
+#rest{
+	text-align: left;
+}
+#control{
+	padding: 1em;
+	width: 100%;
+	text-align: center;
+	font-family: monospace;
+}
+#history_frame{
+	display: block;
+	border: 2px solid lightgray;
+	border-collapse: collapse;
+}
+#history_title th{
+	background-color: lightgray;
+	margin: 0;
+	border-width: 0;
+}
+#history_edit_title{
+	min-width: 9em;
+	text-align: left;
+}
+#history_state_title{
+	min-width: 10em;
+	text-align: left;
+}
+#history_count_title{
+	min-width: 3em;
+	text-align: left;
+}
+#to_done{
+	display: inline-block;
+	font-size:120%;
+}
+#to_rest{
+	display: inline-block;
+	font-size:120%;
+	color: lightgray;
+}
+#from_rest{
+	display: inline-block;
+	font-size:120%;
+}
+#from_rest::first-letter, #to_rest::first-letter{
+	font-size:180%;
+}
+.arrow{
+	padding: 0.2em;
+	font-size:150%;
+}
+.caret{
+	font-size:80%;
+}
+
+.search-node:hover{
+	stroke: red;
+	stroke-width: 2;
+}
+#target{
+	text-align: center;
+}
+
+circle, path{
+	shape-rendering: auto;
+}
+#svg_frame{
+	display: flex;
+	flex-direction: column;
+	border: solid 2px gray;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	resize: both;
+}
+#svg{
+	height: 100%;
+	width: 100%;
+}
+#svg .selected path{
+	stroke: red;
+	stroke-width: 2;
+}
+
+#svg .distance{
+	visibility: hidden;
+}
+
+#svg .state.hidden{
+	display: none;
+}
+#svg .state.show, #svg_frame.show_states .state{
+	display: block;
+}
+
+#svg .arrow{
+	visibility: hidden;
+}
+
+#svg_frame.show_arrows .arrow{
+	visibility: visible
+}
+
+#svg_frame.show_distances .distance{
+	visibility: visible;
+}
