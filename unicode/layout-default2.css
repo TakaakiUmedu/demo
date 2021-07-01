@@ -74,7 +74,7 @@ h1, h2, h3, h4{
 /*	filter: shadow(color=black, direction=135, strength=10);*/
 }
 
-@media screen and (max-width: 1280px){
+@media screen and (max-width: 1024px){
 	p, ul, ol, blockquote, table, caption,pre{
 		margin-left: 0.5em;
 		margin-right: 0.5em;
@@ -83,7 +83,7 @@ h1, h2, h3, h4{
 		font-size: 120%;
 	}
 }
-@media screen and (min-width: 1281px){
+@media screen and (min-width: 1025px){
 	p, ul, ol, blockquote, table, caption,pre{
 		margin-left: 3em;
 		margin-right: 3em;
