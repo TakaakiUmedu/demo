@@ -9,16 +9,16 @@ Lib.executeOnDomLoad(()=> {
 		let code_end = 0x1f1ff;
 		
 		let tr = Dom.elem("tr", Dom.elem("th"));
-		for(var j = code_start; j <= code_end; j ++){
+		for(let j = code_start; j <= code_end; j ++){
 			Dom.append(tr, Dom.elem("th", String.fromCodePoint(j)));
 		}
 		Dom.append(table, tr);
 		
-		for(var i = code_start; i <= code_end; i ++){
+		for(let i = code_start; i <= code_end; i ++){
 			tr = Dom.elem("tr");
 			Dom.append(tr, Dom.elem("th", String.fromCodePoint(i)));
-			for(var j = code_start; j <= code_end; j ++){
-				Dom.append(tr, Dom.elem("td", String.fromCodePoint(j) + String.fromCodePoint(i)));
+			for(let j = code_start; j <= code_end; j ++){
+				Dom.append(tr, Dom.elem("td", String.fromCodePoint(i) + String.fromCodePoint(j)));
 			}
 		Dom.append(table, tr);
 		}
