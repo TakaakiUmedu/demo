@@ -1,26 +1,51 @@
 <!DOCTYPE HTML>
 <html lang="ja">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes"/>
 <title>Unicode Regional Indicatorのテスト</title>
-<link rel="stylesheet" href="layout-default2.css"></link>
-<link rel="stylesheet" href="color-default2.css"></link>
+<link rel="stylesheet" href="/css/layout-default2.css"></link>
+<link rel="stylesheet" href="/css/color-default2.css"></link>
 <style>
 td {
 	font-family: "メイリオ";
 };
 </style>
-<script src="regional-indicator.js"></script>
 </head>
 <body>
 
 
 <h1>Unicode Regional Indicatorのテスト</h1>
 
-<table id="table">
-</table>
+<script type="text/javascript">
+(function(){
+	var code_start = 0x1f1e6;
+	var code_end = 0x1f1ff;
+	
+	
+	document.write("<table>");
+	document.write("<tr><td>");
+	
+	for(var j = code_start; j <= code_end; j ++){
+		document.write("<th>&#" + j + ";</th>");
+	}
+	
+	document.write("</tr>\n");
+	
+	for(var i = code_start; i <= code_end; i ++){
+		document.write("<tr>");
+		document.write("<th>&#" + i + ";</th>");
+		for(var j = code_start; j <= code_end; j ++){
+			document.write("<td>&#" + i + ";&#" + j + ";</td>");
+		}
+		document.write("<tr>\n");
+	}
+	
+	document.write("</table>");
+})();
+</script>
 
-<p><a class="ref" href="index.html">戻る</a></p>
+
 
 </body>
 </html>

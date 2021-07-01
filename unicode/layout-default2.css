@@ -1,6 +1,6 @@
 body,p,h1,h2,h3,h4,h5,h6 {
 	white-space : normal;
-	font-style : medium;
+	font-style : normal;
 	font-weight : normal;
 	font-family : "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 }
@@ -33,7 +33,7 @@ p,ins {
 	text-indent : 1.5em;
 	clear : both;
 	text-align : justify;
-	text-justify : inter-ideograph;
+/*	text-justify : inter-ideograph;*/
 }
 p.continue {
 	text-indent : 0em;
@@ -73,9 +73,24 @@ h4{
 h1, h2, h3, h4{
 /*	filter: shadow(color=black, direction=135, strength=10);*/
 }
-p, ul, ol, blockquote, table, caption,pre{
-	margin-left: 3em;
-	margin-right: 3em;
+
+@media screen and (max-width: 1280px){
+	p, ul, ol, blockquote, table, caption,pre{
+		margin-left: 0.5em;
+		margin-right: 0.5em;
+	}
+	.font-table {
+		font-size: 120%;
+	}
+}
+@media screen and (min-width: 1281px){
+	p, ul, ol, blockquote, table, caption,pre{
+		margin-left: 3em;
+		margin-right: 3em;
+	}
+	.font-table {
+		font-size: 200%;
+	}
 }
 blockquote pre, blockquote p, blockquote ul, blockquote ol{
 	margin-left: 0em;

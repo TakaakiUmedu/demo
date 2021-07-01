@@ -7,10 +7,12 @@ Lib.executeOnDomLoad(()=> {
 		[["メイリオ", "Meiryo"],           "sans-serif"],
 		[["ＭＳ Ｐゴシック","MS PGothic"], "sans-serif"],
 		[['ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro'], "sans-serif"],
+		[['Noto Sans JP'], "serif"],
 
 		[['游明朝', '游明朝体', 'Yu Mincho'], "serif"],
 		[["ＭＳ Ｐ明朝", "MS PMincho"],    "serif"],
 		[['ヒラギノ明朝 Pro W3', 'Hiragino Mincho Pro'], "serif"],
+		[['Noto Serif JP'], "serif"],
 	];
 	const Dom = Lib.Dom;
 	const style = Dom.getElement("style");

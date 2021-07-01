@@ -1,8 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="ja">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes"/>
 <title>濁点(U+3099)、半濁点(U+309A)の扱いのテスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet"></link>
 <link rel="stylesheet" href="layout-default2.css"></link>
 <link rel="stylesheet" href="color-default2.css"></link>
 <style id="style"></style>
@@ -15,7 +19,7 @@
 
 
 <p>
-アクセント記号と同じ扱いで、ひらがな、カタカナに続けて<q style="font-size:200%;"> ゚ </q>(<code>U+309A</code>)、<q style="font-size:200%"> ゙ </q>(<code>U+3099</code>)を置いておくと、
+アクセント記号と同じ扱いで、ひらがな、カタカナに続けて<q class="font-table">&nbsp; ゚ &nbsp;</q>(<code>U+309A</code>)、<q class="font-table">&nbsp; ゙ &nbsp;</q>(<code>U+3099</code>)を置いておくと、
 直前の文字と合体できる分は自動的に合成される。
 </p>
 <p>
@@ -23,10 +27,12 @@
 </p>
 
 <p>
-表示フォント: <select id="font"></select> (インストールされていないフォントについてはブラウザ標準のフォントに切り替わります)
+表示フォント: <br/><select id="font"></select> <br/>
+(<q>Noto Sans</q>と<q>Noto Serif</q>はウェブフォントなのでどんな環境でも想定通りに表示されるはずです。
+それ以外はインストールされていないフォントについてはブラウザ標準のフォントに切り替わります)
 </p>
 
-<table style="font-size:200%;" class="font-select">
+<table class="font-select font-table">
 <caption>ひらがな</caption>
 <tr><td>あ゚</td><td>い゚</td><td>う゚</td><td>え゚</td><td>お゚</td>   <td>あ゙</td><td>い゙</td><td style="background:lightblue;">ゔ</td><td>え゙</td><td>お゙</td></tr>
 <tr><td style="background:lightblue;">か゚</td><td style="background:lightblue;">き゚</td><td style="background:lightblue;">く゚</td><td style="background:lightblue;">け゚</td><td style="background:lightblue;">こ゚</td>             <td style="background:lightblue;">が</td><td style="background:lightblue;">ぎ</td><td style="background:lightblue;">ぐ</td><td style="background:lightblue;">げ</td><td style="background:lightblue;">ご</td></tr>
@@ -39,7 +45,7 @@
 <tr><td>わ゚</td><td>ゐ゚</td><td>ん゚</td><td>ゑ゚</td><td>を゚</td>   <td>わ゙</td><td>ゐ゙</td><td>ん゙</td><td>ゑ゙</td><td>を゙</td></tr>
 </table>
 
-<table style="font-size:200%;" class="font-select">
+<table class="font-select font-table">
 <caption>カタカナ</caption>
 <tr><td>ア゚</td><td>イ゚</td><td>ウ゚</td><td>エ゚</td><td>オ゚</td>   <td>ア゙</td><td>イ゙</td><td style="background:lightblue;">ヴ</td><td>エ゙</td><td>オ゙</td></tr>
 <tr><td style="background:lightblue;">カ゚</td><td style="background:lightblue;">キ゚</td><td style="background:lightblue;">ク゚</td><td style="background:lightblue;">ケ゚</td><td style="background:lightblue;">コ゚</td>             <td style="background:lightblue;">ガ</td><td style="background:lightblue;">ギ</td><td style="background:lightblue;">グ</td><td style="background:lightblue;">ゲ</td><td style="background:lightblue;">ゴ</td></tr>
@@ -52,7 +58,7 @@
 <tr><td>ワ゚</td><td>ヰ゚</td><td>ン゚</td><td>ヱ゚</td><td>ヲ゚</td>   <td style="background:lightblue;">ヷ</td><td style="background:lightblue;">ヸ</td><td>ン゙</td><td style="background:lightblue;">ヹ</td><td style="background:lightblue;">ヺ</td></tr>
 </table>
 
-<table style="font-size:200%;" class="font-select">
+<table class="font-select font-table">
 <caption>小文字カタカナ</caption>
 <tr><td>ヵ゙</td><td>ヶ゙</td><td>ㇰ゙</td><td>ㇱ゙</td><td>ㇲ゙</td><td>ㇳ゙</td><td>ㇴ゙</td><td>ㇵ゙</td><td>ㇶ゙</td></tr><tr><td>ㇷ゙</td><td>ㇸ゙</td><td>ㇹ゙</td><td>ㇺ゙</td><td>ㇻ゙</td><td>ㇼ゙</td><td>ㇽ゙</td><td>ㇾ゙</td><td>ㇿ゙</td></tr>
 <tr><td>ヵ゚</td><td>ヶ゚</td><td>ㇰ゚</td><td>ㇱ゚</td><td>ㇲ゚</td><td>ㇳ゚</td><td>ㇴ゚</td><td>ㇵ゚</td><td>ㇶ゚</td></tr><tr><td style="background:lightblue;">ㇷ゚</td><td>ㇸ゚</td><td>ㇹ゚</td><td>ㇺ゚</td><td>ㇻ゚</td><td>ㇼ゚</td><td>ㇽ゚</td><td>ㇾ゚</td><td>ㇿ゚</td></tr>
