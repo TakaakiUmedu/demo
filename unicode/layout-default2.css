@@ -21,7 +21,8 @@ ul.pre-index li,
 ul.links li,
 code,
 pre{
-	font-family : "ＭＳ ゴシック", "MS Gothic", monospace;
+	text-indent: 0;
+	font-family : "ＭＳ ゴシック", "MS Gothic", Osaka-mono, "Osaka-等幅", monospace;
 }
 p,ins {
 	margin-top : 0.5em;
@@ -73,13 +74,8 @@ h1, h2, h3, h4{
 /*	filter: shadow(color=black, direction=135, strength=10);*/
 }
 p, ul, ol, blockquote, table, caption,pre{
-	margin-left: 5em;
-	margin-right: 5em;
-}
-
-ul ul{
-	margin-left: 0em;
-	margin-right: 0em;
+	margin-left: 3em;
+	margin-right: 3em;
 }
 blockquote pre, blockquote p, blockquote ul, blockquote ol{
 	margin-left: 0em;
@@ -179,7 +175,7 @@ blockquote.follow{
 
 li,dt {
 	line-height : 1.1em;
-	margin-left : 0em;
+	margin-left : 1em;
 	margin-top : 0.3em;
 	margin-bottom : 0.3em;
 }
@@ -357,7 +353,7 @@ img, video{
 }
 td.code{
 	text-align : right;
-	font-family : "ＭＳ ゴシック", "MS Gothic", monospace;
+	font-family : "ＭＳ ゴシック", "MS Gothic", Osaka-mono, "Osaka-等幅", monospace;
 }
 td.right{
 	text-align : right;
