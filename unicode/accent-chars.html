@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes"/>
-<title>アクセント記号のテスト</title>
+<title>アクセント記号などのテスト</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"></link>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet"></link>
@@ -14,25 +14,33 @@
 </head>
 <body>
 
-<h1>アクセント記号のテスト</h1>
+<h1>アクセント記号などのテスト</h1>
 
-<h2>アクセント記号の例</h2>
+<p>
+表示フォント: <select id="font"></select> (インストールされていないフォントについてはブラウザ標準のフォントに切り替わります)
+</p>
+
+<h2>アクセント記号などの例</h2>
+
+<p>
+<label><input type="radio" name="char" value="none" checked="checked"/>記号のみ</label>
+&nbsp;&nbsp;&nbsp;
+<label><input type="radio" name="char" value="a"/><q>a</q>に付ける</label>
+&nbsp;&nbsp;&nbsp;
+<label><input type="radio" name="char" value="abc"/><q>abc</q>の<q>b</q>に付ける</label>
+</p>
 
 <blockquote>
-<p style="font-size:200%" id="list"></p>
+<p style="font-size:200%;line-height:2em;" id="list" class="font-select"></p>
 </blockquote>
 
-<h2>アクセント記号を複数付ける実験</h2>
+<h2>アクセント記号などを複数付ける実験</h2>
 
 <blockquote>
 <p style="font-size:200%" id="samples"></p>
 </blockquote>
 
-<p>適当に選んだ上記のアクセント記号を3つ付ける全てのパターンの一覧。ただし、混沌状況を概観するために適当に作った表示のテストであり、実際に正しい文章の中であり得る組み合わせかどうかは未確認。</p>
-
-<p>
-表示フォント: <select id="font"></select> (インストールされていないフォントについてはブラウザ標準のフォントに切り替わります)
-</p>
+<p>適当に選んだ上記のアクセント記号などを3つ付ける全てのパターンの一覧。ただし、混沌状況を概観するために適当に作った表示のテストであり、実際に正しい文章の中であり得る組み合わせかどうかは未確認。</p>
 
 <p id="chars" class="font-select" style="font-size:200%;line-height:2em;"></p>
 
