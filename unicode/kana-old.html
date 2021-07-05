@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes"/>
+<title>濁点(U+3099)、半濁点(U+309A)の扱いのテスト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"></link>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"></link>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet"></link>
+<link rel="stylesheet" href="layout-default2.css"></link>
+<link rel="stylesheet" href="color-default2.css"></link>
+<style id="style"></style>
+<script src="font-selecter.js"></script>
+</head>
+<body>
+
+
+<h1>濁点(U+3099)、半濁点(U+309A)の扱いのテスト</h1>
+
+
+<p>
+アクセント記号と同じ扱いで、ひらがな、カタカナに続けて<q class="font-table">&nbsp; ゚ &nbsp;</q>(<code>U+309A</code>)、<q class="font-table">&nbsp; ゙ &nbsp;</q>(<code>U+3099</code>)を置いておくと、
+直前の文字と合体できる分は自動的に合成される。
+</p>
+<p>
+青っぽい背景で示した部分は、日本語の表現として実際に存在する。見慣れない組み合わせはアイヌ語関連らしい。
+</p>
+
+<p>
+表示フォント: <br/><select id="font"></select> <br/>
+(<q>Noto Sans</q>と<q>Noto Serif</q>はウェブフォントなのでどんな環境でも想定通りに表示されるはずです。
+それ以外はインストールされていないフォントについてはブラウザ標準のフォントに切り替わります)
+</p>
+
+<table class="font-select font-table">
+<caption>ひらがな</caption>
+<tr><td>あ゚</td><td>い゚</td><td>う゚</td><td>え゚</td><td>お゚</td>   <td>あ゙</td><td>い゙</td><td style="background:lightblue;">ゔ</td><td>え゙</td><td>お゙</td></tr>
+<tr><td style="background:lightblue;">か゚</td><td style="background:lightblue;">き゚</td><td style="background:lightblue;">く゚</td><td style="background:lightblue;">け゚</td><td style="background:lightblue;">こ゚</td>             <td style="background:lightblue;">が</td><td style="background:lightblue;">ぎ</td><td style="background:lightblue;">ぐ</td><td style="background:lightblue;">げ</td><td style="background:lightblue;">ご</td></tr>
+<tr><td>さ゚</td><td>し゚</td><td>す゚</td><td>せ゚</td><td>そ゚</td>   <td style="background:lightblue;">ざ</td><td style="background:lightblue;">じ</td><td style="background:lightblue;">ず</td><td style="background:lightblue;">ぜ</td><td style="background:lightblue;">ぞ</td></tr>
+<tr><td>た゚</td><td>ち゚</td><td>つ゚</td><td>て゚</td><td>と゚</td>   <td style="background:lightblue;">だ</td><td style="background:lightblue;">ぢ</td><td style="background:lightblue;">づ</td><td style="background:lightblue;">で</td><td style="background:lightblue;">ど</td></tr>
+<tr><td>な゚</td><td>に゚</td><td>ぬ゚</td><td>ね゚</td><td>の゚</td>   <td>な゙</td><td>に゙</td><td>ぬ゙</td><td>ね゙</td><td>の゙</td></tr>
+<tr><td style="background:lightblue;">ぱ</td><td style="background:lightblue;">ぴ</td><td style="background:lightblue;">ぷ</td><td style="background:lightblue;">ぺ</td><td style="background:lightblue;">ぽ</td>             <td style="background:lightblue;">ば</td><td style="background:lightblue;">び</td><td style="background:lightblue;">ぶ</td><td style="background:lightblue;">べ</td><td style="background:lightblue;">ぼ</td></tr>
+<tr><td>ま゚</td><td>み゚</td><td>む゚</td><td>め゚</td><td>も゚</td>   <td>ま゙</td><td>み゙</td><td>む゙</td><td>め゙</td><td>も゙</td></tr>
+<tr><td>や゚</td><td>ゆ゚</td><td>よ゚</td><td></td><td></td>           <td>や゙</td><td>ゆ゙</td><td>よ゙</td><td></td><td></td></tr>
+<tr><td>わ゚</td><td>ゐ゚</td><td>ん゚</td><td>ゑ゚</td><td>を゚</td>   <td>わ゙</td><td>ゐ゙</td><td>ん゙</td><td>ゑ゙</td><td>を゙</td></tr>
+</table>
+
+<table class="font-select font-table">
+<caption>カタカナ</caption>
+<tr><td>ア゚</td><td>イ゚</td><td>ウ゚</td><td>エ゚</td><td>オ゚</td>   <td>ア゙</td><td>イ゙</td><td style="background:lightblue;">ヴ</td><td>エ゙</td><td>オ゙</td></tr>
+<tr><td style="background:lightblue;">カ゚</td><td style="background:lightblue;">キ゚</td><td style="background:lightblue;">ク゚</td><td style="background:lightblue;">ケ゚</td><td style="background:lightblue;">コ゚</td>             <td style="background:lightblue;">ガ</td><td style="background:lightblue;">ギ</td><td style="background:lightblue;">グ</td><td style="background:lightblue;">ゲ</td><td style="background:lightblue;">ゴ</td></tr>
+<tr><td>サ゚</td><td>シ゚</td><td>ス゚</td><td style="background:lightblue;">セ゚</td><td>ソ゚</td>   <td style="background:lightblue;">ザ</td><td style="background:lightblue;">ジ</td><td style="background:lightblue;">ズ</td><td style="background:lightblue;">ゼ</td><td style="background:lightblue;">ゾ</td></tr>
+<tr><td>タ゚</td><td>チ゚</td><td style="background:lightblue;">ツ゚</td><td>テ゚</td><td style="background:lightblue;">ト゚</td>   <td style="background:lightblue;">ダ</td><td style="background:lightblue;">ヂ</td><td style="background:lightblue;">ヅ</td><td style="background:lightblue;">デ</td><td style="background:lightblue;">ド</td></tr>
+<tr><td>ナ゚</td><td>ニ゚</td><td>ヌ゚</td><td>ネ゚</td><td>ノ゚</td>   <td>ナ゙</td><td>ニ゙</td><td>ヌ゙</td><td>ネ゙</td><td>ノ゙</td></tr>
+<tr><td style="background:lightblue;">パ</td><td style="background:lightblue;">ピ</td><td style="background:lightblue;">プ</td><td style="background:lightblue;">ペ</td><td style="background:lightblue;">ポ</td>             <td style="background:lightblue;">バ</td><td style="background:lightblue;">ビ</td><td style="background:lightblue;">ブ</td><td style="background:lightblue;">ベ</td><td style="background:lightblue;">ボ</td></tr>
+<tr><td>マ゚</td><td>ミ゚</td><td>ム゚</td><td>メ゚</td><td>モ゚</td>   <td>マ゙</td><td>ミ゙</td><td>ム゙</td><td>メ゙</td><td>モ゙</td></tr>
+<tr><td>ヤ゚</td><td>ユ゚</td><td>ヨ゚</td><td></td><td></td>           <td>ヤ゙</td><td>ユ゙</td><td>ヨ゙</td><td></td><td></td></tr>
+<tr><td>ワ゚</td><td>ヰ゚</td><td>ン゚</td><td>ヱ゚</td><td>ヲ゚</td>   <td style="background:lightblue;">ヷ</td><td style="background:lightblue;">ヸ</td><td>ン゙</td><td style="background:lightblue;">ヹ</td><td style="background:lightblue;">ヺ</td></tr>
+</table>
+
+<table class="font-select font-table">
+<caption>小文字カタカナ</caption>
+<tr><td>ヵ゙</td><td>ヶ゙</td><td>ㇰ゙</td><td>ㇱ゙</td><td>ㇲ゙</td><td>ㇳ゙</td><td>ㇴ゙</td><td>ㇵ゙</td><td>ㇶ゙</td></tr><tr><td>ㇷ゙</td><td>ㇸ゙</td><td>ㇹ゙</td><td>ㇺ゙</td><td>ㇻ゙</td><td>ㇼ゙</td><td>ㇽ゙</td><td>ㇾ゙</td><td>ㇿ゙</td></tr>
+<tr><td>ヵ゚</td><td>ヶ゚</td><td>ㇰ゚</td><td>ㇱ゚</td><td>ㇲ゚</td><td>ㇳ゚</td><td>ㇴ゚</td><td>ㇵ゚</td><td>ㇶ゚</td></tr><tr><td style="background:lightblue;">ㇷ゚</td><td>ㇸ゚</td><td>ㇹ゚</td><td>ㇺ゚</td><td>ㇻ゚</td><td>ㇼ゚</td><td>ㇽ゚</td><td>ㇾ゚</td><td>ㇿ゚</td></tr>
+</table>
+
+<p><a class="ref" href="index.html">戻る</a></p>
+
+</body>
+</html>
