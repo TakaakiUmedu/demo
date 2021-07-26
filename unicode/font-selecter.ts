@@ -16,7 +16,7 @@ Lib.executeOnDomLoad(()=> {
 	];
 	const Dom = Lib.Dom;
 	const style = Dom.getElement("style");
-	const font = Dom.getSelect("font");
+	const font = Dom.get(HTMLSelectElement, "font");
 	if(style && font){
 		for(const names of fonts){
 			let value = "";

@@ -10,15 +10,15 @@ namespace RSADemo{
 			const L = BigInteger.parse(123456);
 			const A = BigInteger.parse(165437);
 			
-			Dom.getInput("demo_id_2").value = checkParam("L", "" + L);
-			Dom.getInput("demo_id_3").value = checkParam("A", "" + A);
+			Dom.get(HTMLInputElement, "demo_id_2").value = checkParam("L", "" + L);
+			Dom.get(HTMLInputElement, "demo_id_3").value = checkParam("A", "" + A);
 			
 			return { L, A };
 		}
 		
 		function reload(): ReturnType<typeof initialize>{
-			const L = BigInteger.parse(Dom.getInput("demo_id_2").value);
-			const A = BigInteger.parse(Dom.getInput("demo_id_3").value);
+			const L = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_2").value);
+			const A = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_3").value);
 			
 			return { L, A };
 		}

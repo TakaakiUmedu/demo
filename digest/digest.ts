@@ -20,8 +20,8 @@ namespace Digest{
 	const ClassicAlgorithms: ClassicAlgorithm[] = ["CHECKSUM", "XOR"];
 	
 	class Main{
-		private readonly digests = Dom.getElements(...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms, ...ClassicAlgorithms);
-		private readonly message = Dom.getTextArea("message");
+		private readonly digests = Dom.collect(HTMLElement, [...DigestAlgorithms, ...CryptoJSAlgorithms, ...CRCAlgorithms, ...ClassicAlgorithms]);
+		private readonly message = Dom.get(HTMLTextAreaElement, "message");
 		private readonly useless = Dom.getElement("useless");
 		private readonly useless_body = Dom.getElement("useless_body");
 		private readonly useless_head = Dom.getElement("useless_head");

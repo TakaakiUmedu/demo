@@ -24,7 +24,11 @@ namespace Levenshtein_distance{
 		public static initialize(){
 			new Demo();
 		}
-		private readonly elems = Dom.combineTables(Dom.getInputs("from", "to", "restart", "pass", "replace", "delete", "insert", "undo", "calc", "show_arrows", "show_distances", "show_states"), Dom.getElements("to_rest", "to_done", "from_rest", "history", "svg_frame", "history_frame"), SVG.getSVGs("svg"));
+		private readonly elems = Dom.collect(
+			HTMLInputElement, ["from", "to", "restart", "pass", "replace", "delete", "insert", "undo", "calc", "show_arrows", "show_distances", "show_states"], 
+			HTMLElement, ["to_rest", "to_done", "from_rest", "history", "svg_frame", "history_frame"],
+			SVGElement, ["svg"]
+		);
 //		private readonly context = new SVG.Context(this.elems.svg);
 		private to_done: string;
 		private to_rest: string;

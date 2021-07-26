@@ -15,15 +15,15 @@
 		private readonly canvas: HTMLCanvasElement;
 		private readonly context: CanvasRenderingContext2D;
 		private imagedata : null | ImageData = null;
-		private readonly elems = Dom.combineTables(
-			Dom.getImages("result_image"),
-			Dom.getElements("image_area", "picked_color"),
-			Dom.getAnchors("download"),
-			Dom.getInputs("execute_button", "r", "g", "b"),
-			Dom.getSelects("background_mode")
+		private readonly elems = Dom.collect(
+			Image, ["result_image"], 
+			HTMLElement, ["image_area", "picked_color"],
+			HTMLAnchorElement, ["download"],
+			HTMLInputElement, ["execute_button", "r", "g", "b"],
+			HTMLSelectElement, ["background_mode"]
 		);
 		private original_image: HTMLImageElement | null = null;
-
+		
 		public constructor(){
 			const canvas = Dom.canvas2D();
 			

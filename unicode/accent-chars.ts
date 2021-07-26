@@ -36,22 +36,7 @@ Lib.executeOnDomLoad(()=> {
 			Dom.append(listElem, list_texts.join(" "));
 		}
 		
-		const inputs = document.getElementsByTagName("input");
-		for(let i = 0; i < inputs.length; i ++){
-			const input = inputs[i];
-			if(input instanceof HTMLInputElement && input.type == "radio" && input.name == "char" && (input.value == "a" || input.value == "abc" || input.value == "none")){
-				((input: HTMLInputElement, value: "none" | "a" | "abc")=> {
-					Dom.addEventListener(input, "change", ()=> {
-						if(input.checked){
-							setChar(value);
-						}
-					});
-				})(input, input.value);
-				if(input.checked){
-					setChar(input.value);
-				}
-			}
-		}
+		Dom.setRadioChangeListener("char", setChar);
 		
 		let sample_texts: string[] = [];
 		for(const a of as){

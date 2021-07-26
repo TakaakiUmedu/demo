@@ -11,17 +11,17 @@ namespace RSADemo{
 			const q = BigInteger.parse(3734091287);
 			const e = BigInteger.parse(65537);
 			
-			Dom.getInput("prime_p").value = checkParam("p", "" + p);
-			Dom.getInput("prime_q").value = checkParam("q", "" + q);
-			Dom.getInput("demo_id_2").value = checkParam("e", "" + e);
+			Dom.get(HTMLInputElement, "prime_p").value = checkParam("p", "" + p);
+			Dom.get(HTMLInputElement, "prime_q").value = checkParam("q", "" + q);
+			Dom.get(HTMLInputElement, "demo_id_2").value = checkParam("e", "" + e);
 			
 			return { p, q, e };
 		}
 		
 		function reload(): ReturnType<typeof initialize>{
-			const p = BigInteger.parse(Dom.getInput("prime_p").value);
-			const q = BigInteger.parse(Dom.getInput("prime_q").value);
-			const e = BigInteger.parse(Dom.getInput("demo_id_2").value);
+			const p = BigInteger.parse(Dom.get(HTMLInputElement, "prime_p").value);
+			const q = BigInteger.parse(Dom.get(HTMLInputElement, "prime_q").value);
+			const e = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_2").value);
 			
 			return { p, q, e };
 		}
@@ -73,18 +73,18 @@ namespace RSADemo{
 					}
 				}
 			}
-			const primeMakeButton = Dom.getInput("make_primes_submit");
+			const primeMakeButton = Dom.get(HTMLInputElement, "make_primes_submit");
 			function create_random_primes(event: MouseEvent){
-				const inputs = [ Dom.getInput("prime_p"), Dom.getInput("prime_q") ];
-				const calc_button1 = Dom.getInput("calc_button1");
-				const calc_button2 = Dom.getInput("calc_button2");
+				const inputs = [ Dom.get(HTMLInputElement, "prime_p"), Dom.get(HTMLInputElement, "prime_q") ];
+				const calc_button1 = Dom.get(HTMLInputElement, "calc_button1");
+				const calc_button2 = Dom.get(HTMLInputElement, "calc_button2");
 				primeMakeButton.disabled = true;
 				calc_button1.disabled = true;
 				calc_button2.disabled = true;
 				inputs[0].disabled = true;
 				inputs[1].disabled = true;
 			
-				const primeDigits = Dom.getInput("make_primes_digits");
+				const primeDigits = Dom.get(HTMLInputElement, "make_primes_digits");
 				let n = parseInt(primeDigits.value);
 				if(typeof(n) != "number" || !(n > 0)){
 					n = 1;
@@ -162,13 +162,13 @@ namespace RSADemo{
 				function initialize(checkParam: (name: string, defaultValue: string)=> string){
 					const message = "RSA暗号方式のデモ";
 					
-					Dom.getInput("demo_id_30").value = checkParam("message", "" + message);
+					Dom.get(HTMLInputElement, "demo_id_30").value = checkParam("message", "" + message);
 					
 					return { message };
 				}
 				
 				function reload(): ReturnType<typeof initialize>{
-					const message = Dom.getInput("demo_id_30").value;
+					const message = Dom.get(HTMLInputElement, "demo_id_30").value;
 					
 					return { message };
 				}

@@ -21,14 +21,12 @@ namespace Demo{
 			return Dom.elem("span", { className: "not_assigned", dataset: { c : c } }, c);
 		}
 		
-		private readonly elems = Dom.combineTables(
-			Dom.getInputs("encrypt", "import", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"),
-			Dom.getTextAreas("src"),
-			Dom.getSelects("mode"),
-			Dom.getElements("dst", "graph_1", "graph_2", "graph_3", "src_panel", "table", "guess"),
+		private readonly elems = Dom.collect(
+			HTMLInputElement, ["encrypt", "import", "toggle_dst", "toggle_src_panel1", "toggle_src_panel2", "input_dst", "input_src"],
+			HTMLTextAreaElement, ["src"],
+			HTMLSelectElement, ["mode"],
+			HTMLElement, ["dst", "graph_1", "graph_2", "graph_3", "src_panel", "table", "guess"]
 		);
-		
-//		private readonly guess: Lib.Hash<HTMLInputElement> = {};
 		
 		private import = ()=> {
 			this.import_target_str(false);
@@ -246,14 +244,14 @@ namespace Demo{
 		
 		private updateContent(){
 			let i = 0;
-			Dom.eachChild(this.elems.dst, (word)=> {
+			for(const word of Dom.iterateChildNodes(this.elems.dst)){
 				if(word instanceof Text){
 					i ++;
 					if(i >= ALPHABETS.length){
 						i = 0;
 					}
 				}else if(word instanceof HTMLElement){
-					Dom.eachChildElement(word, (span)=> {
+					for(const span of Dom.iterateChildElements(word)){
 						let c = span.dataset.c;
 						if(c !== undefined){
 							const cU = c.toUpperCase();
@@ -284,9 +282,9 @@ namespace Demo{
 								i = 0;
 							}
 						}
-					});
+					}
 				}
-			});
+			}
 		};
 		
 		private createReplaceList(){

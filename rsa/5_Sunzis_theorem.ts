@@ -11,15 +11,15 @@ namespace RSADemo{
 			const p = N.random();
 			const q = N.random();
 			
-			Dom.getInput("demo_id_2").value = checkParam("p", "" + p);
-			Dom.getInput("demo_id_3").value = checkParam("q", "" + q);
+			Dom.get(HTMLInputElement, "demo_id_2").value = checkParam("p", "" + p);
+			Dom.get(HTMLInputElement, "demo_id_3").value = checkParam("q", "" + q);
 			
 			return { p, q };
 		}
 		
 		function reload(): ReturnType<typeof initialize>{
-			const p = BigInteger.parse(Dom.getInput("demo_id_2").value);
-			const q = BigInteger.parse(Dom.getInput("demo_id_3").value);
+			const p = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_2").value);
+			const q = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_3").value);
 			
 			return { p, q };
 		}
@@ -62,15 +62,15 @@ namespace RSADemo{
 						const a = p.random();
 						const b = q.random();
 						
-						Dom.getInput("demo_id_26").value = checkParam("a", "" + a);
-						Dom.getInput("demo_id_27").value = checkParam("b", "" + b);
+						Dom.get(HTMLInputElement, "demo_id_26").value = checkParam("a", "" + a);
+						Dom.get(HTMLInputElement, "demo_id_27").value = checkParam("b", "" + b);
 						
 						return { a, b };
 					}
 					
 					function reload(): ReturnType<typeof initialize>{
-						const a = BigInteger.parse(Dom.getInput("demo_id_26").value);
-						const b = BigInteger.parse(Dom.getInput("demo_id_27").value);
+						const a = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_26").value);
+						const b = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_27").value);
 						
 						return { a, b };
 					}

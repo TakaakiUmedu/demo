@@ -11,17 +11,17 @@ namespace RSADemo{
 			const q = BigInteger.parse(5);
 			const m = BigInteger.parse(4);
 			
-			Dom.getInput("demo_id_2").value = checkParam("p", "" + p);
-			Dom.getInput("demo_id_3").value = checkParam("q", "" + q);
-			Dom.getInput("demo_id_4").value = checkParam("m", "" + m);
+			Dom.get(HTMLInputElement, "demo_id_2").value = checkParam("p", "" + p);
+			Dom.get(HTMLInputElement, "demo_id_3").value = checkParam("q", "" + q);
+			Dom.get(HTMLInputElement, "demo_id_4").value = checkParam("m", "" + m);
 			
 			return { p, q, m };
 		}
 		
 		function reload(): ReturnType<typeof initialize>{
-			const p = BigInteger.parse(Dom.getInput("demo_id_2").value);
-			const q = BigInteger.parse(Dom.getInput("demo_id_3").value);
-			const m = BigInteger.parse(Dom.getInput("demo_id_4").value);
+			const p = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_2").value);
+			const q = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_3").value);
+			const m = BigInteger.parse(Dom.get(HTMLInputElement, "demo_id_4").value);
 			
 			return { p, q, m };
 		}

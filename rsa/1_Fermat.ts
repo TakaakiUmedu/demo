@@ -9,13 +9,13 @@ namespace RSADemo{
 		function initialize(checkParam: (name: string, defaultValue: string)=> string){
 			const p = BigInteger.parse(13);
 			
-			Dom.getInput("p").value = checkParam("p", "" + p);
+			Dom.get(HTMLInputElement, "p").value = checkParam("p", "" + p);
 			
 			return { p };
 		}
 		
 		function reload(): ReturnType<typeof initialize>{
-			const p = BigInteger.parse(Dom.getInput("p").value);
+			const p = BigInteger.parse(Dom.get(HTMLInputElement, "p").value);
 			
 			return { p };
 		}
@@ -31,11 +31,11 @@ namespace RSADemo{
 				class Calc{
 					private static readonly LIMIT = 100;
 			
-					private readonly elem = Dom.combineTables(
-						Dom.getInputs("calculate", "p", "mod"),
-						Dom.getSelects("count"),
-						Dom.getElements("result")
-					);
+					private readonly elem = Dom
+						.collect(HTMLInputElement, "calculate", "p", "mod")
+						.collect(HTMLSelectElement, "count")
+						.collect(HTMLElement, "result")
+					.table;
 					
 					public static initialize(){
 						new Calc();
