@@ -1,0 +1,64 @@
+#TABLE_DIV{
+	margin: 0em 3em;
+}
+
+#TABLE_DIV p label{
+	margin: 0em 0.5em;
+}
+
+#TABLE_DIV textarea{
+	margin: 0em 3em;
+	width: 70%;
+	white-space: nowrap;
+	font-family: "ÇlÇr ÇoÉSÉVÉbÉN", "MS PGothic", sans-serif;
+	tab-size: 4;
+}
+
+#TABLE_DIV textarea.MONOSPACE{
+	font-family: "ÇlÇr ÉSÉVÉbÉN", "MS Gothic", Osaka-mono, "Osaka-ìôïù", monospace;
+}
+
+#TABLE_DIV table{
+	background-color: white;
+	border-collapse: collapse;
+	table-layout: fixed;
+	position: relative;
+	border: 2px green solid;
+	width: 1em;
+}
+
+#TABLE_DIV table tr{
+	background-color: transparent;
+	height: 1em;
+}
+
+#TABLE_DIV table tr th{
+	color: white;
+	margin: 0;
+	width: 1em;
+	height: 2em;
+	text-align: center;
+	background-color: green;
+	border: 1px solid green;
+	padding: 0;
+}
+
+#TABLE_DIV table tr td{
+	margin: 0;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	background-color: white;
+	border: 1px solid lightgreen;
+}
+
+#TABLE_DIV table.NO_GRIDS tr td{
+	border-color: white;
+}
+
+#TABLE_DIV td.TAB{
+	text-align: right;
+	color: mediumaquamarine;
+	font-wait: bold;
+}
+
