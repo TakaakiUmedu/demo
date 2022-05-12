@@ -1,0 +1,2879 @@
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var Lib;
+(function (Lib) {
+    Lib.isTouchDevice = false;
+    function setUserAgent() {
+        if (window.ontouchstart) {
+            Lib.isTouchDevice = true;
+        }
+    }
+    /*
+    export function cloneObject(obj: object): object{
+        let ret = {};
+        for(let name in obj){
+            Object.defineProperty(ret, name, Object.getOwnPropertyDescriptor(obj, name));
+        }
+        return ret;
+//		return Object.assign({}, obj);
+    }
+    */
+    function toPx(val) {
+        if (val > 0.1) {
+            return "" + Math.round(val) + "px";
+        }
+        else if (val < -0.1) {
+            return "-" + Math.round(-val) + "px";
+        }
+        else {
+            return "0px";
+        }
+    }
+    Lib.toPx = toPx;
+    function cloneHash(src) {
+        var ret = {};
+        for (var name_1 in src) {
+            ret[name_1] = src[name_1];
+        }
+        return ret;
+    }
+    Lib.cloneHash = cloneHash;
+    var gDebgugWindow = null;
+    function argumentsToMessage() {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var message = "";
+        if (args.length > 0) {
+            message = args[0];
+            for (var i = 1; i < args.length; i++) {
+                message += "," + args[i].toString();
+            }
+        }
+        return message;
+    }
+    function debugOutput() {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var message = argumentsToMessage(args);
+        var pElement = document.createElement("p");
+        pElement.appendChild(document.createTextNode(message));
+        var debugWindowDiv = document.getElementById("debug_window");
+        if (debugWindowDiv) {
+            debugWindowDiv.appendChild(pElement);
+        }
+        else {
+            if (gDebgugWindow == null) {
+                var div = document.createElement("div");
+                div.style.position = "absolute";
+                div.style.borderStyle = "solid";
+                div.style.borderColor = "black";
+                div.style.borderWidth = "2px";
+                div.style.padding = "0px";
+                div.style.backgroundColor = "white";
+                div.style.color = "black";
+                div.style.fontSize = "small";
+                div.style.fontFamily = "monospace";
+                document.body.appendChild(div);
+                gDebgugWindow = div;
+            }
+            pElement.style.border = "0px";
+            pElement.style.margin = "0px";
+            pElement.style.padding = "0px";
+            pElement.style.textIndent = "0px";
+            gDebgugWindow.style.top = toPx(document.documentElement ? document.documentElement.scrollTop : 0);
+            if (gDebgugWindow.firstChild != null) {
+                gDebgugWindow.insertBefore(pElement, gDebgugWindow.firstChild);
+            }
+            else {
+                gDebgugWindow.appendChild(pElement);
+            }
+        }
+    }
+    Lib.debugOutput = debugOutput;
+    function infoOutput() {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var message = argumentsToMessage(args);
+        var pElement = document.createElement("p");
+        pElement.appendChild(document.createTextNode(message));
+        var infoDiv = document.getElementById("info");
+        if (infoDiv) {
+            infoDiv.appendChild(pElement);
+        }
+        else {
+            document.body.appendChild(pElement);
+        }
+    }
+    Lib.infoOutput = infoOutput;
+    function doNothing() {
+        var _ = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            _[_i] = arguments[_i];
+        }
+    }
+    Lib.doNothing = doNothing;
+    function setExecuteOnLoadHandler(eventName, target, handler) {
+        if (document.readyState == "complete") {
+            handler();
+        }
+        else {
+            var initialized = false;
+            var func = function () {
+                if (initialized) {
+                    return;
+                }
+                initialized = true;
+                handler();
+                target.removeEventListener(eventName, func, false);
+            };
+            target.addEventListener(eventName, func, false);
+        }
+    }
+    function executeOnDomLoad(handler) {
+        setExecuteOnLoadHandler("DOMContentLoaded", window, handler);
+    }
+    Lib.executeOnDomLoad = executeOnDomLoad;
+    function executeOnLoad(handler, image) {
+        if (image === undefined) {
+            setExecuteOnLoadHandler("load", window, handler);
+        }
+        else {
+            var newHandler_1 = handler;
+            setExecuteOnLoadHandler("load", image, function () { newHandler_1(image); });
+        }
+    }
+    Lib.executeOnLoad = executeOnLoad;
+    function indexer() {
+        var index = 0;
+        return function () {
+            return index++;
+        };
+    }
+    Lib.indexer = indexer;
+    function forEachRecursive(item, callback) {
+        if (Array.isArray(item)) {
+            for (var i = 0; i < item.length; i++) {
+                forEachRecursive(item[i], callback);
+            }
+        }
+        else {
+            callback(item);
+        }
+    }
+    Lib.forEachRecursive = forEachRecursive;
+    var StableHash = /** @class */ (function () {
+        function StableHash() {
+            this.list = [];
+            this.table = {};
+        }
+        StableHash.prototype.push = function (key, value) {
+            if (this.table[key] == undefined) {
+                this.list.push(key);
+                this.table[key] = value;
+            }
+        };
+        StableHash.prototype.get = function (key) {
+            return this.table[key];
+        };
+        StableHash.prototype.forEach = function (callback) {
+            var list = this.list.concat();
+            for (var i = 0; i < list.length; i++) {
+                var key = list[i];
+                if (callback(key, this.table[key], i) === false) {
+                    break;
+                }
+            }
+        };
+        StableHash.prototype.remove = function (key) {
+            var index = this.list.indexOf(key);
+            if (index >= 0) {
+                this.list.splice(index, 1);
+            }
+            if (this.table[key]) {
+                delete this.table[key];
+            }
+        };
+        StableHash.prototype.keys = function () {
+            return this.list.concat();
+        };
+        StableHash.prototype.values = function () {
+            var _this = this;
+            return this.list.map(function (key) { return _this.table[key]; });
+        };
+        StableHash.prototype.count = function () {
+            return this.list.length;
+        };
+        StableHash.prototype.map = function (callback) {
+            var _this = this;
+            return this.list.map(function (key, index) {
+                return callback(key, _this.table[key], index);
+            });
+        };
+        StableHash.prototype.freeze = function () {
+            Object.freeze(this.list);
+            Object.freeze(this.table);
+        };
+        return StableHash;
+    }());
+    Lib.StableHash = StableHash;
+    function convertIfDefined(item, convert) {
+        if (item === null || item === undefined) {
+            return undefined;
+        }
+        else {
+            return convert(item);
+        }
+    }
+    Lib.convertIfDefined = convertIfDefined;
+    function convertOrDefault(item, convert, defaultValue) {
+        if (item === null || item === undefined) {
+            return defaultValue;
+        }
+        else {
+            return convert(item);
+        }
+    }
+    Lib.convertOrDefault = convertOrDefault;
+    function prioritizedExecute(totalTask) {
+        var tasks = [];
+        totalTask(function (priority, task) {
+            var list = tasks[priority] || (tasks[priority] = []);
+            list.push(task);
+        });
+        for (var _i = 0, tasks_1 = tasks; _i < tasks_1.length; _i++) {
+            var list = tasks_1[_i];
+            if (list !== undefined) {
+                for (var _a = 0, list_1 = list; _a < list_1.length; _a++) {
+                    var task = list_1[_a];
+                    task();
+                }
+            }
+        }
+    }
+    Lib.prioritizedExecute = prioritizedExecute;
+    setUserAgent();
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.ts" />
+///// <reference path="./mylib.dom_tagnames.d.ts" />
+///// <reference path="./mylib.html_element_map.ts" />
+var Lib;
+/// <reference path="./mylib.ts" />
+///// <reference path="./mylib.dom_tagnames.d.ts" />
+///// <reference path="./mylib.html_element_map.ts" />
+(function (Lib) {
+    //	function camelToSnake(str: string){
+    //		return str.replace(/([A-Z])/g, (match, p1)=> "-" + p1.toLowerCase());
+    //	}
+    var Dom;
+    (function (Dom) {
+        function elem(name, attributes) {
+            var args = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                args[_i - 2] = arguments[_i];
+            }
+            var element = document.createElement(name);
+            setAttributes(element, attributes);
+            append(element, args);
+            return element;
+        }
+        Dom.elem = elem;
+        function setAttributes(element, attributes) {
+            if (attributes) {
+                var aName = void 0;
+                for (aName in attributes) {
+                    var match = void 0;
+                    if (aName === "style") {
+                        var style = attributes.style;
+                        if (style) {
+                            var sName = void 0;
+                            for (sName in style) {
+                                var sValue = style[sName];
+                                if (sValue) {
+                                    element.style[sName] = sValue;
+                                }
+                            }
+                        }
+                    }
+                    else if (aName === "dataset") {
+                        var dataset = attributes.dataset;
+                        if (dataset) {
+                            for (var sName in dataset) {
+                                element.dataset[sName] = dataset[sName];
+                            }
+                        }
+                    }
+                    else {
+                        var aValue = attributes[aName];
+                        if (aValue === undefined || aValue === null) {
+                            continue;
+                        }
+                        if (aName === "className") {
+                            element.setAttribute("class", aValue.toString());
+                        }
+                        else {
+                            var aNameStr = aName.toString();
+                            if ((match = aNameStr.match(/^on(.*)/))) {
+                                var event_1 = match[1];
+                                if (aValue instanceof Function) {
+                                    element.addEventListener(event_1, aValue); // any: EventListener
+                                }
+                                else if (typeof (aValue) === "object" && aValue.hasOwnProperty("handleEvent")) {
+                                    element.addEventListener(event_1, aValue); // any: EventListenerObject
+                                }
+                                else {
+                                    throw "invalid event handler specified for \"" + aName + "\"";
+                                }
+                            }
+                            else {
+                                element.setAttribute(aNameStr, aValue.toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Dom.setAttributes = setAttributes;
+        function input(type, attributes) {
+            var args = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                args[_i - 2] = arguments[_i];
+            }
+            var element = elem("input", attributes, args);
+            element.type = type;
+            return element;
+        }
+        Dom.input = input;
+        function checkbox(label, attributes) {
+            var checkbox = input("checkbox", attributes);
+            var element = elem("label", null, checkbox, label);
+            return {
+                checkbox: checkbox,
+                label: element
+            };
+        }
+        Dom.checkbox = checkbox;
+        function radio(label, attributes) {
+            var radio = input("radio", attributes);
+            var element = elem("label", null, radio, label);
+            return {
+                radio: radio,
+                label: element
+            };
+        }
+        Dom.radio = radio;
+        function radios(name, attributes) {
+            var items = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                items[_i - 2] = arguments[_i];
+            }
+            var firstRadio = null;
+            var radios = [];
+            var labels = [];
+            var checked = false;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var value = void 0;
+                var label = void 0;
+                var additionalAttributes = void 0;
+                if (typeof (item) === "string") {
+                    value = label = item;
+                    additionalAttributes = undefined;
+                }
+                else {
+                    value = item.value;
+                    if (item.label) {
+                        label = item.label;
+                    }
+                    else {
+                        label = value;
+                    }
+                    additionalAttributes = item.attributes;
+                }
+                var _a = Dom.radio(label, attributes), radio_1 = _a.radio, radioLabel = _a.label;
+                radio_1.name = name;
+                radio_1.value = value;
+                setAttributes(radio_1, additionalAttributes);
+                if (radio_1.checked) {
+                    checked = true;
+                }
+                if (!firstRadio) {
+                    firstRadio = radio_1;
+                }
+                radios.push(radio_1);
+                labels.push(radioLabel);
+            }
+            if (!checked && firstRadio) {
+                firstRadio.checked = true;
+            }
+            return { labels: labels, radios: radios };
+        }
+        Dom.radios = radios;
+        function text(str) {
+            return document.createTextNode(str.toString());
+        }
+        Dom.text = text;
+        function findElement(id) {
+            var element = document.getElementById(id);
+            if (element instanceof HTMLElement) {
+                return element;
+            }
+            else {
+                return null;
+            }
+        }
+        Dom.findElement = findElement;
+        function getElement(id) {
+            var element = findElement(id);
+            if (element) {
+                return element;
+            }
+            else {
+                throw "cannot find target with id \"" + id + "\"";
+            }
+        }
+        Dom.getElement = getElement;
+        function getFirstText(element) {
+            var result = findFirstText(element);
+            if (result) {
+                return result;
+            }
+            else {
+                throw "has no child";
+            }
+        }
+        Dom.getFirstText = getFirstText;
+        function prepareTarget(target) {
+            if (target instanceof Element) {
+                return target;
+            }
+            else {
+                return getElement(target.toString());
+            }
+        }
+        Dom.prepareTarget = prepareTarget;
+        function addOne(element, item) {
+            element.appendChild(item instanceof Node ? item : text(item));
+        }
+        function insertFirst(target) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var list = [];
+            Lib.forEachRecursive(args, function (item) { return list.push(item); });
+            var element = prepareTarget(target);
+            for (var i = list.length - 1; i >= 0; i--) {
+                element.insertBefore(toElement(list[i]), element.firstChild);
+            }
+        }
+        Dom.insertFirst = insertFirst;
+        function append(target) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            var element = prepareTarget(target);
+            Lib.forEachRecursive(args, function (item) { return addOne(element, item); });
+        }
+        Dom.append = append;
+        function toElement(item) {
+            if (item instanceof Node) {
+                return item;
+            }
+            else {
+                return text(item.toString());
+            }
+        }
+        Dom.toElement = toElement;
+        function clear(target) {
+            var element = prepareTarget(target);
+            var c;
+            while (c = element.firstChild) {
+                element.removeChild(c);
+            }
+        }
+        Dom.clear = clear;
+        function hasClass(target, value) {
+            var element = prepareTarget(target);
+            return element.className !== undefined && (" " + element.className + " ").indexOf(" " + value + " ") >= 0;
+        }
+        Dom.hasClass = hasClass;
+        function appendClass(target, value) {
+            var element = prepareTarget(target);
+            if (element.className === undefined || element.className == "") {
+                return element.className = value;
+            }
+            else if (hasClass(element, value)) {
+                return element.className;
+            }
+            else {
+                return element.className += " " + value;
+            }
+        }
+        Dom.appendClass = appendClass;
+        function remove(target) {
+            var parent = target.parentNode;
+            if (parent) {
+                parent.removeChild(target);
+            }
+        }
+        Dom.remove = remove;
+        function removeClass(target, value) {
+            var element = prepareTarget(target);
+            if (element.className === undefined || element.className == "") {
+                return "";
+            }
+            else {
+                var classNames = element.className.split(" ");
+                var newClassNames = [];
+                for (var i = 0; i < classNames.length; i++) {
+                    var name_2 = classNames[i];
+                    if (name_2.length > 0 && name_2 != value) {
+                        newClassNames.push(name_2);
+                    }
+                }
+                return element.className = newClassNames.join(" ");
+            }
+        }
+        Dom.removeClass = removeClass;
+        function eachChild(element, func) {
+            for (var node = element.firstChild; node; node = node.nextSibling) {
+                if (func(node) === "break") {
+                    return false;
+                }
+            }
+            return true;
+        }
+        Dom.eachChild = eachChild;
+        function eachChildElement(element, func) {
+            return eachChild(element, function (child) {
+                if (child instanceof HTMLElement) {
+                    return func(child);
+                }
+            });
+        }
+        Dom.eachChildElement = eachChildElement;
+        function eachChildTag(element, name, func) {
+            name = name.toLowerCase();
+            return eachChildElement(element, function (child) {
+                if (child.tagName.toLowerCase() === name) {
+                    return func(child);
+                }
+            });
+        }
+        Dom.eachChildTag = eachChildTag;
+        function eachDescendant(element, func) {
+            if (func(element) === "break") {
+                return false;
+            }
+            return eachChild(element, function (child) {
+                if (!eachDescendant(child, func)) {
+                    return "break";
+                }
+                return;
+            });
+        }
+        Dom.eachDescendant = eachDescendant;
+        function eachDescendantElement(element, func) {
+            return eachDescendant(element, function (child) {
+                if (child instanceof HTMLElement) {
+                    return func(child);
+                }
+            });
+        }
+        Dom.eachDescendantElement = eachDescendantElement;
+        function eachDescendantTag(element, name, func) {
+            name = name.toLowerCase();
+            return eachDescendantElement(element, function (child) {
+                if (child.tagName.toLowerCase() === name) {
+                    return func(child);
+                }
+            });
+        }
+        Dom.eachDescendantTag = eachDescendantTag;
+        function forEachTag(element, name, func) {
+            if (element instanceof Element && element.tagName.toLowerCase() === name) {
+                func(element);
+            }
+            var children = element.getElementsByTagName(name);
+            for (var i = 0; i < children.length; i++) {
+                func(children[i]);
+            }
+        }
+        Dom.forEachTag = forEachTag;
+        /*
+        export type RepeatedTaskFor<T extends Node> = (node: T) => void | "break";
+
+        export function forEachChildElement(node: Node | Document, task: RepeatedTaskFor<HTMLElement>): boolean{
+            return forEachChild(node, (child)=> {
+                if(child instanceof HTMLElement){
+                    if(task(child) === "break"){
+                        return "break";
+                    }
+                }
+                return;
+            });
+        }
+        
+        export function forEachChild(node: Node | Document, task: RepeatedTaskFor<Node>): boolean{
+            for(let child: Node | null = node.firstChild; child !== null; child = child.nextSibling){
+                if(task(child) === "break"){
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        export function forEachNode(node: Node, task: RepeatedTaskFor<Node>): boolean{
+            if(task(node) === "break"){
+                return false;
+            }
+            return forEachChild(node, (node)=> {
+                if(forEachNode(node, task)){
+                    return;
+                }else{
+                    return "break";
+                }
+            });
+        }*/
+        function cloneNode(node) {
+            if (node instanceof HTMLElement) {
+                return clone(node);
+            }
+            else if (node instanceof Text) {
+                return cloneText(node);
+            }
+            return null;
+        }
+        Dom.cloneNode = cloneNode;
+        function cloneText(text) {
+            return document.createTextNode(text.nodeValue || "");
+        }
+        Dom.cloneText = cloneText;
+        function clone(element) {
+            var newElement = elem(element.nodeName.toLowerCase());
+            for (var i = 0; i < element.attributes.length; i++) {
+                var attribute = element.attributes[i];
+                if (attribute.name == "style") {
+                    var subTable = element.style;
+                    for (var sName in subTable) {
+                        if (sName !== "length" && sName !== "parentRule") {
+                            try {
+                                newElement.style[sName] = subTable[sName];
+                            }
+                            catch (e) {
+                            }
+                        }
+                    }
+                }
+                else {
+                    var match = attribute.name.match(/^data-(.*)/);
+                    if (match == null) {
+                        newElement.setAttribute(attribute.name, attribute.value);
+                    }
+                }
+            }
+            for (var name_3 in element.dataset) {
+                newElement.dataset[name_3] = element.dataset[name_3];
+            }
+            for (var child = element.firstChild; child != null; child = child.nextSibling) {
+                if (child instanceof HTMLElement) {
+                    newElement.appendChild(clone(child));
+                }
+                else if (child instanceof Text) {
+                    newElement.appendChild(cloneText(child));
+                }
+            }
+            return newElement;
+        }
+        Dom.clone = clone;
+        function br() {
+            return elem("br");
+        }
+        Dom.br = br;
+        function getCanvasContext2D(canvas) {
+            var context = canvas.getContext("2d");
+            if (context instanceof CanvasRenderingContext2D) {
+                return context;
+            }
+            throw "cannot get canvas context 2D";
+        }
+        function canvas2D(attributes) {
+            var canvas = elem("canvas", attributes);
+            return { canvas: canvas, context: getCanvasContext2D(canvas) };
+        }
+        Dom.canvas2D = canvas2D;
+        function getCanvas(id) {
+            var canvas = getElementWithType(HTMLCanvasElement, id);
+            return { canvas: canvas, context: getCanvasContext2D(canvas) };
+        }
+        Dom.getCanvas = getCanvas;
+        var ElementWithText = /** @class */ (function () {
+            function ElementWithText(element, text) {
+                this.element = element;
+                this.text = text;
+                this.style = this.element.style;
+            }
+            ElementWithText.create = function (tagName, text, attributes) {
+                var textNode = Dom.text(text);
+                return new ElementWithText(elem(tagName, attributes, textNode), textNode);
+            };
+            ElementWithText.prototype.set = function (text) {
+                this.text.nodeValue = text.toString();
+            };
+            ElementWithText.prototype.get = function () {
+                return this.text.nodeValue || "";
+            };
+            return ElementWithText;
+        }());
+        Dom.ElementWithText = ElementWithText;
+        function innerText(target) {
+            if (target instanceof Text) {
+                return target.nodeValue || "";
+            }
+            else {
+                var elem_1 = prepareTarget(target);
+                var text_1 = "";
+                eachDescendant(elem_1, function (node) {
+                    if (node instanceof Text) {
+                        text_1 += node.nodeValue;
+                    }
+                });
+                return text_1;
+            }
+        }
+        Dom.innerText = innerText;
+        function findFirstText(elem) {
+            var text = null;
+            eachDescendant(elem, function (node) {
+                if (node instanceof Text) {
+                    text = node;
+                    return "break";
+                }
+                else {
+                    return;
+                }
+            });
+            return text;
+        }
+        Dom.findFirstText = findFirstText;
+        function setText(elem, value) {
+            var str = value.toString();
+            if (eachDescendant(elem, function (node) {
+                if (node instanceof Text) {
+                    node.nodeValue = str;
+                    return "break";
+                }
+                else {
+                    return;
+                }
+            })) {
+                append(elem, str);
+            }
+        }
+        Dom.setText = setText;
+        function findFirstTag(elem, name) {
+            var nameUC = name.toUpperCase();
+            var elem_found = null;
+            eachDescendant(elem, function (node) {
+                if (node instanceof HTMLElement && node.tagName.toUpperCase() == nameUC) {
+                    elem_found = node;
+                    return "break";
+                }
+                else {
+                    return;
+                }
+            });
+            return elem_found;
+        }
+        Dom.findFirstTag = findFirstTag;
+        function addEventListener(element, event, listener, useCapture) {
+            element.addEventListener(event, listener, useCapture);
+        }
+        Dom.addEventListener = addEventListener;
+        function setEventListeners(type, event_name, table, useCapture) {
+            for (var id in table) {
+                getElementWithType(type, id).addEventListener(event_name, table[id], useCapture);
+            }
+        }
+        Dom.setEventListeners = setEventListeners;
+        function getTypedElement(id, TYPE) {
+            var element = document.getElementById(id);
+            if (element) {
+                if (element instanceof TYPE) {
+                    return element;
+                }
+                else {
+                    throw "element with id = " + id + " has invalid class";
+                }
+            }
+            else {
+                throw "cannot find target: " + id;
+            }
+        }
+        Dom.getTypedElement = getTypedElement;
+        var IdTable = {};
+        function createId(name) {
+            if (name === undefined) {
+                name = "";
+            }
+            var index = IdTable[name];
+            if (index === undefined) {
+                index = 0;
+            }
+            else {
+                index++;
+            }
+            while (true) {
+                var id = name + index;
+                if (!document.getElementById(id)) {
+                    IdTable[name] = index;
+                    return id;
+                }
+                index++;
+            }
+        }
+        Dom.createId = createId;
+        function findElementWithType(TYPE, id) {
+            var element = document.getElementById(id);
+            if (element && element instanceof TYPE) {
+                return element;
+            }
+            else {
+                return null;
+            }
+        }
+        Dom.findElementWithType = findElementWithType;
+        function getElementWithType(TYPE, id) {
+            var element = findElementWithType(TYPE, id);
+            if (element) {
+                return element;
+            }
+            else {
+                throw "cannot find target: " + id;
+            }
+        }
+        Dom.getElementWithType = getElementWithType;
+        function getElementWithText(id) {
+            var element = getElement(id);
+            var text = getFirstText(element);
+            return new ElementWithText(element, text);
+        }
+        Dom.getElementWithText = getElementWithText;
+        function getSpecifiedItems(getFunction, ids) {
+            var table = {};
+            for (var i = 0; i < ids.length; i++) {
+                var id = ids[i];
+                table[id] = getFunction(id);
+            }
+            return table;
+        }
+        function getTexts() {
+            var ids = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                ids[_i] = arguments[_i];
+            }
+            return getSpecifiedItems(function (id) { return getFirstText(getElement(id)); }, ids);
+        }
+        Dom.getTexts = getTexts;
+        function getElementsWithText() {
+            var ids = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                ids[_i] = arguments[_i];
+            }
+            return getSpecifiedItems(function (id) { return getElementWithText(id); }, ids);
+        }
+        Dom.getElementsWithText = getElementsWithText;
+        function getTypedElements(ids, elementClass) {
+            return getSpecifiedItems(function (id) { return getElementWithType(elementClass, id); }, ids);
+        }
+        Dom.getTypedElements = getTypedElements;
+        function getElements() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLElement);
+        }
+        Dom.getElements = getElements;
+        function getInputs() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLInputElement);
+        }
+        Dom.getInputs = getInputs;
+        function getOutputs() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLOutputElement);
+        }
+        Dom.getOutputs = getOutputs;
+        function getForms() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLFormElement);
+        }
+        Dom.getForms = getForms;
+        function getSelect() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLSelectElement);
+        }
+        Dom.getSelect = getSelect;
+        function getSelects() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLSelectElement);
+        }
+        Dom.getSelects = getSelects;
+        function getOptions() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLOptionElement);
+        }
+        Dom.getOptions = getOptions;
+        function getAnchors() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLAnchorElement);
+        }
+        Dom.getAnchors = getAnchors;
+        function getTextAreas() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLTextAreaElement);
+        }
+        Dom.getTextAreas = getTextAreas;
+        function getImages() {
+            var idList = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                idList[_i] = arguments[_i];
+            }
+            return getTypedElements(idList, HTMLImageElement);
+        }
+        Dom.getImages = getImages;
+        function combineTables(t1, t2, t3, t4, t5, t6, t7, t8, t9) {
+            var table = {};
+            for (var _i = 0, _a = [
+                t1,
+                t2,
+                t3,
+                t4,
+                t5,
+                t6,
+                t7,
+                t8,
+                t9,
+            ]; _i < _a.length; _i++) {
+                var t = _a[_i];
+                if (t) {
+                    for (var name_4 in t) {
+                        table[name_4] = t[name_4];
+                    }
+                }
+            }
+            return table;
+        }
+        Dom.combineTables = combineTables;
+        function getForm(id) {
+            return getElementWithType(HTMLFormElement, id);
+        }
+        Dom.getForm = getForm;
+        function findInput(id) {
+            return findElementWithType(HTMLInputElement, id);
+        }
+        Dom.findInput = findInput;
+        function getInput(id) {
+            return getElementWithType(HTMLInputElement, id);
+        }
+        Dom.getInput = getInput;
+        function setFormDisabled(form, disabled) {
+            for (var i = 0; i < form.elements.length; i++) {
+                var element = form.elements[i];
+                if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+                    element.disabled = disabled;
+                }
+            }
+        }
+        Dom.setFormDisabled = setFormDisabled;
+        function enableForm(form) {
+            setFormDisabled(form, false);
+        }
+        Dom.enableForm = enableForm;
+        function disableForm(form) {
+            setFormDisabled(form, true);
+        }
+        Dom.disableForm = disableForm;
+    })(Dom = Lib.Dom || (Lib.Dom = {}));
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.ts" />
+var Lib;
+/// <reference path="./mylib.ts" />
+(function (Lib) {
+    var PositionPair = /** @class */ (function () {
+        function PositionPair(m1, m2) {
+            this.m1 = m1;
+            this.m2 = m2;
+        }
+        PositionPair.prototype.add = function (v) {
+            return new PositionPair(this.m1.add(v.m1), this.m2.add(v.m2));
+        };
+        PositionPair.prototype.sub = function (p) {
+            return new VectorPair(this.m1.sub(p.m1), this.m2.sub(p.m2));
+        };
+        PositionPair.prototype.equals = function (p) {
+            if (this === p) {
+                return true;
+            }
+            else if (p instanceof VectorPair) {
+                return this.m1.equals(p.m1) && this.m2.equals(p.m2);
+            }
+            else {
+                return false;
+            }
+        };
+        PositionPair.prototype.toString = function () {
+            return this.m1.toString() + "-" + this.m2.toString();
+        };
+        return PositionPair;
+    }());
+    Lib.PositionPair = PositionPair;
+    var VectorPair = /** @class */ (function (_super) {
+        __extends(VectorPair, _super);
+        function VectorPair() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        VectorPair.prototype.add = function (v) {
+            return new VectorPair(this.m1.add(v.m1), this.m2.add(v.m2));
+        };
+        VectorPair.prototype.neg = function () {
+            return new VectorPair(this.m1.neg(), this.m2.neg());
+        };
+        VectorPair.prototype.mul = function (s) {
+            return new VectorPair(this.m1.mul(s), this.m2.mul(s));
+        };
+        VectorPair.prototype.div = function (s) {
+            return new VectorPair(this.m1.div(s), this.m2.div(s));
+        };
+        VectorPair.prototype.isZero = function () {
+            return this.m1.isZero() && this.m2.isZero();
+        };
+        return VectorPair;
+    }(PositionPair));
+    Lib.VectorPair = VectorPair;
+    function propDist(a, b, r) {
+        return a.add(b.sub(a).mul(r));
+        /*
+        if(typeof(a) === "object" && typeof(b) === "object"){
+            let ret = {};
+            for(let name in a){
+                ret[name] = a[name] + (b[name] - a[name]) * r;
+            }
+            return ret;
+        }else{
+            return a + (b - a) * r;
+        }*/
+    }
+    Lib.propDist = propDist;
+    function propDistNum(a, b, r) {
+        return a + (b - a) * r;
+    }
+    Lib.propDistNum = propDistNum;
+    function findRowToReplace(matrix, cols, i) {
+        for (var j = i + 1; j < cols; j++) {
+            if (matrix[j][i] != 0) {
+                return j;
+            }
+        }
+        return -1;
+    }
+    function gaussianElimination(matrix) {
+        var rows = matrix.length;
+        var cols = matrix[0].length - 1;
+        if (rows != cols) {
+            return false;
+        }
+        for (var i = 0; i < cols; i++) {
+            if (matrix[i][i] == 0) {
+                var r = findRowToReplace(matrix, cols, i);
+                if (r < 0) {
+                    return false;
+                }
+                var tmpRow = matrix[r];
+                matrix[r] = matrix[i];
+                matrix[i] = tmpRow;
+            }
+            var p = matrix[i][i];
+            if (p != 1) {
+                for (var j = i; j <= rows; j++) {
+                    matrix[i][j] /= p;
+                }
+            }
+            for (var j = 0; j < cols; j++) {
+                if (j != i) {
+                    var n = matrix[j][i];
+                    if (n != 0) {
+                        for (var k = i; k <= rows; k++) {
+                            matrix[j][k] -= n * matrix[i][k];
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    Lib.gaussianElimination = gaussianElimination;
+    function findRowToReplaceForObj(matrix, cols, i) {
+        for (var j = i + 1; j < cols; j++) {
+            if (!matrix[j][i].isZero()) {
+                return j;
+            }
+        }
+        return -1;
+    }
+    function gaussianEliminationForObj(matrix, one) {
+        var rows = matrix.length;
+        var cols = matrix[0].length - 1;
+        if (rows != cols) {
+            return false;
+        }
+        for (var i = 0; i < cols; i++) {
+            if (matrix[i][i].isZero()) {
+                var r = findRowToReplaceForObj(matrix, cols, i);
+                if (r < 0) {
+                    return false;
+                }
+                var tmpRow = matrix[r];
+                matrix[r] = matrix[i];
+                matrix[i] = tmpRow;
+            }
+            var p = matrix[i][i];
+            if (!p.equals(one)) {
+                for (var j = i; j <= rows; j++) {
+                    matrix[i][j] = matrix[i][j].div(p);
+                }
+            }
+            for (var j = 0; j < cols; j++) {
+                if (j != i) {
+                    var n = matrix[j][i];
+                    if (!n.isZero()) {
+                        for (var k = i; k <= rows; k++) {
+                            matrix[j][k] = matrix[j][k].sub(n.mul(matrix[i][k]));
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    Lib.gaussianEliminationForObj = gaussianEliminationForObj;
+    function SolveLinearEquation(equations, solver) {
+        if (equations.length > 0) {
+            var varList = [];
+            var varCount = 0;
+            for (var v in equations[0]) {
+                if (v != "_") {
+                    varList[varCount++] = v;
+                }
+            }
+            if (varCount > equations.length) {
+                return null;
+            }
+            var matrix = [];
+            for (var i = 0; i < equations.length; i++) {
+                var equation = equations[i];
+                var line = [];
+                for (var j = 0; j < varCount; j++) {
+                    line.push(equation[varList[j]]);
+                }
+                line.push(equation["_"]);
+                matrix.push(line);
+            }
+            if (solver(matrix)) {
+                var solution = {};
+                for (var j = 0; j < varCount; j++) {
+                    solution[varList[j]] = matrix[j][varCount];
+                }
+                return solution;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+    function solveLinearEquationVec(equations, one) {
+        return SolveLinearEquation(equations, function (matrix) { return gaussianEliminationForObj(matrix, one); });
+    }
+    Lib.solveLinearEquationVec = solveLinearEquationVec;
+    function solveLinearEquation(equations) {
+        return SolveLinearEquation(equations, gaussianElimination);
+    }
+    Lib.solveLinearEquation = solveLinearEquation;
+    function outputMatrix(matrix) {
+        for (var j = 0; j < matrix.length; j++) {
+            var line = "";
+            for (var k = 0; k < matrix[j].length; k++) {
+                line += matrix[j][k] + ", ";
+            }
+            Lib.infoOutput(line);
+        }
+    }
+    Lib.outputMatrix = outputMatrix;
+    //	Lib.gaussian_elimination = gaussian_elimination;
+    //	Lib.output_matrix = output_matrix;
+})(Lib || (Lib = {}));
+/*
+    function test(){
+        for(let i = 0; i < 100; i ++){
+            let size = Math.floor(3 * Math.random()) + 3;
+            let matrix_org = [];
+            let matrix = [];
+            for(let j = 0; j < size; j ++){
+                matrix[j] = [];
+                matrix_org[j] = [];
+                for(let k = 0; k < size; k ++){
+                    matrix_org[j][k] = matrix[j][k] = 1.0 - Math.random() * 2.0;
+                }
+                matrix_org[j][size] = matrix[j][size] = 1.0 - Math.random() * 2.0;
+            }
+            matrix_org[0][0] = matrix[0][0] = 0;
+            if(Lib.gaussian_elimination(matrix)){
+                Lib.infoOutput(i + ": solved");
+                Lib.infoOutput("[org]");
+                for(let j = 0; j < size; j ++){
+                    let line = "";
+                    for(let k = 0; k < size ; k ++){
+                        line += matrix_org[j][k] + ", "
+                    }
+                    Lib.infoOutput(line + matrix_org[j][size]);
+                }
+                Lib.infoOutput("[solved]");
+                for(let j = 0; j < size; j ++){
+                    let line = "";
+                    for(let k = 0; k < size ; k ++){
+                        line += matrix[j][k] + ", "
+                    }
+                    Lib.infoOutput(line + matrix[j][size]);
+                }
+                let error = 0;
+                for(let j = 0; j < size; j ++){
+                    let sum = 0;
+                    for(let k = 0; k < size ; k ++){
+                        sum += matrix_org[j][k] * matrix[k][size];
+                    }
+                    error += sum - matrix_org[j][size]
+//					Lib.infoOutput("  " + sum + " = " + matrix_org[j][size]);
+                }
+                Lib.infoOutput("error :" + error);
+                
+                
+            }else{
+                Lib.infoOutput(i + ": not solved");
+            }
+        }
+    }
+    
+    
+    
+*/
+/// <reference path="./mylib.linear_algebra.ts"/>
+var Lib;
+/// <reference path="./mylib.linear_algebra.ts"/>
+(function (Lib) {
+    var Color = /** @class */ (function () {
+        function Color(r, g, b) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+        }
+        Color.toHex = function (d) {
+            d = Math.round(d);
+            if (d >= 255) {
+                return "ff";
+            }
+            else if (d <= 15) {
+                return "0" + d.toString(16);
+            }
+            else {
+                return d.toString(16);
+            }
+        };
+        Color.prototype.add = function (col) {
+            return new Color(this.r + col.r, this.g + col.g, this.b + col.b);
+        };
+        Color.prototype.sub = function (col) {
+            return new Color(this.r - col.r, this.g - col.g, this.b - col.b);
+        };
+        Color.prototype.mul = function (r) {
+            return new Color(this.r * r, this.g + r, this.b + r);
+        };
+        Color.prototype.div = function (r) {
+            return new Color(this.r / r, this.g / r, this.b / r);
+        };
+        Color.prototype.neg = function () {
+            return new Color(-this.r, -this.g, -this.b);
+        };
+        Color.prototype.isZero = function () {
+            return this.r == 0 && this.g == 0 && this.b == 0;
+        };
+        Color.prototype.equals = function (obj) {
+            if (obj instanceof Color) {
+                return this.r == obj.r && this.g == obj.g && this.b == obj.b;
+            }
+            else {
+                return false;
+            }
+        };
+        Color.prototype.toString = function () {
+            return "#" + Color.toHex(this.r) + Color.toHex(this.g) + Color.toHex(this.b);
+        };
+        return Color;
+    }());
+    Lib.Color = Color;
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.dom.ts"/>
+/// <reference path="./mylib.color.ts"/>
+var Lib;
+/// <reference path="./mylib.dom.ts"/>
+/// <reference path="./mylib.color.ts"/>
+(function (Lib) {
+    var SVG;
+    (function (SVG) {
+        function getSVG(id) {
+            return Lib.Dom.getElementWithType(SVGElement, id);
+        }
+        SVG.getSVG = getSVG;
+        function elem(name, attributes) {
+            var children = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                children[_i - 2] = arguments[_i];
+            }
+            var e = document.createElementNS("http://www.w3.org/2000/svg", name);
+            setAttributes(e, attributes);
+            for (var _a = 0, children_1 = children; _a < children_1.length; _a++) {
+                var child = children_1[_a];
+                Lib.Dom.append(e, child);
+            }
+            return e;
+        }
+        SVG.elem = elem;
+        function setAttributes(elem, attributes) {
+            if (attributes) {
+                for (var name_5 in attributes) {
+                    elem.setAttribute(name_5, attributes[name_5]);
+                }
+            }
+        }
+        SVG.setAttributes = setAttributes;
+        function circle(cx, cy, r, stroke, fill, attributes) {
+            var e = elem("circle", {
+                cx: cx + "px",
+                cy: cy + "px",
+                r: r + "px",
+                stroke: stroke,
+                fill: fill,
+                "shape-rendering": "crispEdges"
+            });
+            setAttributes(e, attributes);
+            return e;
+        }
+        SVG.circle = circle;
+        function ellipse(cx, cy, rx, ry, stroke, fill, attributes) {
+            var e = elem("ellipse", {
+                cx: cx + "px",
+                cy: cy + "px",
+                rx: rx + "px",
+                ry: ry + "px",
+                stroke: stroke,
+                fill: fill,
+                "shape-rendering": "crispEdges"
+            });
+            setAttributes(e, attributes);
+            return e;
+        }
+        SVG.ellipse = ellipse;
+        function path(path, stroke, fill, attributes) {
+            var e = elem("path", {
+                d: path,
+                stroke: stroke,
+                fill: fill,
+                "shape-rendering": "crispEdges"
+            });
+            setAttributes(e, attributes);
+            return e;
+        }
+        SVG.path = path;
+        function fill(elem, r, g, b) {
+            elem.setAttribute("fill", new Lib.Color(r, g, b).toString());
+        }
+        SVG.fill = fill;
+    })(SVG = Lib.SVG || (Lib.SVG = {}));
+})(Lib || (Lib = {}));
+//type PrioritizedDo<T> = (priority: number, action:(pseudoTarget: T)=> void)=> void;
+function prioritizedExecute(target, maxPriority, action) {
+    var tasks = [];
+    var targets = [];
+    var _loop_1 = function (prio) {
+        tasks[prio] = [];
+        var tmpTarget = new Object();
+        var _loop_2 = function (name_6) {
+            var org = target[name_6];
+            if (typeof (org) === "function") {
+                tmpTarget[name_6] = function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
+                    tasks[prio].push({ name: name_6, args: args });
+                };
+            }
+            else {
+                tmpTarget[name_6] = org;
+            }
+        };
+        for (var name_6 in target) {
+            _loop_2(name_6);
+        }
+        targets[prio] = tmpTarget;
+    };
+    for (var prio = 0; prio < maxPriority; prio++) {
+        _loop_1(prio);
+    }
+    try {
+        action(targets);
+    }
+    finally {
+        for (var _i = 0, tasks_2 = tasks; _i < tasks_2.length; _i++) {
+            var list = tasks_2[_i];
+            for (var _a = 0, list_2 = list; _a < list_2.length; _a++) {
+                var task = list_2[_a];
+                target[task.name].apply(target, task.args);
+            }
+        }
+    }
+}
+prioritizedExecute(console, 3, function (consoles) {
+    consoles[2].log(10);
+    consoles[0].log(20);
+    consoles[1].log(30);
+});
+/*
+type PrioritizedDo<T> = (priority: number, action:(pseudoTarget: T)=> void)=> void;
+function prioritizedExecute<T>(target: T, action: (prioritizedDo: PrioritizedDo<T>)=> void){
+    const tasks: {
+        name: string,
+        args: any[],
+    }[][] = [];
+    const targets: T[] = [];
+    
+    function getTarget(priority: number): T{
+        let pseudoTarget = targets[priority];
+        if(pseudoTarget !== undefined){
+            return pseudoTarget;
+        }
+        const tmpTarget = new Object() as any;
+        for(const name in target){
+            const org = target[name];
+            if(typeof(org) === "function"){
+                tmpTarget[name] = (...args: any[]) => {
+                    const task = {name, args};
+                    const list = tasks[priority];
+                    if(list){
+                        list.push(task);
+                    }else{
+                        tasks[priority] = [task];
+                    }
+                };
+            }else{
+                tmpTarget[name] = org;
+            }
+        }
+        return targets[priority] = tmpTarget as T;
+    }
+    function prioritizedDo(priority: number, action: (target: T)=> void): void{
+        action(getTarget(priority));
+    }
+    
+    try{
+        action(prioritizedDo);
+    }finally{
+        for(const list of tasks){
+            if(list !== undefined){
+                for(const task of list){
+                    (target as any)[task.name].apply(target, task.args);
+                }
+            }
+        }
+    }
+}
+*/
+/// <reference path="mylib.ts"/>
+var Lib;
+/// <reference path="mylib.ts"/>
+(function (Lib) {
+    var XMLHttpRequests = [];
+    function download(url, param) {
+        if (param === void 0) { param = {}; }
+        if (param == undefined) {
+            param = {};
+        }
+        var method = param.method || "GET";
+        var onsuccess = param.onsuccess || Lib.doNothing;
+        var onerror = param.onerror || Lib.doNothing;
+        var onrequest = param.onrequest || Lib.doNothing;
+        var onprogress = param.onprogress || Lib.doNothing;
+        var asynchronous = param.synchronous === undefined ? false : !param.synchronous;
+        var postdata;
+        if (param.postdata !== undefined) {
+            method = "POST";
+            postdata = param.postdata;
+        }
+        else {
+            postdata = "";
+        }
+        if (param.includeFilter === undefined) {
+            return asynchronousGet(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, postdata);
+        }
+        else {
+            asynchronousGetWithInclude(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, param.includeFilter);
+            return null; //to be corrected
+        }
+    }
+    Lib.download = download;
+    function asynchronousGet(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, postdata) {
+        var requestCheck = createHttpRequest();
+        if (!requestCheck) {
+            onerror("Ajax not available");
+            return null;
+        }
+        try {
+            var request_1 = requestCheck;
+            request_1.open(method.toString(), url, asynchronous);
+            var result_1 = null;
+            request_1.onreadystatechange = function () {
+                if (request_1.readyState != 4) {
+                    onprogress(request_1);
+                    return;
+                }
+                if (request_1.status == 200) {
+                    result_1 = request_1.responseText;
+                    onsuccess(request_1.responseText);
+                }
+                else {
+                    onerror("onerror(" + request_1.status + ") : " + request_1.statusText, request_1.status);
+                }
+                //				request.abort();
+                XMLHttpRequests.push(request_1);
+            };
+            onrequest(request_1);
+            request_1.send(postdata);
+            if (asynchronous) {
+                return null;
+            }
+            else {
+                return result_1;
+            }
+        }
+        catch (e) {
+            onerror(e);
+            return null;
+        }
+    }
+    Lib.asynchronousGet = asynchronousGet;
+    function joinIncludingFiles(includingData, filename) {
+        var filedata = includingData.files[filename];
+        var ret = "";
+        for (var i = 0; i < filedata.length - 1; i++) {
+            ret += filedata[i].text + joinIncludingFiles(includingData, filedata[i].filename);
+        }
+        ret += filedata[filedata.length - 1].text;
+        return ret;
+    }
+    function simpleIncludeFilter(text, regexp) {
+        var match = regexp.exec(text);
+        if (match) {
+            return [
+                text.substring(0, match.index > 0 ? match.index : 0),
+                match[1],
+                text.substring(regexp.lastIndex),
+            ];
+        }
+        else {
+            return null;
+        }
+    }
+    function asynchronousGetWithIncludeRecursive(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, includeFilter, includingData, includedFrom) {
+        includedFrom = Lib.cloneHash(includedFrom);
+        includedFrom[url] = true;
+        asynchronousGet(method, url, function (text) {
+            includingData.waitingCount--;
+            var fileData = [];
+            includingData.files[url] = fileData;
+            var match;
+            while (match = includeFilter(text)) {
+                var includingFile = match[1];
+                if (includedFrom[includingFile]) {
+                    alert("looped including");
+                }
+                fileData.push(new FileData(text, includingFile));
+                text = match[2];
+                if (!includingData.files[includingFile]) {
+                    asynchronousGetWithIncludeRecursive(method, includingFile, onsuccess, onerror, onrequest, onprogress, asynchronous, includeFilter, includingData, includedFrom);
+                }
+            }
+            fileData.push(new FileData(text));
+            if (includingData.waitingCount == 0) {
+                onsuccess(joinIncludingFiles(includingData, includingData.main));
+            }
+        }, onerror, onrequest, onprogress, asynchronous);
+        includingData.waitingCount++;
+    }
+    var FileData = /** @class */ (function () {
+        function FileData(filename, text) {
+            this.filename = filename;
+            this.text = text;
+        }
+        return FileData;
+    }());
+    var IncludingData = /** @class */ (function () {
+        function IncludingData(main, waitingCount, files) {
+            this.main = main;
+            this.waitingCount = waitingCount || 0;
+            this.files = files || {};
+        }
+        IncludingData.prototype.clone = function () {
+            return new IncludingData(this.main, this.waitingCount, this.files);
+        };
+        return IncludingData;
+    }());
+    function asynchronousGetWithInclude(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, includeFilter) {
+        var filter;
+        if (typeof (includeFilter) === "string" || includeFilter instanceof RegExp) {
+            var regexp_1 = (includeFilter instanceof RegExp ? includeFilter : new RegExp(includeFilter));
+            filter = function (text) {
+                return simpleIncludeFilter(text, regexp_1);
+            };
+        }
+        else {
+            filter = includeFilter;
+        }
+        asynchronousGetWithIncludeRecursive(method, url, onsuccess, onerror, onrequest, onprogress, asynchronous, filter, new IncludingData(url), {});
+    }
+    function createHttpRequest() {
+        if (XMLHttpRequests.length > 0) {
+            return XMLHttpRequests.pop() || null;
+        }
+        try {
+            return new XMLHttpRequest();
+        }
+        catch (e) {
+            return null;
+        }
+    }
+})(Lib || (Lib = {}));
+var Lib;
+(function (Lib) {
+    function replaceEntities(str) {
+        var ret = "";
+        var regexp = /&.+?;/mg;
+        var match;
+        var lastIndex = 0;
+        while (match = regexp.exec(str)) {
+            ret += str.substring(lastIndex, match.index);
+            var reference = match[0];
+            var replace = Lib.ENTITY_LIST[reference];
+            if (replace) {
+                ret += replace;
+            }
+            else {
+                ret += reference;
+            }
+            lastIndex = regexp.lastIndex;
+        }
+        return ret + str.substr(lastIndex);
+    }
+    Lib.replaceEntities = replaceEntities;
+    function unescapeEntities(str) {
+        var ret = "";
+        var regexp = /&.+?;/mg;
+        var match;
+        var lastIndex = 0;
+        while (match = regexp.exec(str)) {
+            ret += str.substring(lastIndex, match.index);
+            var reference = match[0];
+            var replace = Lib.ENTITY_LIST[reference] || reference;
+            if (match = replace.match(/^&#x(.+);/)) {
+                ret += String.fromCharCode(parseInt(match[1], 16));
+            }
+            else if (match = replace.match(/^&#(.+);/)) {
+                ret += String.fromCharCode(parseInt(match[1], 10));
+            }
+            lastIndex = regexp.lastIndex;
+        }
+        return ret + str.substr(lastIndex);
+    }
+    Lib.unescapeEntities = unescapeEntities;
+    Lib.ENTITY_LIST = {
+        "&fnof;": "&#x192;",
+        "&Alpha;": "&#x391;",
+        "&Beta;": "&#x392;",
+        "&Gamma;": "&#x393;",
+        "&Delta;": "&#x394;",
+        "&Epsilon;": "&#x395;",
+        "&Zeta;": "&#x396;",
+        "&Eta;": "&#x397;",
+        "&Theta;": "&#x398;",
+        "&Iota;": "&#x399;",
+        "&Kappa;": "&#x39A;",
+        "&Lambda;": "&#x39B;",
+        "&Mu;": "&#x39C;",
+        "&Nu;": "&#x39D;",
+        "&Xi;": "&#x39E;",
+        "&Omicron;": "&#x39F;",
+        "&Pi;": "&#x3A0;",
+        "&Rho;": "&#x3A1;",
+        "&Sigma;": "&#x3A3;",
+        "&Tau;": "&#x3A4;",
+        "&Upsilon;": "&#x3A5;",
+        "&Phi;": "&#x3A6;",
+        "&Chi;": "&#x3A7;",
+        "&Psi;": "&#x3A8;",
+        "&Omega;": "&#x3A9;",
+        "&alpha;": "&#x3B1;",
+        "&beta;": "&#x3B2;",
+        "&gamma;": "&#x3B3;",
+        "&delta;": "&#x3B4;",
+        "&epsilon;": "&#x3B5;",
+        "&zeta;": "&#x3B6;",
+        "&eta;": "&#x3B7;",
+        "&theta;": "&#x3B8;",
+        "&iota;": "&#x3B9;",
+        "&kappa;": "&#x3BA;",
+        "&lambda;": "&#x3BB;",
+        "&mu;": "&#x3BC;",
+        "&nu;": "&#x3BD;",
+        "&xi;": "&#x3BE;",
+        "&omicron;": "&#x3BF;",
+        "&pi;": "&#x3C0;",
+        "&rho;": "&#x3C1;",
+        "&sigmaf;": "&#x3C2;",
+        "&sigma;": "&#x3C3;",
+        "&tau;": "&#x3C4;",
+        "&upsilon;": "&#x3C5;",
+        "&phi;": "&#x3C6;",
+        "&chi;": "&#x3C7;",
+        "&psi;": "&#x3C8;",
+        "&omega;": "&#x3C9;",
+        "&thetasym;": "&#x3D1;",
+        "&upsih;": "&#x3D2;",
+        "&piv;": "&#x3D6;",
+        "&bull;": "&#x2022;",
+        "&hellip;": "&#x2026;",
+        "&prime;": "&#x2032;",
+        "&Prime;": "&#x2033;",
+        "&oline;": "&#x203E;",
+        "&frasl;": "&#x2044;",
+        "&weierp;": "&#x2118;",
+        "&image;": "&#x2111;",
+        "&real;": "&#x211C;",
+        "&trade;": "&#x2122;",
+        "&alefsym;": "&#x2135;",
+        "&larr;": "&#x2190;",
+        "&rarr;": "&#x2192;",
+        "&darr;": "&#x2193;",
+        "&harr;": "&#x2194;",
+        "&crarr;": "&#x21B5;",
+        "&lArr;": "&#x21D0;",
+        "&uArr;": "&#x21D1;",
+        "&rArr;": "&#x21D2;",
+        "&dArr;": "&#x21D3;",
+        "&hArr;": "&#x21D4;",
+        "&forall;": "&#x2200;",
+        "&part;": "&#x2202;",
+        "&exist;": "&#x2203;",
+        "&empty;": "&#x2205;",
+        "&nabla;": "&#x2207;",
+        "&isin;": "&#x2208;",
+        "&notin;": "&#x2209;",
+        "&ni;": "&#x220B;",
+        "&prod;": "&#x220F;",
+        "&sum;": "&#x2211;",
+        "&minus;": "&#x2212;",
+        "&lowast;": "&#x2217;",
+        "&radic;": "&#x221A;",
+        "&prop;": "&#x221D;",
+        "&infin;": "&#x221E;",
+        "&ang;": "&#x2220;",
+        "&and;": "&#x2227;",
+        "&or;": "&#x2228;",
+        "&cap;": "&#x2229;",
+        "&cup;": "&#x222A;",
+        "&int;": "&#x222B;",
+        "&there4;": "&#x2234;",
+        "&sim;": "&#x223C;",
+        "&cong;": "&#x2245;",
+        "&asymp;": "&#x2248;",
+        "&ne;": "&#x2260;",
+        "&equiv;": "&#x2261;",
+        "&le;": "&#x2264;",
+        "&ge;": "&#x2265;",
+        "&sub;": "&#x2282;",
+        "&sup;": "&#x2283;",
+        "&nsub;": "&#x2284;",
+        "&sube;": "&#x2286;",
+        "&supe;": "&#x2287;",
+        "&oplus;": "&#x2295;",
+        "&otimes;": "&#x2297;",
+        "&perp;": "&#x22A5;",
+        "&sdot;": "&#x22C5;",
+        "&lceil;": "&#x2308;",
+        "&rceil;": "&#x2309;",
+        "&lfloor;": "&#x230A;",
+        "&rfloor;": "&#x230B;",
+        "&lang;": "&#x2329;",
+        "&rang;": "&#x232A;",
+        "&loz;": "&#x25CA;",
+        "&spades;": "&#x2660;",
+        "&clubs;": "&#x2663;",
+        "&hearts;": "&#x2665;",
+        "&diams;": "&#x2666;",
+        "&quot;": "&#x22;",
+        "&amp;": "&#x26;",
+        "&lt;": "&#x3C;",
+        "&gt;": "&#x3E;",
+        "&apos;": "&#x27;",
+        "&OElig;": "&#x152;",
+        "&oelig;": "&#x153;",
+        "&Scaron;": "&#x160;",
+        "&scaron;": "&#x161;",
+        "&Yuml;": "&#x178;",
+        "&circ;": "&#x2C6;",
+        "&tilde;": "&#x2DC;",
+        "&ensp;": "&#x2002;",
+        "&emsp;": "&#x2003;",
+        "&thinsp;": "&#x2009;",
+        "&zwnj;": "&#x200C;",
+        "&zwj;": "&#x200D;",
+        "&lrm;": "&#x200E;",
+        "&rlm;": "&#x200F;",
+        "&ndash;": "&#x2013;",
+        "&mdash;": "&#x2014;",
+        "&lsquo;": "&#x2018;",
+        "&rsquo;": "&#x2019;",
+        "&sbquo;": "&#x201A;",
+        "&ldquo;": "&#x201C;",
+        "&rdquo;": "&#x201D;",
+        "&bdquo;": "&#x201E;",
+        "&dagger;": "&#x2020;",
+        "&Dagger;": "&#x2021;",
+        "&permil;": "&#x2030;",
+        "&lsaquo;": "&#x2039;",
+        "&rsaquo;": "&#x203A;",
+        "&euro;": "&#x20AC;",
+        "&nbsp;": "&#xA0;",
+        "&iexcl;": "&#xA1;",
+        "&cent;": "&#xA2;",
+        "&pound;": "&#xA3;",
+        "&curren;": "&#xA4;",
+        "&yen;": "&#xA5;",
+        "&brvbar;": "&#xA6;",
+        "&sect;": "&#xA7;",
+        "&uml;": "&#xA8;",
+        "&copy;": "&#xA9;",
+        "&ordf;": "&#xAA;",
+        "&laquo;": "&#xAB;",
+        "&not;": "&#xAC;",
+        "&shy;": "&#xAD;",
+        "&reg;": "&#xAE;",
+        "&macr;": "&#xAF;",
+        "&deg;": "&#xB0;",
+        "&plusmn;": "&#xB1;",
+        "&sup2;": "&#xB2;",
+        "&sup3;": "&#xB3;",
+        "&acute;": "&#xB4;",
+        "&micro;": "&#xB5;",
+        "&para;": "&#xB6;",
+        "&middot;": "&#xB7;",
+        "&cedil;": "&#xB8;",
+        "&sup1;": "&#xB9;",
+        "&ordm;": "&#xBA;",
+        "&raquo;": "&#xBB;",
+        "&frac14;": "&#xBC;",
+        "&frac12;": "&#xBD;",
+        "&frac34;": "&#xBE;",
+        "&iquest;": "&#xBF;",
+        "&Agrave;": "&#xC0;",
+        "&Aacute;": "&#xC1;",
+        "&Acirc;": "&#xC2;",
+        "&Atilde;": "&#xC3;",
+        "&Auml;": "&#xC4;",
+        "&Aring;": "&#xC5;",
+        "&AElig;": "&#xC6;",
+        "&Ccedil;": "&#xC7;",
+        "&Egrave;": "&#xC8;",
+        "&Eacute;": "&#xC9;",
+        "&Ecirc;": "&#xCA;",
+        "&Euml;": "&#xCB;",
+        "&Igrave;": "&#xCC;",
+        "&Iacute;": "&#xCD;",
+        "&Icirc;": "&#xCE;",
+        "&Iuml;": "&#xCF;",
+        "&ETH;": "&#xD0;",
+        "&Ntilde;": "&#xD1;",
+        "&Ograve;": "&#xD2;",
+        "&Oacute;": "&#xD3;",
+        "&Ocirc;": "&#xD4;",
+        "&Otilde;": "&#xD5;",
+        "&Ouml;": "&#xD6;",
+        "&times;": "&#xD7;",
+        "&Oslash;": "&#xD8;",
+        "&Ugrave;": "&#xD9;",
+        "&Uacute;": "&#xDA;",
+        "&Ucirc;": "&#xDB;",
+        "&Uuml;": "&#xDC;",
+        "&Yacute;": "&#xDD;",
+        "&THORN;": "&#xDE;",
+        "&szlig;": "&#xDF;",
+        "&agrave;": "&#xE0;",
+        "&aacute;": "&#xE1;",
+        "&acirc;": "&#xE2;",
+        "&atilde;": "&#xE3;",
+        "&auml;": "&#xE4;",
+        "&aring;": "&#xE5;",
+        "&aelig;": "&#xE6;",
+        "&ccedil;": "&#xE7;",
+        "&egrave;": "&#xE8;",
+        "&eacute;": "&#xE9;",
+        "&ecirc;": "&#xEA;",
+        "&euml;": "&#xEB;",
+        "&igrave;": "&#xEC;",
+        "&iacute;": "&#xED;",
+        "&icirc;": "&#xEE;",
+        "&iuml;": "&#xEF;",
+        "&eth;": "&#xF0;",
+        "&ntilde;": "&#xF1;",
+        "&ograve;": "&#xF2;",
+        "&oacute;": "&#xF3;",
+        "&ocirc;": "&#xF4;",
+        "&otilde;": "&#xF5;",
+        "&ouml;": "&#xF6;",
+        "&divide;": "&#xF7;",
+        "&oslash;": "&#xF8;",
+        "&ugrave;": "&#xF9;",
+        "&uacute;": "&#xFA;",
+        "&ucirc;": "&#xFB;",
+        "&uuml;": "&#xFC;",
+        "&yacute;": "&#xFD;",
+        "&thorn;": "&#xFE;",
+        "&yuml;": "&#xFF;"
+    };
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.entity.ts"/>
+var Lib;
+/// <reference path="./mylib.entity.ts"/>
+(function (Lib) {
+    var DomParser = null;
+    function clearDomParser() {
+        DomParser = null;
+    }
+    Lib.clearDomParser = clearDomParser;
+    function parseXml(text) {
+        text = Lib.replaceEntities(text);
+        if (DomParser === null) {
+            DomParser = new DOMParser();
+        }
+        return DomParser.parseFromString(text, "text/xml");
+    }
+    Lib.parseXml = parseXml;
+    /*
+    function get_element_by_id(element, id){
+        if(element.getElementById){
+            return element.getElementById(id);
+        }else{
+            return get_element_by_id_recursive(element, id);
+        }
+    }
+    function get_element_by_id_recursive(element, id){
+        if(element && element.nodeName != "#text"){
+            if(element.nodeName[0] != "#" && element.nodeName != "html" && element.getAttribute("id") == id){
+                return element
+            }
+            var child = element.firstChild;
+            while(child){
+                var ret = get_element_by_id_recursive(child, id);
+                if(ret){
+                    return ret;
+                }
+                child = child.nextSibling;
+            }
+        }
+        return null;
+    }
+    */
+    var ATTRIBUTES_TO_COPY = ["id", "src", "href", "alt", "title", "data-popup"];
+    var ATTRIBUTES_TO_COPY_LENGTH = ATTRIBUTES_TO_COPY.length;
+    function copyText(src) {
+        return document.createTextNode(src.nodeValue || "");
+    }
+    Lib.copyText = copyText;
+    function copyElement(src, base_uri) {
+        var dst = Lib.Dom.elem(src.nodeName);
+        var className = src.getAttribute("class");
+        if (className) {
+            dst.className = className;
+        }
+        var style = src.getAttribute("style");
+        if (style) {
+            dst.style.cssText = style;
+        }
+        for (var i = 0; i < ATTRIBUTES_TO_COPY_LENGTH; i++) {
+            var name_7 = ATTRIBUTES_TO_COPY[i];
+            var value = src.getAttribute(name_7);
+            if (value) {
+                if (dst instanceof HTMLAnchorElement && base_uri !== undefined && name_7 == "href" && value[0] == "#") {
+                    dst.href = base_uri + value;
+                }
+                else {
+                    dst.setAttribute(name_7, value);
+                }
+            }
+        }
+        var child = src.firstChild;
+        if (dst instanceof Element) {
+            while (child) {
+                if (child instanceof Text) {
+                    Lib.Dom.append(dst, copyText(child));
+                }
+                else if (child instanceof Element) {
+                    Lib.Dom.append(dst, copyElement(child, base_uri));
+                }
+                child = child.nextSibling;
+            }
+        }
+        return dst;
+    }
+    Lib.copyElement = copyElement;
+})(Lib || (Lib = {}));
+/// <reference path="./mylib.ts" />
+/// <reference path="./mylib.ajax.ts" />
+/// <reference path="./mylib.xml.ts" />
+var Lib;
+/// <reference path="./mylib.ts" />
+/// <reference path="./mylib.ajax.ts" />
+/// <reference path="./mylib.xml.ts" />
+(function (Lib) {
+    if (window["Promise"] === undefined) {
+        var ResultHolder_1 = /** @class */ (function () {
+            function ResultHolder(value) {
+                this.value = value;
+            }
+            return ResultHolder;
+        }());
+        var MyPromise_1 = /** @class */ (function () {
+            function MyPromise(executor) {
+                var _this = this;
+                this.result = undefined;
+                this.reason = undefined;
+                this.callbacks = [];
+                var setResolveValue = function (value) {
+                    if (_this.callbacks) {
+                        _this.result = new ResultHolder_1(value);
+                        for (var _i = 0, _a = _this.callbacks; _i < _a.length; _i++) {
+                            var callback = _a[_i];
+                            callback[0](value);
+                        }
+                        _this.callbacks = null;
+                    }
+                };
+                var setRejectValue = function (value) {
+                    if (_this.callbacks) {
+                        _this.reason = value;
+                        for (var _i = 0, _a = _this.callbacks; _i < _a.length; _i++) {
+                            var callback = _a[_i];
+                            callback[1](value);
+                        }
+                        _this.callbacks = null;
+                    }
+                };
+                try {
+                    executor(function (value) { return MyPromise.apply_then(value, setResolveValue, setRejectValue); }, setRejectValue); // value could be undefined
+                }
+                catch (error) {
+                    setRejectValue(error);
+                }
+            }
+            MyPromise.apply_then = function (value, resolve, reject) {
+                if (value instanceof Promise) {
+                    value.then(resolve, reject);
+                }
+                else {
+                    resolve(value);
+                }
+            };
+            MyPromise.prototype.add_callbacks = function (resolve, reject) {
+                if (this.callbacks) {
+                    this.callbacks.push([resolve, reject]);
+                }
+                else {
+                    if (this.result) {
+                        resolve(this.result.value);
+                    }
+                    else {
+                        reject(this.reason);
+                    }
+                }
+            };
+            MyPromise.prototype.then = function (onfulfilled, onrejected) {
+                if (this.callbacks) {
+                    var _onfulfilled_1 = onfulfilled || (function (value) { return value; }); // T == TResult1
+                    var _onrejected_1 = onrejected || (function (value) { return value; });
+                    var prev_1 = this;
+                    return new MyPromise(function (resolve, reject) {
+                        prev_1.add_callbacks(function (value) {
+                            try {
+                                MyPromise.apply_then(_onfulfilled_1(value), resolve, reject);
+                            }
+                            catch (error) {
+                                reject(error);
+                            }
+                        }, function (value) {
+                            try {
+                                MyPromise.apply_then(_onrejected_1(value), resolve, reject);
+                            }
+                            catch (error) {
+                                reject(error);
+                            }
+                        });
+                    });
+                }
+                else {
+                    try {
+                        if (this.result) {
+                            if (onfulfilled) {
+                                var result = onfulfilled(this.result.value);
+                                if (result instanceof Promise) {
+                                    return result;
+                                }
+                                else {
+                                    return Promise.resolve(result);
+                                }
+                            }
+                            else {
+                                return Promise.resolve(this.result.value); // T == TResult1
+                            }
+                        }
+                        else {
+                            if (onrejected) {
+                                var result = onrejected(this.reason);
+                                if (result instanceof Promise) {
+                                    return result;
+                                }
+                                else {
+                                    return Promise.reject(result);
+                                }
+                            }
+                            else {
+                                return Promise.reject(this.reason);
+                            }
+                        }
+                    }
+                    catch (error) {
+                        return Promise.reject(error);
+                    }
+                }
+            };
+            MyPromise.prototype["catch"] = function (onrejected) {
+                return this.then(undefined, onrejected);
+            };
+            MyPromise.all = function (promises) {
+                var pending = true;
+                var count = promises.length;
+                var next_resolve = undefined;
+                var next_reject = undefined;
+                var rejected = false;
+                var results = [];
+                var reason = undefined;
+                function make_resolve(index) {
+                    return function (value) {
+                        if (pending) {
+                            results[index] = value;
+                            count--;
+                            if (count == 0) {
+                                if (next_resolve) {
+                                    next_resolve(results);
+                                }
+                                pending = false;
+                            }
+                        }
+                    };
+                }
+                var reject = function (value) {
+                    if (pending) {
+                        if (next_reject) {
+                            next_reject(value);
+                        }
+                        else {
+                            rejected = true;
+                            reason = value;
+                        }
+                        pending = false;
+                    }
+                };
+                for (var i = 0; i < promises.length; i++) {
+                    promises[i].then(make_resolve(i), reject);
+                }
+                return new Promise(function (resolve, reject) {
+                    if (pending) {
+                        next_resolve = resolve;
+                        next_reject = reject;
+                    }
+                    else {
+                        if (rejected) {
+                            reject(reason);
+                        }
+                        else {
+                            resolve(results);
+                        }
+                    }
+                });
+            };
+            MyPromise.resolve = function (value) {
+                return new Promise(function (resolve, _) {
+                    resolve(value);
+                });
+            };
+            MyPromise.reject = function (value) {
+                return new Promise(function (_, reject) {
+                    reject(value);
+                });
+            };
+            return MyPromise;
+        }());
+        window["Promise"] = MyPromise_1;
+    }
+})(Lib || (Lib = {}));
+(function (Lib) {
+    function waitForOneByOne(promises, resolve, reject) {
+        function call_then(prev, next) {
+            var execute = function () { return next.then(resolve, reject); };
+            return prev.then(execute, execute);
+        }
+        var prev = promises[0].then(resolve, reject);
+        var next_promises = [prev];
+        for (var i = 1; i < promises.length; i++) {
+            var promise = promises[i];
+            prev = call_then(prev, promise);
+            next_promises.push(prev);
+        }
+        return Promise.all(next_promises);
+    }
+    Lib.waitForOneByOne = waitForOneByOne;
+    function waitForGet(url, options) {
+        var onrequest = (options && options.onrequest) || Lib.doNothing;
+        var onprogress = (options && options.onprogress) || Lib.doNothing;
+        return new Promise(function (resolve, reject) {
+            Lib.asynchronousGet("GET", url, resolve, function (result, status) { return reject({ result: result, status: status }); }, onrequest, onprogress, true);
+            //			asynchronousGet("GET", url, (value)=> setTimeout(()=> resolve(value), 10000 * Math.random()), (result: string, status: number)=> reject({result, status}), onrequest, onprogress, true)
+        });
+    }
+    Lib.waitForGet = waitForGet;
+    function postDataToString(postData) {
+        if (typeof (postData) === "string") {
+            return postData;
+        }
+        else {
+            var list = [];
+            for (var key in postData) {
+                list.push(key + "=" + encodeURI(postData[key].toString()));
+            }
+            return list.join("&");
+        }
+    }
+    function waitForPost(url, postData, options) {
+        var onrequest = (options && options.onrequest) || Lib.doNothing;
+        var onprogress = (options && options.onprogress) || Lib.doNothing;
+        return new Promise(function (resolve, reject) {
+            Lib.asynchronousGet("POST", url, resolve, function (result, status) { return reject({ result: result, status: status }); }, onrequest, onprogress, true, postDataToString(postData));
+        });
+    }
+    Lib.waitForPost = waitForPost;
+    function waitForSubmit(target) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var form, postData, formID, i, input, result, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        form = typeof (target) === "string" ? Lib.Dom.getForm(target) : target;
+                        postData = {};
+                        formID = form.id;
+                        for (i = 0; i < form.elements.length; i++) {
+                            input = form.elements[i];
+                            if ((input instanceof HTMLInputElement || input instanceof HTMLSelectElement) && input.name != "") {
+                                postData[input.name] = input.value;
+                            }
+                        }
+                        Lib.Dom.disableForm(form);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, , 3, 4]);
+                        return [4 /*yield*/, (form.method === "post" ? waitForPost(form.action, postData) : waitForGet(form.action + "?" + postDataToString(postData)))];
+                    case 2:
+                        result = _a.sent();
+                        resolve({ result: result, postData: postData });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        Lib.Dom.enableForm(form);
+                        return [7 /*endfinally*/];
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        e_1 = _a.sent();
+                        reject(e_1);
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        }); });
+    }
+    Lib.waitForSubmit = waitForSubmit;
+    function waitForDomLoad() {
+        return new Promise(function (resolve) {
+            if (document.readyState === "loading") {
+                var func_1 = function () {
+                    resolve();
+                    document.removeEventListener("DOMContentLoaded", func_1, false);
+                };
+                document.addEventListener("DOMContentLoaded", func_1, false);
+            }
+            else {
+                resolve();
+            }
+        });
+    }
+    Lib.waitForDomLoad = waitForDomLoad;
+    function waitFor(count) {
+        return new Promise(function (resolve) {
+            setTimeout(resolve, count);
+        });
+    }
+    Lib.waitFor = waitFor;
+    function waitForParseXml(text) {
+        return new Promise(function (resolve, reject) {
+            var result;
+            try {
+                result = Lib.parseXml(text);
+            }
+            catch (e) {
+                reject(e);
+                return;
+            }
+            if (result instanceof XMLDocument) {
+                resolve(result);
+            }
+            else {
+                reject(result);
+            }
+        });
+    }
+    Lib.waitForParseXml = waitForParseXml;
+    var ParallelCountLimit = /** @class */ (function () {
+        function ParallelCountLimit(max) {
+            var _this = this;
+            this.max = max;
+            this.executing = 0;
+            this.tasks = [];
+            this.ended = function () {
+                var task = _this.tasks.shift();
+                if (task) {
+                    task();
+                }
+                else {
+                    _this.executing--;
+                }
+            };
+        }
+        ParallelCountLimit.prototype.register = function (task) {
+            if (this.executing < this.max) {
+                this.executing += 1;
+                task();
+            }
+            else {
+                this.tasks.push(task);
+            }
+        };
+        ParallelCountLimit.prototype.execute = function (task) {
+            var guard = this;
+            return new Promise(function (resolve, reject) {
+                var executor = function () {
+                    try {
+                        var result = task();
+                        if (result instanceof Promise) {
+                            result.then(guard.ended, guard.ended);
+                            result.then(resolve, reject);
+                        }
+                        else {
+                            resolve(result);
+                            guard.ended();
+                        }
+                    }
+                    catch (e) {
+                        reject(e);
+                        guard.ended();
+                    }
+                };
+                guard.register(executor);
+            });
+        };
+        return ParallelCountLimit;
+    }());
+    Lib.ParallelCountLimit = ParallelCountLimit;
+})(Lib || (Lib = {}));
+/// <reference path="./lib/mylib.dom.ts"/>
+/// <reference path="./lib/mylib.svg.ts"/>
+/// <reference path="./lib/mylib.promise.ts"/>
+var Tournament;
+/// <reference path="./lib/mylib.dom.ts"/>
+/// <reference path="./lib/mylib.svg.ts"/>
+/// <reference path="./lib/mylib.promise.ts"/>
+(function (Tournament) {
+    var Dom = Lib.Dom;
+    var SVG = Lib.SVG;
+    var MARGIN = 20;
+    var FONT_SIZE = 16;
+    var INTERVAL = 33;
+    var LINE_WIDTH = 3; // must be odd
+    var PATH_WIDTH = 7; // must be odd
+    var Tree = /** @class */ (function () {
+        function Tree(mode, values, dummy, type, speed, width, height, planes) {
+            this.mode = mode;
+            this.type = type;
+            this.speed = speed;
+            this.leaves = [];
+            var count = values.length;
+            var nums = [];
+            var tree = [];
+            for (var i = 0; i < count; i++) {
+                nums.push(i);
+                var leaf = new TreeLeaf(i, values[i], planes);
+                tree.push(leaf);
+                this.leaves.push(leaf);
+            }
+            for (var i = 0; i < count; i++) {
+                var j_1 = i + Math.floor((count - i) * Math.random());
+                if (i != j_1) {
+                    var tmp = nums[i];
+                    nums[i] = nums[j_1];
+                    nums[j_1] = tmp;
+                }
+            }
+            this.competitionState = [];
+            if (dummy) {
+                var dummyValue = mode === "sum" ? 0 : (mode === "fact" ? 1 : -1);
+                var dummyLeaf = new TreeLeaf(count, dummyValue, planes, true);
+                var dummyNode = new TreeBranch(dummyLeaf, tree[0], planes);
+                tree[0] = dummyNode;
+                this.leaves.push(dummyLeaf);
+            }
+            var fair_width = count / 2;
+            var j = -1;
+            for (var i = 0; i < count - 1; i++) {
+                if (this.type == "fair") {
+                    j++;
+                    if (j >= fair_width) {
+                        j = 0;
+                        fair_width /= 2;
+                    }
+                }
+                else if (this.type == "unfair") {
+                    j = 0;
+                }
+                else {
+                    j = Math.floor((tree.length - 1) * Math.random());
+                }
+                var newNode = new TreeBranch(tree[j], tree[j + 1], planes);
+                tree[j] = newNode;
+                tree.splice(j + 1, 1);
+            }
+            for (var i = 0; i < this.leaves.length - 1; i++) {
+                this.competitionState[i] = false;
+            }
+            this.root = tree[0];
+            var treeInfo = this.root.calcPositions(mode, 0, 0, width, height, []);
+            //			const c = Math.round(width / 2);
+            Dom.append(planes.line, SVG.path("", "black", "none", { "stroke-width": LINE_WIDTH + "px", d: ["M", treeInfo.x, 0, "L", treeInfo.x, treeInfo.h].join(" ") }));
+        }
+        Tree.prototype.updatePath = function () {
+            var completed = true;
+            var competitions = [];
+            for (var i = 0; i < this.leaves.length - 1; i++) {
+                competitions[i] = [];
+            }
+            for (var i = 0; i < this.leaves.length; i++) {
+                var leaf = this.leaves[i];
+                var state = leaf.updatePath(this.speed / INTERVAL, competitions, this.competitionState);
+                if (state === "moving") {
+                    completed = false;
+                }
+                else if (state !== "completed") {
+                    completed = false;
+                }
+            }
+            for (var i = 0; i < competitions.length; i++) {
+                var competition = competitions[i];
+                if (competition.length == 2 && !this.competitionState[i]) {
+                    this.competitionState[i] = true;
+                    if (this.mode === "sum" || this.mode === "fact") {
+                        var v = competition[0].getValue() + competition[1].getValue();
+                        competition[0].setValue(v);
+                        competition[1].setValue(v);
+                    }
+                }
+            }
+            return completed;
+        };
+        return Tree;
+    }());
+    var TreeBranch = /** @class */ (function () {
+        function TreeBranch(l, r, planes) {
+            this.l = l;
+            this.r = r;
+            this.line = SVG.path("", "black", "none", { "stroke-width": LINE_WIDTH + "px" });
+            this.back = SVG.elem("g", null, this.line);
+            Dom.append(planes.line, this.back);
+        }
+        TreeBranch.prototype.depth = function () {
+            return Math.max(this.l.depth(), this.r.depth()) + 1;
+        };
+        TreeBranch.prototype.count = function () {
+            return this.l.count() + this.r.count();
+        };
+        TreeBranch.prototype.max = function () {
+            return Math.max(this.l.max(), this.r.max());
+        };
+        TreeBranch.prototype.calcPositions = function (mode, l, t, w, h, competitions) {
+            var cl = this.l.count();
+            var cr = this.r.count();
+            var d = this.depth();
+            var ix = Math.floor(w / (cl + cr));
+            var iy = Math.floor(h / d);
+            var wl = ix * cl;
+            var wr = ix * cr;
+            var lTree = this.l.calcPositions(mode, l, t + iy, wl, h - iy, competitions);
+            var rTree = this.r.calcPositions(mode, l + wl, t + iy, wr, h - iy, competitions);
+            var x = Math.round((lTree.x + rTree.x) / 2);
+            var b = t + iy;
+            var competition = competitions.length;
+            competitions.push(0);
+            var newPoint0 = { x: x, y: b };
+            var newPoint1 = { x: x, y: t };
+            var winnerPath;
+            if (mode === "tournament") {
+                var loserPath = void 0;
+                if (this.l.max() > this.r.max()) {
+                    winnerPath = lTree.path;
+                    loserPath = rTree.path;
+                }
+                else {
+                    winnerPath = rTree.path;
+                    loserPath = lTree.path;
+                }
+                winnerPath.push(competition);
+                winnerPath.push(newPoint0);
+                winnerPath.push(newPoint1);
+                loserPath.push(competition);
+            }
+            else {
+                winnerPath = lTree.path;
+                winnerPath.push(newPoint0);
+                winnerPath.push(competition);
+                winnerPath.push(newPoint1);
+                rTree.path.push(newPoint0);
+                rTree.path.push(competition);
+                var op = mode === "sum" ? "+" : "×";
+                Dom.append(this.back, SVG.elem("text", { x: "" + x, y: "" + (b + FONT_SIZE), "text-anchor": "middle", "dominant-baseline": "hanging", "font-size": FONT_SIZE + "px" }, op));
+            }
+            var lxl = lTree.x;
+            var lxr = rTree.x;
+            var hy = t + iy;
+            this.line.setAttribute("d", ["M", lxl, hy + lTree.h, "L", lxl, hy, "L", lxr, hy, "L", lxr, hy + rTree.h].join(" "));
+            return { h: iy, x: x, path: winnerPath };
+        };
+        return TreeBranch;
+    }());
+    var TreeLeaf = /** @class */ (function () {
+        function TreeLeaf(index, value, planes, isDummy) {
+            if (isDummy === void 0) { isDummy = false; }
+            this.index = index;
+            this.value = value;
+            this.pathData = [];
+            this.length = 0;
+            this.curValue = value;
+            var cl1, cb1, cl2, cb2;
+            cl1 = "#7aa";
+            cb1 = "#aff";
+            if (isDummy) {
+                cl2 = "#b9b";
+                cb2 = "#fdf";
+            }
+            else {
+                cl2 = "#9bb";
+                cb2 = "#dff";
+            }
+            this.path = SVG.path("", "red", "none", { "stroke-width": PATH_WIDTH + "px", "opacity": "0.5" });
+            this.ellipse = SVG.ellipse(0, 0, FONT_SIZE, FONT_SIZE, cl1, cb1, { "stroke-width": "3px", "shape-rendering": "geometricPrecision" });
+            this.text = SVG.elem("g", null, this.ellipse, SVG.elem("text", { "text-anchor": "middle", "dominant-baseline": "central", "font-size": FONT_SIZE + "px" }, "" + this.value));
+            this.backText = SVG.elem("g", null, SVG.ellipse(0, 0, FONT_SIZE, FONT_SIZE, cl2, cb2, { "stroke-width": "3px", "shape-rendering": "geometricPrecision" }), SVG.elem("text", { "text-anchor": "middle", "dominant-baseline": "central", "font-size": FONT_SIZE + "px" }, "" + this.value));
+            Dom.append(planes.path, this.path);
+            Dom.append(planes.text, this.backText, this.text);
+        }
+        TreeLeaf.prototype.getValue = function () {
+            return this.value;
+        };
+        TreeLeaf.prototype.setValue = function (value) {
+            this.value = value;
+            var v = "" + value;
+            Dom.setText(this.text, v);
+            if (v.length > 2) {
+                this.ellipse.setAttribute("rx", Math.round(FONT_SIZE * v.length / 2.5) + "px");
+            }
+        };
+        TreeLeaf.prototype.depth = function () {
+            return 1;
+        };
+        TreeLeaf.prototype.count = function () {
+            return 1;
+        };
+        TreeLeaf.prototype.max = function () {
+            return this.value;
+        };
+        TreeLeaf.prototype.calcPositions = function (mode, l, t, w, h, competitions) {
+            var x = l + Math.round(w / 2);
+            this.pathData = [
+                { x: x, y: t + h },
+                { x: x, y: t },
+            ];
+            this.backText.setAttribute("transform", "translate(" + x + "," + (t + h) + ")");
+            return { h: h, x: x, path: this.pathData };
+        };
+        TreeLeaf.prototype.updatePath = function (dl, competitions, competitionState) {
+            var state = "completed";
+            var lengthDrawn = 0;
+            var px = undefined;
+            var py = undefined;
+            var i = 0;
+            for (; i < this.pathData.length; i++) {
+                var p = this.pathData[i];
+                if (typeof (p) !== "number") {
+                    px = p.x;
+                    py = p.y;
+                    break;
+                }
+            }
+            if (px === undefined || py === undefined) {
+                return "completed";
+            }
+            var winnerPath = "M " + px + " " + py;
+            for (; i < this.pathData.length; i++) {
+                var p = this.pathData[i];
+                if (typeof (p) === "number") {
+                    if (competitionState[p] === false) {
+                        competitions[p].push(this);
+                        state = "waiting";
+                        break;
+                    }
+                }
+                else {
+                    var dx = p.x - px;
+                    var dy = p.y - py;
+                    var l = Math.sqrt(dx * dx + dy * dy);
+                    lengthDrawn += l;
+                    if (l == 0 || lengthDrawn <= this.length) {
+                        winnerPath += "L " + p.x + " " + p.y;
+                    }
+                    else {
+                        var r = (lengthDrawn - this.length) / l;
+                        px = p.x - dx * r;
+                        py = p.y - dy * r;
+                        winnerPath += "L " + px + " " + py;
+                        state = "moving";
+                        this.length += dl;
+                        break;
+                    }
+                    px = p.x;
+                    py = p.y;
+                }
+            }
+            this.path.setAttribute("d", winnerPath);
+            this.text.setAttribute("transform", "translate(" + px + "," + py + ")");
+            return state;
+        };
+        return TreeLeaf;
+    }());
+    var N = 16;
+    var Main = /** @class */ (function () {
+        function Main() {
+            var _this = this;
+            this.svg = SVG.getSVG("svg");
+            this.opts = Dom.combineTables(Dom.getSelects("speed", "type", "mode"), Dom.getInputs("dummy", "random"));
+            this.animTask = null;
+            this.terminating = false;
+            this.planes = {
+                line: SVG.elem("g"),
+                path: SVG.elem("g"),
+                text: SVG.elem("g")
+            };
+            var top = SVG.elem("g", { "shape-rendering": "geometricPrecision", transform: "translate(" + MARGIN + "," + MARGIN + ")" });
+            Dom.append(top, this.planes.line, this.planes.path, this.planes.text);
+            Dom.append(this.svg, top);
+            Dom.addEventListener(Dom.getInput("start"), "click", function () {
+                _this.start();
+            });
+            this.start();
+        }
+        Main.initialize = function () {
+            new Main();
+        };
+        ;
+        Main.prototype.start = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!this.animTask) return [3 /*break*/, 2];
+                            this.terminating = true;
+                            return [4 /*yield*/, this.animTask];
+                        case 1:
+                            _a.sent();
+                            this.terminating = false;
+                            _a.label = 2;
+                        case 2:
+                            this.animTask = this.startAnim();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        Main.prototype.startAnim = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var root;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            root = this.makeTree();
+                            _a.label = 1;
+                        case 1:
+                            if (!!this.terminating) return [3 /*break*/, 3];
+                            if (root.updatePath()) {
+                                return [3 /*break*/, 3];
+                            }
+                            return [4 /*yield*/, Lib.waitFor(INTERVAL)];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 1];
+                        case 3: return [2 /*return*/, null];
+                    }
+                });
+            });
+        };
+        Main.prototype.makeTree = function () {
+            Dom.clear(this.planes.line);
+            Dom.clear(this.planes.path);
+            Dom.clear(this.planes.text);
+            var values = [];
+            for (var i = 0; i < N; i++) {
+                values.push(i + 1);
+            }
+            if (this.opts.random.checked) {
+                for (var i = 0; i < N; i++) {
+                    var j = i + Math.floor((N - i) * Math.random());
+                    if (i != j) {
+                        var tmp = values[i];
+                        values[i] = values[j];
+                        values[j] = tmp;
+                    }
+                }
+            }
+            var rect = this.svg.getBoundingClientRect();
+            return new Tree(this.opts.mode.value == "sum" ? "sum" : (this.opts.mode.value === "fact" ? "fact" : "tournament"), values, this.opts.dummy.checked, this.opts.type.value, parseInt(this.opts.speed.value), rect.width - MARGIN * 2, rect.height - MARGIN * 2, this.planes);
+        };
+        Main.prototype.terminate = function () {
+            this.terminating = true;
+        };
+        return Main;
+    }());
+    Lib.executeOnDomLoad(Main.initialize);
+})(Tournament || (Tournament = {}));

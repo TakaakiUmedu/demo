@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<script src="lib.js"></script>
+<script src="lib.dom.js"></script>
+<script src="lib.storage.js"></script>
+<script src="lib.ajax.js"></script>
+<script src="routing.js"></script>
+<link rel="stylesheet" href="routing.css"/>
+<title>Routing demo</title>
+</head>
+<body>
+<div id="main"><div id="setting">
+<p>
+<span class="menu_group">
+<span class="menu_title">
+Map
+</span>
+name:<select id="map_select"></select>
+<input type="button" id="map_create" value="Create new map"/>
+<input type="button" id="map_rename" value="Rename map"/>
+<input type="button" id="map_delete" value="Delete map"/>
+|
+<input type="button" id="undo" value="Undo edit" disabled="disabled"/>
+<input type="button" id="redo" value="Redo edit" disabled="disabled"/>
+|
+<input type="button" id="map_export_all" value="Export all maps"/>
+<input type="button" id="map_export" value="Export map"/>
+<input type="button" id="map_import" value="Import maps"/>
+</span>
+
+<span class="menu_group">
+<span class="menu_title">
+Routing
+</span>
+<select id="routing">
+<option value="random walk">Random walk</option>
+<option value="repeater">Repeater hub like</option>
+<option value="switch">Switching hub like</option>
+<option value="dvrp">Distance Vector Routing</option>
+</select>
+<input type="button" value="Reset table" id="routing_reset"></input>
+|
+<span class="menu_title">
+Control packets
+</span>
+interval: <input type="number" value="5000" size="5" id="routing_interval"></input>
+<input type="button" value="Send" id="routing_send" disabled="disabled"></input>
+<input type="button" value="Start" id="routing_start" disabled="disabled"></input>
+<input type="button" value="Stop" id="routing_stop" disabled="disabled"></input>
+
+</span>
+
+<span class="menu_group">
+<span class="menu_title">
+Packets
+</span>
+from:<select id="from"></select>
+to:<select id="to"></select>
+ttl:<select id="ttl">
+<option value="0">∞</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+</select>
+
+<input type="button" id="send" value="Send"/> 
+
+|
+<span class="menu_title">
+Auto
+</span>
+
+interval(ms):<input type="number" id="interval" size="5" value="100"/> 
+<input type="button" id="auto_start" value="Start"/> / 
+<input type="button" id="auto_stop" value="Stop" disabled="disabled"/>
+|
+<input type="button" id="clear_packets" value="Clear"/>
+
+</span>
+
+<span class="menu_group">
+<span class="menu_title">
+Simulation
+</span>
+speed:<select id="speed_ratio">
+<option value="10">10</option>
+<option value="5">5</option>
+<option value="2">2</option>
+<option value="1" selected="selected">1</option>
+<option value="0.5">1/2</option>
+<option value="0.25">1/4</option>
+<option value="0.1">1/10</option>
+</select>
+<input type="button" value="Start" id="simulation_start" disabled="disabled"></input>
+<input type="button" value="Stop" id="simulation_stop"></input>
+</span>
+
+<span class="menu_group">
+<span class="menu_title">
+Display
+</span>
+routing table:<select id="routing_table_display">
+<option value="each">For each link</option>
+<option value="simple">Simple</option>
+</select>
+routing table:<select id="control_packet_display">
+<option value="detailed">Detailed</option>
+<option value="simple" selected="selected">Simple</option>
+</select>
+</span>
+
+
+</p>
+</div>
+
+<canvas id="canvas" width="10" height="10"/>
+
+</div>
+
+<div id="export_window">
+<p id="export_buttons">
+<span class="menu_title" id="export_head">&nbsp;</span>
+<span id="export_message">&nbsp;</span>
+<input type="button" id="import_import" value="Import"></input>
+<input type="button" id="import_cancel" value="Cancel"></input>
+<input type="button" id="import_close" value="OK"></input>
+</p>
+<textarea id="export_textarea"></textarea>
+</div>
+
+</body>
+</html>

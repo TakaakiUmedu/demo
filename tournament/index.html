@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<script src="tournament.js"></script>
+</head>
+<body>
+<p>
+<svg id="svg" style="width:800px;height:600px"/>
+</p>
+<p>
+<input type="button" id="start" value="開始"></input>
+&nbsp;&nbsp;&nbsp;&nbsp;
+スピード:
+<select id="speed">
+<option value="33">×1</option>
+<option value="66">×2</option>
+<option value="133">×4</option>
+<option value="267">×8</option>
+<option value="533">×16</option>
+</select>
+&nbsp;&nbsp;&nbsp;&nbsp;
+トーナメント:
+<select id="type">
+<option value="random">ランダム</option>
+<option value="fair" selected="selected">公平</option>
+<option value="unfair">不公平</option>
+</select>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+モード:
+<select id="mode">
+<option value="tournament" selected="selected">トーナメント</option>
+<option value="sum">合計</option>
+<option value="fact">階乗</option>
+</select>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+<label><input type="checkbox" checked="checked" id="random"/>ランダム</label>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+<label><input type="checkbox" id="dummy"/>ダミー</label>
+
+</p>
+
+</body>
+</html>
