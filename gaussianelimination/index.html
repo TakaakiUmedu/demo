@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title></title>
+<script src="encrypt.js"></script>
+<link rel="stylesheet" href="/css/color-default2.css"></link>
+<link rel="stylesheet" href="/css/layout-default2.css"></link>
+<link rel="stylesheet" href="gaussian_elimination.css"></link>
+</head>
+<body>
+
+<h1>ガウス・ジョルダン法</h1>
+
+<h2>4元1次連立方程式を解く例</h2>
+
+<p>
+以下、添え字の<q>-n</q>は、<q>n番目</q>ぐらいの意味とする。
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>0,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>0</sub> </td><td> …(1) </td></tr>
+<tr><td> k<sub>1,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>1,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>1,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>1</sub> </td><td> …(2) </td></tr>
+<tr><td> k<sub>2,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>2,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>2,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>2,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>2</sub> </td><td> …(3) </td></tr>
+<tr><td> k<sub>3,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>3,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>3,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>3,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3</sub> </td><td> …(4) </td></tr>
+</table>
+
+<p>
+式(1)を、k<sub>1,0</sub> / k<sub>0,0</sub>倍、k<sub>2,0</sub> / k<sub>0,0</sub>倍、k<sub>3,0</sub> / k<sub>0,0</sub>倍したものを、式(2)～(4)からそれぞれ引くと、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub>             </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub>             </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>0,3</sub>             </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>0</sub>             </td><td> …(1) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2-1</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>1,3-1</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>1-1</sub> </td><td> …(2-1) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>2,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>2,2-1</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>2,3-1</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>2-1</sub> </td><td> …(3-1) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>3,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>3,2-1</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>3,3-1</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-1</sub> </td><td> …(4-1) </td></tr>
+</table>
+
+<p class="continue">
+という形に変形できる。
+ただし、k<sub>0,0</sub>が0の場合は、x<sub>0</sub>の係数が0でない行を探し、その行と0行目を入れ替えてから計算する。
+以下も同じ。0でない行、がない場合は、その連立方程式は解けないので終了(解が無いか、無限に存在する)。
+k<sub>i,j-1</sub>、v<sub>i-1</sub>は、それぞれ適切に計算する。
+</p>
+
+<p>
+次は、式(2-1)を、k<sub>2,1-1</sub> / k<sub>1,1-1</sub>、k<sub>3,1-1</sub> / k<sub>1,1-1</sub>倍したものを、式(3-2)、(4-2)行目からそれぞれ引くと、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub>             </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub>             </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>0,3</sub>             </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>0</sub>             </td><td> …(1)   </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2-1</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>1,3-1</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>1-1</sub> </td><td> …(2-1) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>2,2-2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>2,3-2</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>2-2</sub> </td><td> …(3-2) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>3,2-2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>3,3-2</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-2</sub> </td><td> …(4-2) </td></tr>
+</table>
+
+<p class="continue">
+という形に変形できる。2行目は1回目の計算終了時の、k<sub>i,j-2</sub>、k<sub>i,j-2</sub>は、それぞれ適切に計算する。
+</p>
+
+<p>
+同様に、式(3-2)を、k<sub>3,2-2</sub> / k<sub>2-2</sub> 倍したものを、式(4-2)から引くと、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub>             </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub>             </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>0,3</sub>             </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>0</sub>             </td><td> …(1)   </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2-1</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>1,3-1</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>1-1</sub> </td><td> …(2-1) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>2,2-2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>2,3-2</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>2-2</sub> </td><td> …(3-2) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>3,3-3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-3</sub> </td><td> …(4-3) </td></tr>
+</table>
+
+<p class="continue">
+となって、式(4-3)から、x<sub>3</sub>が求まる。
+</p>
+
+<p>
+この式(4-3)を k<sub>0,3</sub> / k<sub>3,3-3</sub>、k<sub>1,3-1</sub> / k<sub>3,3-3</sub>、k<sub>2,3-2</sub> / k<sub>3,3-3</sub>倍したものを、式(1)、式(2-1)、式(3-2)からそれぞれ引くと(つまり、求まったx<sub>3</sub>をそれぞれに代入して整理する。以下同様)、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub>             </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub>             </td><td> x<sub>2</sub> </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>0-4</sub> </td><td> …(1-4) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2-1</sub> </td><td> x<sub>2</sub> </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>1-4</sub> </td><td> …(2-4) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>2,2-2</sub> </td><td> x<sub>2</sub> </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>2-4</sub> </td><td> …(3-4) </td></tr>
+<tr><td>                               </td><td></td><td>   </td><td></td><td>                                           </td><td>   </td><td>                                           </td><td>   </td><td> k<sub>3,3-3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-3</sub> </td><td> …(4-3) </td></tr>
+</table>
+
+<p class="continue">
+となって、式(3-4)から、x<sub>2</sub>が求まる。
+</p>
+
+<p>
+次に、式(3-4)を k<sub>0,2</sub> / k<sub>2,2-2</sub>、k<sub>1,2-1</sub> / k<sub>2,2-2</sub> 倍したものを、式(1-4)、式(2-4)からそれぞれ引くと、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub>             </td><td> x<sub>1</sub> </td><td>   </td><td>                                           </td><td></td><td></td><td>   </td><td>                                           </td><td> = </td><td> v<sub>0-5</sub> </td><td> …(1-5) </td></tr>
+<tr><td>                               </td><td></td><td></td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td>   </td><td>                                           </td><td></td><td></td><td>   </td><td>                                           </td><td> = </td><td> v<sub>1-5</sub> </td><td> …(2-5) </td></tr>
+<tr><td>                               </td><td></td><td></td><td>   </td><td>                                           </td><td>   </td><td> k<sub>2,2-2</sub> </td><td> x<sub>2</sub> </td><td>   </td><td></td><td>                                           </td><td> = </td><td> v<sub>2-4</sub> </td><td> …(3-4) </td></tr>
+<tr><td>                               </td><td></td><td></td><td>   </td><td>                                           </td><td>   </td><td></td><td>                                           </td><td>   </td><td> k<sub>3,3-3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-3</sub> </td><td> …(4-3) </td></tr>
+</table>
+
+<p class="continue">
+となって、式(2-5)から、x<sub>1</sub>が求まる。
+</p>
+
+<p>
+最後に、式(2-5)を k<sub>0,1</sub> / k<sub>1,1-1</sub> 倍したものを、式(1-5)から引くと、
+</p>
+
+<table class="equation">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td>   </td><td>                                           </td><td>   </td><td>                                           </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>0-6</sub> </td><td> …(1-6) </td></tr>
+<tr><td>                               </td><td>   </td><td> k<sub>1,1-1</sub> </td><td> x<sub>1</sub> </td><td>   </td><td>                                           </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>1-5</sub> </td><td> …(2-5) </td></tr>
+<tr><td>                               </td><td>   </td><td>                                           </td><td>   </td><td> k<sub>2,2-2</sub> </td><td> x<sub>2</sub> </td><td>   </td><td>                                           </td><td> = </td><td> v<sub>2-4</sub> </td><td> …(3-4) </td></tr>
+<tr><td>                               </td><td>   </td><td>                                           </td><td>   </td><td>                                           </td><td>   </td><td> k<sub>3,3-3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3-3</sub> </td><td> …(4-3) </td></tr>
+</table>
+
+<p class="continue">
+式(1-6)から、x<sub>0</sub>が求まる。
+</p>
+
+<h2>プログラムとして実装する場合</h2>
+
+<p>
+式(1)～(4)を、以下のように、それぞれの係数を並べたものの後ろに、v<sub>i</sub>をくっつけたリストとして記憶する。
+</p>
+
+<div class="flex">
+<table class="equation float">
+<tr><td> k<sub>0,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>0,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>0,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>0,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>0</sub> </td><td> …(1) </td></tr>
+<tr><td> k<sub>1,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>1,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>1,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>1,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>1</sub> </td><td> …(2) </td></tr>
+<tr><td> k<sub>2,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>2,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>2,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>2,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>2</sub> </td><td> …(3) </td></tr>
+<tr><td> k<sub>3,0</sub> </td><td> x<sub>0</sub> </td><td> + </td><td> k<sub>3,1</sub> </td><td> x<sub>1</sub> </td><td> + </td><td> k<sub>3,2</sub> </td><td> x<sub>2</sub> </td><td> + </td><td> k<sub>3,3</sub> </td><td> x<sub>3</sub> </td><td> = </td><td> v<sub>3</sub> </td><td> …(4) </td></tr>
+</table>
+
+<div class="float">
+<br/>
+<br/>
+<br/>
+<br/>
+→
+</div>
+
+<table class="equation float">
+<tr><td>[</td><td> k<sub>0,0</sub> </td><td> , </td><td> k<sub>0,1</sub> </td><td> , </td><td> k<sub>0,2</sub> </td><td> , </td><td> k<sub>0,3</sub> </td><td> , </td><td> v<sub>0</sub> </td><td> ], </td></tr>
+<tr><td>[</td><td> k<sub>1,0</sub> </td><td> , </td><td> k<sub>1,1</sub> </td><td> , </td><td> k<sub>1,2</sub> </td><td> , </td><td> k<sub>1,3</sub> </td><td> , </td><td> v<sub>1</sub> </td><td> ], </td></tr>
+<tr><td>[</td><td> k<sub>2,0</sub> </td><td> , </td><td> k<sub>2,1</sub> </td><td> , </td><td> k<sub>2,2</sub> </td><td> , </td><td> k<sub>2,3</sub> </td><td> , </td><td> v<sub>2</sub> </td><td> ], </td></tr>
+<tr><td>[</td><td> k<sub>3,0</sub> </td><td> , </td><td> k<sub>3,1</sub> </td><td> , </td><td> k<sub>3,2</sub> </td><td> , </td><td> k<sub>3,3</sub> </td><td> , </td><td> v<sub>3</sub> </td><td> ], </td></tr>
+</table>
+</div>
+
+<p>
+より具体的には、以下のような2次元配列として適当な変数(ここではmatrix)に読み込むようプログラムする。
+</p>
+
+<blockquote>
+<pre>
+matrix = 
+[
+  [ k<sub>0,0</sub>, k<sub>0,1</sub>, k<sub>0,2</sub>, k<sub>0,3</sub>, v<sub>0</sub> ], 
+  [ k<sub>1,0</sub>, k<sub>1,1</sub>, k<sub>1,2</sub>, k<sub>1,3</sub>, v<sub>1</sub> ], 
+  [ k<sub>2,0</sub>, k<sub>2,1</sub>, k<sub>2,2</sub>, k<sub>2,3</sub>, v<sub>2</sub> ], 
+  [ k<sub>3,0</sub>, k<sub>3,1</sub>, k<sub>3,2</sub>, k<sub>3,3</sub>, v<sub>3</sub> ], 
+]
+</pre>
+</blockquote>
+
+<p>
+このn元連立方程式を表すmatrixに以下の変更を加えても、元のmatrixが表すものと等価なn元連立方程式になる。
+</p>
+<ol>
+<li>いずれか2つの行を入れ替える</li>
+<li>いずれかの行を、0でない任意の数xで、x倍する</li>
+<li>いずれかの行の各値から、別のいずれかの行の各値をそれぞれ引く</li>
+</ol>
+<p>
+なぜなら1は、単に方程式の式の番号を入れ替えているだけである。
+2は、方程式の1つを、両辺をx倍しているだけである。
+3は、1つの方程式の両辺から、別の方程式の両辺を引いて新たな方程式を作る式変形に当たる。
+いずれも、連立方程式を解く際に使われる基本的な式変形である。
+</p>
+<p>
+そして、これらの式変形を適切な順序で行うと、↑の<q>ガウスの消去法</q>と呼ばれる手順を再現できる。
+</p>
+<p>
+ということで、この操作を、上から順に実行し、下から順に実行すると、matrixの中身が
+</p>
+
+<blockquote>
+<pre>
+matrix = [
+  [ k<sub>0,0</sub>,  <sub>     </sub>0,  <sub>     </sub>0,  <sub>     </sub>0, v<sub>0-6</sub> ],
+  [ <sub>   </sub>0,  k<sub>1,1-1</sub>,  <sub>     </sub>0,  <sub>     </sub>0, v<sub>1-5</sub> ],
+  [ <sub>   </sub>0,  <sub>     </sub>0,  k<sub>2,2-2</sub>,  <sub>     </sub>0, v<sub>2-4</sub> ],
+  [ <sub>   </sub>0,  <sub>     </sub>0,  <sub>     </sub>0,  k<sub>3,3-3</sub>, v<sub>3-3</sub> ],
+]
+</pre>
+</blockquote>
+
+<p class="continue">
+となる。このmatrixは、
+</p>
+
+<blockquote>
+<pre>
+   k<sub>0,0</sub> x<sub>0</sub> = v<sub>0-6</sub>
+   k<sub>1,1-1</sub> x<sub>1</sub> = v<sub>1-5</sub>
+   k<sub>2,2-2</sub> x<sub>2</sub> = v<sub>2-4</sub>
+   k<sub>3,3-3</sub> x<sub>3</sub> = v<sub>3-3</sub>
+</pre>
+</blockquote>
+
+<p class="continue">
+という式を意味するので、各x<sub>i</sub>が求まる。
+</p>
+
+
+</body>
+</html>

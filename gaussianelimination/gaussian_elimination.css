@@ -1,0 +1,15 @@
+
+table.equation, table.equation tr, table.equation td{
+	background-color: transparent;
+}
+
+table.equation{
+	border: solid 2px #faa;
+	font-size: large;
+}
+
+div.flex{
+	flex-flow:row nowrap;
+	display: flex;
+}
+
