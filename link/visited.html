@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>:visited擬似要素がプライバシー侵害になりそうだったので仕様変更された件のテスト</title>
+<style>
+a{
+	color: blue;
+}
+
+a:visited {
+	color: #ff9090;
+}
+
+td{
+	padding: 0;
+}
+
+td a{
+	display: inline-block;
+	width: 4em;
+	height: 4em;
+	color: cyan;
+	background-color: cyan;
+}
+
+td a:visited{
+	color: red;
+	background-color: red;
+}
+</style>
+
+</head>
+<body>
+<h1>:visited擬似要素がプライバシー侵害になりそうだったので仕様変更された件のテスト</h1>
+
+<p>下記のうち、このページの閲覧者が利用中のブラウザで再生したことのある動画だけ、<span style="font-weight:bold;color:#ff9090">ピンク色</span>で表示される。</p>
+
+<h2><a href="https://www.youtube.com/@ShigaUniversityOfficial">滋賀大学の公式YouTubeチャンネル</a>の動画一覧(2024年6月頃現在の一覧)</h2>
+<ul>
+<li><a href="https://youtube.com/watch?v=M7paALmh2gc">【滋賀大学】1分でわかる！SHIGADAI Weekly News|4/8-4/12</a></li>
+<li><a href="https://youtube.com/watch?v=FsN4TeAX9Yw">【滋賀大学】1分でわかる！SHIGADAI Weekly News|4/1-4/5</a></li>
+<li><a href="https://youtube.com/watch?v=D3_Alk2ib0Y">【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/25-3/30</a></li>
+<li><a href="https://youtube.com/watch?v=IOgregtNRLQ">【滋賀大学】学長メッセージ　2024年度　新入生の皆さんへ</a></li>
+<li><a href="https://youtube.com/watch?v=fP2GaPQXeaE">【滋賀大学】SHIGADAI Challenge#03～滋賀大初DS博士へのインタビュー～</a></li>
+<li><a href="https://youtube.com/watch?v=1NyJkjbe_SU">【滋賀大学】SHIGADAI  Challenge#02～滋賀大初DS博士へのインタビュー～</a></li>
+<li><a href="https://youtube.com/watch?v=_y45PaDZaJ0">【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/18-3/22</a></li>
+<li><a href="https://youtube.com/watch?v=0miXPVeChlY">【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/11-3/15</a></li>
+<li><a href="https://youtube.com/watch?v=h93ZoWxXlYY">【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/4-3/8</a></li>
+<li><a href="https://youtube.com/watch?v=qa30OtASCzI">【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/26-3/1</a></li>
+<li><a href="https://youtube.com/watch?v=2kGuUguW8n8">【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/19-2/23</a></li>
+<li><a href="https://youtube.com/watch?v=3PZF71tK8C4">【滋賀大学】SHIGADAI Challenge#01 ～おとさぽの取り組み～</a></li>
+<li><a href="https://youtube.com/watch?v=nIZj6F4Bj8U">【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/13-2/16</a></li>
+<li><a href="https://youtube.com/watch?v=iM4udtBXCF0">【滋賀大学】1分でわかる！SHIGADAI Weekly News | 2/5-2/9</a></li>
+<li><a href="https://youtube.com/watch?v=9p4gyesgHeM">【滋賀大学】リベラルアーツ教育｜アントレプレナーシップⅡ</a></li>
+<li><a href="https://youtube.com/watch?v=qzohe8qonHw">【滋賀大学】滋賀大学のリベラルアーツとは？</a></li>
+<li><a href="https://youtube.com/watch?v=r8dgi-VFV1w">【滋賀大学】1分でわかる！SHIGADAI Weekly News|1/29-2/2</a></li>
+<li><a href="https://youtube.com/watch?v=pulG1A785sg">【1分でわかる！】SHIGADAI Weekly News | 1/22-1/26</a></li>
+<li><a href="https://youtube.com/watch?v=YB3CKhlY09o">【1分でわかる！】SHIGADAI Weekly News | 1/15-1/19</a></li>
+<li><a href="https://youtube.com/watch?v=8lNFWPjbPVw">【1分でわかる！】SHIGADAI Weekly News | 12/25-1/12</a></li>
+<li><a href="https://youtube.com/watch?v=U7gi3CPEkMw">【1分でわかる！】SHIGADAI NEWS 2023 総集編（10月→12月）</a></li>
+<li><a href="https://youtube.com/watch?v=USfd6adRKY4">【1分でわかる！】SHIGADAI NEWS 2023 総集編（7月→9月）</a></li>
+<li><a href="https://youtube.com/watch?v=l1ZiN38X9FQ">【1分でわかる！】SHIGADAI NEWS 2023 総集編（4月→6月）</a></li>
+<li><a href="https://youtube.com/watch?v=DN3HceLR84w">【1分でわかる！】SHIGADAI NEWS 2023 総集編（1月→3月）</a></li>
+<li><a href="https://youtube.com/watch?v=yZF3ZtFheuQ">【1分でわかる!】SHIGADAI Weekly News | 12/11-12/15</a></li>
+<li><a href="https://youtube.com/watch?v=edJwtSH643c">【1分でわかる!】SHIGADAI Weekly News | 12/4-12/8</a></li>
+<li><a href="https://youtube.com/watch?v=bu6GbZB7V34">【2024年4月誕生！】滋賀大学経済学研究科・経営分析学専攻（MBAN）のご紹介</a></li>
+<li><a href="https://youtube.com/watch?v=xRZJX_88DwQ">オープンキャンパス　小倉国際交流機構長</a></li>
+<li><a href="https://youtube.com/watch?v=TciPNgHl_eA">聖火リレー　滋賀大学正門前</a></li>
+<li><a href="https://youtube.com/watch?v=ouiqX6NCKkU">滋賀大学講堂の竣工までの様子</a></li>
+<li><a href="https://youtube.com/watch?v=FtfSd1025eU">カモンちゃんの滋大祭レポート2019</a></li>
+<li><a href="https://youtube.com/watch?v=0yKEH6KdYdI">滋賀大学  建物紹介</a></li>
+<li><a href="https://youtube.com/watch?v=7ndMxWPeV04">カモン！滋賀大！！ラーニングコモンズ編</a></li>
+<li><a href="https://youtube.com/watch?v=J60nT185sio">データサイエンスとは (滋賀大学データサイエンス学部)</a></li>
+<li><a href="https://youtube.com/watch?v=NDfz_CB5fBM">学部紹介 (滋賀大学データサイエンス学部)</a></li>
+</ul>
+
+<p>
+これは、<q>:visited擬似要素</q>の色を変えるよう、CSSで設定することで実現されている。
+2010年ぐらいより以前は、色以外にも、フォントのサイズなど、見た目を何でも変えられるような仕様でブラウザは設計されていた。
+例えば、このようなリストで、再生済みのリンクだけフォントサイズを小さく表示する、あるいは、そもそも表示しない、というようなことができていた。
+そのような設定が可能なら、見たことのない動画だけリンクが巨大化することで強調表示されるなど、ウェブページのユーザインターフェイスデザインとして上手く使えた可能性がある。
+が、これは、<q>訪問者がどのページを見たことがあるか?</q>というプライバシー情報への侵害になり得るということが見いだされ、結果として、色以外は変えられないように仕様変更された。
+詳しい仕様は、<a href="https://developer.mozilla.org/ja/docs/Web/CSS/Privacy_and_the_:visited_selector">MDNのプライバシーと :visited セレクターのページ</a>などを参照のこと。</p>
+
+<p>かつて可能だったプライバシーの侵害方法は以下の通りである。</p>
+
+<ol>
+<li>プライバシー侵害を目論む人Aは、上記のようなリストを含むウェブページを作る</li>
+<li>その際、リンクが訪問済みかどうかでフォントサイズなども変わるようなCSSを指定する</li>
+<li>Javascriptを使うと、ウェブページ上の各要素がどの座標に表示されているか? を取得できるので、各項目の表示位置のずれから、どのリンクが訪問済みか? という情報を抜き取れる</li>
+<li>Javascriptはそのページ内で得られたあらゆる情報をウェブサーバに送信できるので、3で得た情報をAに送ることもできる</li>
+</ol>
+
+<p>以上の手順は、ユーザから見えないように隠した要素の下などでも行える為、あるページを開きっぱなしにしていると、YouTubeの人気動画トップから順に、どの動画を見たことがあるか?
+という情報をじわじわと抜き取り続けるようなページを作る事もできる。
+このプライバシー問題に関して色々検討された結果、訪問済みかどうかに応じて、フォントサイズその他、レイアウトが変わるような変更は禁止という事になった。
+また、Javascriptでフォントの色を取得しようとしたりしても、未訪問の場合の色で表示されている、とブラウザが嘘をつくようなになった。
+サイズが変わるようなウェブページが作れなくなって不便かも知れないが、プライバシー侵害の可能性を消すにはそれしか方法が無かったため仕様は変更された。</p>
+
+<h2>こういう罠も可能</h2>
+
+<p>なお、下記のような方法で、このプライバシー侵害対策を回避する事も可能である(ただし、このページは、どこにも情報を送信していない)。</p>
+
+<p>超楽しいゲーム: 赤いタイルをクリックしよう!</p>
+
+<table id="table" style="float:left;margin-right:3em;">
+<tr><td><a href="https://www.youtube.com/@ShigaUniversityOfficial" title="滋賀大学の公式YouTubeチャンネル">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=M7paALmh2gc" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|4/8-4/12">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=FsN4TeAX9Yw" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|4/1-4/5">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=D3_Alk2ib0Y" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/25-3/30">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=IOgregtNRLQ" title="【滋賀大学】学長メッセージ　2024年度　新入生の皆さんへ">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=fP2GaPQXeaE" title="【滋賀大学】SHIGADAI Challenge#03～滋賀大初DS博士へのインタビュー～">&nbsp;</a></td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=1NyJkjbe_SU" title="【滋賀大学】SHIGADAI  Challenge#02～滋賀大初DS博士へのインタビュー～">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=_y45PaDZaJ0" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/18-3/22">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=0miXPVeChlY" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/11-3/15">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=h93ZoWxXlYY" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|3/4-3/8">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=qa30OtASCzI" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/26-3/1">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=2kGuUguW8n8" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/19-2/23">&nbsp;</a></td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=3PZF71tK8C4" title="【滋賀大学】SHIGADAI Challenge#01 ～おとさぽの取り組み～">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=nIZj6F4Bj8U" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|2/13-2/16">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=iM4udtBXCF0" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News | 2/5-2/9">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=9p4gyesgHeM" title="【滋賀大学】リベラルアーツ教育｜アントレプレナーシップⅡ">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=qzohe8qonHw" title="【滋賀大学】滋賀大学のリベラルアーツとは？">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=r8dgi-VFV1w" title="【滋賀大学】1分でわかる！SHIGADAI Weekly News|1/29-2/2">&nbsp;</a></td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=pulG1A785sg" title="【1分でわかる！】SHIGADAI Weekly News | 1/22-1/26">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=YB3CKhlY09o" title="【1分でわかる！】SHIGADAI Weekly News | 1/15-1/19">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=8lNFWPjbPVw" title="【1分でわかる！】SHIGADAI Weekly News | 12/25-1/12">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=U7gi3CPEkMw" title="【1分でわかる！】SHIGADAI NEWS 2023 総集編（10月→12月）">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=USfd6adRKY4" title="【1分でわかる！】SHIGADAI NEWS 2023 総集編（7月→9月）">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=l1ZiN38X9FQ" title="【1分でわかる！】SHIGADAI NEWS 2023 総集編（4月→6月）">&nbsp;</a></td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=DN3HceLR84w" title="【1分でわかる！】SHIGADAI NEWS 2023 総集編（1月→3月）">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=yZF3ZtFheuQ" title="【1分でわかる!】SHIGADAI Weekly News | 12/11-12/15">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=edJwtSH643c" title="【1分でわかる!】SHIGADAI Weekly News | 12/4-12/8">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=bu6GbZB7V34" title="【2024年4月誕生！】滋賀大学経済学研究科・経営分析学専攻（MBAN）のご紹介">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=xRZJX_88DwQ" title="オープンキャンパス　小倉国際交流機構長">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=TciPNgHl_eA" title="聖火リレー　滋賀大学正門前">&nbsp;</a></td></tr>
+<tr><td><a href="https://www.youtube.com/watch?v=ouiqX6NCKkU" title="滋賀大学講堂の竣工までの様子">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=FtfSd1025eU" title="カモンちゃんの滋大祭レポート2019">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=0yKEH6KdYdI" title="滋賀大学  建物紹介">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=7ndMxWPeV04" title="カモン！滋賀大！！ラーニングコモンズ編">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=J60nT185sio" title="データサイエンスとは (滋賀大学データサイエンス学部)">&nbsp;</a></td><td><a href="https://www.youtube.com/watch?v=NDfz_CB5fBM" title="学部紹介 (滋賀大学データサイエンス学部)">&nbsp;</a></td></tr>
+</table>
+
+<p style="padding-left: 3em">あなたの見たことのある動画一覧</p>
+
+<ul style="padding-left: 3em" id="list">
+</ul>
+
+<script>
+
+window.addEventListener("DOMContentLoaded", ()=> {
+	const list = document.getElementById("list");
+	for(const a of document.getElementById("table").getElementsByTagName("a")){
+		a.addEventListener("click", (event)=> {
+			const li = document.createElement("li");
+			const e = document.createElement("a");
+			e.href = a.href;
+			e.appendChild(document.createTextNode(a.title));
+			li.appendChild(e);
+			list.appendChild(li);
+			event.preventDefault();
+		});
+	}
+});
+
+</script>
+
+<p style="clear:both;">上のゲームをきちんとプレイすると、このページ内で動作しているJavascript環境に対して、自分がどの動画を見たことがあるかがバレる。
+ブラウザが嘘をつくのはJavascriptで書かれたプログラムに対してのみで、ユーザに対しては嘘はつかない。
+何しろ、ユーザに対して嘘をつく = 訪問済みかどうかに関わらず色が変わらない、なのでそれは、色代わり機能の廃止に他ならず不便になりすぎるため。
+Javascriptがどこかへ情報を送るようにけっけいしていた場合、このページの設置者に対して、自分が見た動画一覧がバレることになる(繰り返しになるが、このページにはそのような送信動作は組み込んでいない)。</p>
+
+<p>よって、ユーザに、<q>色が変わっている部分をクリックせよ</q>などと促してクリックさせるとプライバシーを引っこ抜くことができる。
+クリック以外にも、敵キャラやアイテムが、見える / (背景と同じ色になってしまって)見えない、という違いを使って、
+アクションゲーム、シューティングゲーム、音ゲーなどでユーザの反応の違いから同じように情報収集を行う事も理屈の上では可能。
+Web上で制作者不明なゲームをやる場合には、そういう邪悪なゲームではないことを祈ろう。</p>
+
+</body>
+</html>
