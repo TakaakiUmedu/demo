@@ -1,0 +1,37 @@
+
+
+ul#menu{
+	display: flex;
+}
+
+ul#menu li{
+	list-style: none;
+	padding: 0 0.5em;
+	border: 0.5em solid #9ff;
+	border-radius: 0.5em;
+	background-color: #9ff;
+}
+
+ul#menu li.selected{
+	border-color: #bfb;
+	background-color: #bfb;
+}
+
+ul#menu li:hover{
+	border-color: #9e9;
+	background-color: #bfb;
+}
+
+th:hover{
+	background-color: #f77;
+}
+
+div#comment{
+	width:auto;
+	margin-left:0;
+}
+
+div#comment ul, div#comment h4{
+	margin-left:0;
+}
+
