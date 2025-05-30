@@ -1,0 +1,86 @@
+@font-face {
+	font-family: "QRFont";
+/*	src: url("QRFont.ttf");*/
+	src: url("QRFont.woff2");
+}
+
+@font-face {
+	font-family: "QRFontMicro";
+/*	src: url("QRFontMicro.ttf");*/
+	src: url("QRFontMicro.woff2");
+}
+
+@font-face {
+	font-family: "QRFontWithLetters";
+/*	src: url("QRFontWithLetters.ttf");*/
+	src: url("QRFontWithLetters.woff2");
+}
+
+.QRFont {
+	font-family: "QRFont";
+}
+
+.QRFontMicro {
+	font-family: "QRFontMicro";
+}
+
+.QRFontWithLetters {
+	font-family: "QRFontWithLetters";
+}
+
+h1{
+	background-color: #dfe;
+	border-width: 0 0 0 0.5rem;
+	border-style: solid;
+	border-color: #bdc;
+	margin: 0 0 0.5rem 0;
+	padding: 0.1rem 0.5rem;
+}
+
+h2, h3, h4, h5{
+	background-color: #fff;
+	border-width: 0 0 0.2rem 0.5rem;
+	border-style: solid;
+	border-left-color: #bdc;
+	border-bottom-color: #dfe;
+	margin: 0 0 0.5rem 0;
+	padding: 0.1rem 0.5rem;
+}
+
+h2.QRFont, h2.QRFontMicro, h2.QRFontWithLetters{
+	font-size: 3rem;
+}
+
+span.QRFont, span.QRFontMicro, span.QRFontWithLetters{
+	font-size: 2rem;
+}
+
+blockquote{
+	border: 0.3rem solid #bdc;
+}
+
+table{
+	background-color: #bdc;
+	margin: 1rem;
+}
+td{
+	background-color: white;
+}
+
+h1{
+	border-left-width: 1rem;
+}
+
+h2{
+	border-left-width: 2rem;
+}
+
+h3{
+	border-left-width: 3rem;
+}
+
+
+
+h2{
+	font-weight: normal;
+}

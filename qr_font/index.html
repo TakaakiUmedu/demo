@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="main.css"/>
+<title>QRコードなフォント</title>
+</head>
+<body>
+<h1>QRコードなフォント</h1>
+
+<h2>世界一機械可読性の高いフォントが登場!!</h2>
+<h2 class="QRFont">世界一機械可読性の高いフォントが登場!!</h2>
+<h2 class="QRFontMicro">世界一機械可読性の高いフォントが登場!!</h2>
+<h2 class="QRFontWithLetters">世界一機械可読性の高いフォントが登場!!</h2>
+
+<p>OCRに強いフォントがあっても良いのではないか……という悩みを思いついたので、全てのグリフをQRコードにしたフォントを作ってみました!!</p>
+
+<h2>バリエーションは3種類</h2>
+
+<ol>
+<li><span class="QRFont">QR Font</span>(QR Font)</li>
+	<ul>
+		<li>最小、21ドット×21ドットのQRコードで作ったフォント</li>
+		<li>QRコードの生成には<a href="https://pypi.org/project/qrcode/">qrcode</a>を使用</li>
+	</ul>
+<li><span class="QRFontMicro">QR Font Micro</span>(QR Font Micro)</li>
+	<ul>
+		<li>1を作っているときに、へー、そんなのもあるのかー、と気付いたのでついでに作ったマイクロQRコードのフォント</li>
+		<li>QRコードの生成には<a href="https://github.com/sorairolake/qrtool/">qrtool</a>のバージョン0.11.8を使用</li>
+	</ul>
+<li><span class="QRFontWithLetters">QR Font with Letters</span>(QR Font with Letters)</li>
+	<ul>
+		<li>1、2を作っているときに、もしかして意外と使いづらいでは? という気がしたので、人間可読性を上げるため、右下に文字も入れてみたフォント</li>
+		<li>21×21ドットではエラー訂正しきれないようだったので、余裕を持たせて29×29ドット</li>
+		<li>QRコードの生成には<a href="https://pypi.org/project/qrcode/">qrcode</a>を使用</li>
+		<li>文字部分のフォントは<a href="https://itouhiro.hatenablog.com/entry/20130602/font">PixelMplus（ピクセル・エムプラス）</a>のPixelMplus10を使わせていただきました</li>
+	</ul>
+</ol>
+
+<p>いずれも、<a href="https://fontforge.org/en-US/">FontForge</a>を用いてフォントファイル化しています。</p>
+
+<h2>ライセンス</h2>
+
+<p>ライセンスは<a href="https://openfontlicense.org/">SIL Open Font License (OFL)</a>version 1.1とします。おおむね自由に使って貰って大丈夫です。
+……そもそも、1と2は誰が作っても同じ物になりそうな気がするので著作物としての要件を満たしているのか不安です。</p>
+
+<h2>ダウンロード</h2>
+
+<p>下記いずれかをご利用ください。
+なおファイルサイズは、True Type形式は各フォントファイルが3～6MB、Web Open Font Format version 2形式は各フォントファイルが500KB～0.5MB程度です。</p>
+
+<table>
+<tr><td>True Type形式(.ttf)</td><td><a href="QRFontTTF.zip">QRFontTTF.zip</a></td></tr>
+<tr><td>Web Open Font Format version 2形式(.woff2)</td><td><a href="QRFontWOFF2.zip">QRFontWOFF.zip</a></td></tr>
+</table>
+
+<h2>対応範囲</h2>
+
+<p>QR Fontと、QR Font Microは雑にCP932(大ざっぱに言うとShiftJISの拡張版)の範囲の文字を収録しています。
+QR Font with Lettersは、利用した<a href="https://itouhiro.hatenablog.com/entry/20130602/font">PixelMplus（ピクセル・エムプラス）</a>フォントに含まれていない文字は文字部分が表示されないと思いますが詳しく調べていません。
+また、全文字エラー訂正が効いて読み込めることを保証することもいたしません。
+</p>
+
+<h2>使用例1</h2>
+<p>ホームページのURLをQRコードに変換したい……というときも、QRコードエディタを開く必要はありません!!
+このフォントを使えば、特別なツールも不要で、たった2ステップ!!</p>
+<h3>1. 普通にURLを書く</h3>
+<blockquote>
+https://takaakiumedu.github.io/demo/qr_font/
+</blockquote>
+<h3>2. 文字列を選択して、フォントを変更</h3>
+<blockquote class="QRFont" style="font-size:1.5em;">
+https://takaakiumedu.github.io/demo/qr_font/
+</blockquote>
+
+<p>これだけでQRコード化完了!!</p>
+
+<p>別のフォントを選べば以下の通り。</p>
+
+<blockquote class="QRFontMicro" style="font-size:1.5em;">
+https://takaakiumedu.github.io/demo/qr_font/
+</blockquote>
+<blockquote class="QRFontWithLetters" style="font-size:1.5em;">
+https://takaakiumedu.github.io/demo/qr_font/
+</blockquote>
+
+<p>また、それぞれ、単なる文字列なのでコピー&amp;ペーストでURLの文字列を取得可能!!</p>
+
+<h2>使用例2</h2>
+
+<p>ロボ語に使うとすごくそれっぽい感じに。</p>
+
+<p><img src="example.jpg" style="width:360px;height360px;" alt="ロボ"/></p>
+
+<p>(画像は<a href="https://www.irasutoya.com/2019/03/blog-post_84.html">コンピューターを使うロボットのイラスト</a>より利用)</p>
+
+<h2>その他</h2>
+
+<p>作るのに使用したスクリプト類は<a href="https://github.com/TakaakiUmedu/qr_font">https://github.com/TakaakiUmedu/qr_font</a>で公開しています。
+作り方として、QR FontとQR Font Microは、SVG形式で出力した各文字のグリフをまとめただけです。</p>
+
+<h2>免責事項</h2>
+
+<p>思いついてから作るまでが楽しくて、既出のネタかどうか確認せずに作業を進めてしまいました。
+ネタ被りがあったら申し訳ありません。</p>
+
+</body>
+</html>
+
