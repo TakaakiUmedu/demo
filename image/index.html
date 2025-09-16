@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+<title>画像の見え方のテスト</title>
+<link rel="stylesheet" href="test.css"></link>
+<script type="text/javascript" src="test.js"></script>
+</head>
+<body>
+<p>
+<!--<input type="text" value="03.jpg" id="SRC"></input>-->
+<input type="button" id="original" value="元の画像"></input>
+<input type="button" id="zoom" value="拡大表示"></input>
+<input type="button" id="monochrome" value="モノクロ化"></input>
+<input type="button" id="floor" value="階調を削減"></input>
+<input type="button" id="reduce" value="簡易減色"></input>
+ ◇ 
+分解: 
+<input type="button" id="rgb" value="RGB"></input>
+<input type="button" id="cmy" value="CMY"></input>
+<input type="button" id="cmyk" value="CMYK"></input>
+<input type="button" id="hsv" value="HSV"></input>
+<input type="button" id="yiq" value="YIQ"></input>
+<input type="button" id="yuv" value="YUV"></input>
+<input type="checkbox" id="show_monochrome"></input>モノクロで表示
+ ◇ 
+<span id="compose_menu" style="display:none;">
+<input type="button" id="recompose" value="再合成"></input>
+<span id="recompose_checkboxes"></span>
+</span>
+</p>
+<table id="result">
+<tr><td class="dd">ここに画像ファイルをドラッグ&amp;ドロップする。</td></tr>
+</table>
+
+<h1>使い方</h1>
+<ul>
+<li>講義の際に、説明と共に見せるために作ったページなので、以下の説明は最低限</li>
+<li>正しくはソースコードを参照のこと。以下の説明と動作が食い違っていたり、動作が正しい操作と食い違っていたりしても作者は責任を取りません</li>
+<li>詳しく知りたかったら、頑張って調べるか、分かる人に解説して貰おう!</li>
+<li>ローカルに保存された画像ファイルをドラッグ&amp;ドロップするとターゲットとして表示される</li>
+<li>画像をクリックするとサブメニューを表示。その画像をターゲットにしたり別ウィンドウで開いたりモザイクをかけたりできる</li>
+<li><q>元の画像</q>ボタンで、ドラッグ&amp;ドロップしたときのデータに戻せる。</li>
+<li><q>～に分解</q>は、画像をそれぞれ各種の3チャンネルに分解する
+<ul>
+<li><q>モノクロで表示</q>にチェックを入れている場合は、分解後の値域が0～255になるよう線形に正規化した白黒表示</li>
+<li>チェックを入れていない場合は、それぞれ残る2要素に適当な値を放り込んでRGBに戻した色で表示。ただしYUVのUとVに関しては、
+変換後のRGBが常に0～255に収まる適当な値U、Vが存在しないので、
+はみ出た場合は収まるように線形変換などの追加処理</li>
+</ul>
+<li>再合成は、合成対象のチャネルを選択可能。要、最低2個の選択
+<ul>
+<li>モザイクをかけてから再合成した場合は、そのように再合成される。YUVのUVを削りまくっても・・・とかに使う</li>
+</ul>
+</li>
+</li>
+</ul>
+
+<div id="dialog">
+画像をどうしますか?<br/>
+<input id="load" type="button" value="ターゲットにする"></input><br/>
+<input id="open" type="button" value="新しいウィンドウで開く"></input><br/>
+<input type="button" id="mosaic" value="モザイク"></input> <input type="text" id="mosaic_size" value="10" size="3"></input>
+</div>
+
+
+</body>
+</html>
